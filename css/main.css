@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #f44acd;
+  background: #7114ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2603,4 +2603,19 @@ hr {
 }
 code {
   font-size: 0.875em;
+}
+.post-header .post-title {
+  font-size: 1.25rem;
+}
+.post-title .post-title-link {
+  font-size: 1.25rem;
+}
+.brand .logo-line-before {
+  display: none;
+}
+.brand .logo-line-after {
+  display: none;
+}
+.brand .site-title {
+  font-family: "Russo One";
 }
