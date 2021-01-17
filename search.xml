@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Tutorial on Building a Chess Game &amp; AI Using Eclipse RCP</title>
+    <url>/2018/06/17/alpha-beta-chess/</url>
+    <content><![CDATA[<p>Hi all, I’ve put together a <a href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
+<a id="more"></a>
+
+<h4 id="TLDR-Here’s-the-YouTube-Playlist"><a href="#TLDR-Here’s-the-YouTube-Playlist" class="headerlink" title="TLDR: Here’s the YouTube Playlist"></a>TLDR: Here’s the YouTube Playlist</h4><iframe
+    src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL"
+    width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+</iframe>
+
+<h4 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It?"></a>What Is It?</h4><p>I started developing the first version of this application a few years ago while learning Java. After a while, I started to learn Eclipse RCP and thought it would be a good idea to build a GUI for my chess game on this platform. Then recently I took an AI course and learned about minimax and alpha-beta pruning algorithms. So I decided to rewrite the application and plug these algorithms in so that I could improve the AI, while recording the whole development process. It took a few months and most of my spare time, and finally it’s complete. I hope you like it!</p>
+<h4 id="Who-Is-It-For"><a href="#Who-Is-It-For" class="headerlink" title="Who Is It For?"></a>Who Is It For?</h4><p>You might like this tutorial if you</p>
+<ul>
+<li>are a beginner in Java and want to learn more about the language (or object-oriented programming in general)</li>
+<li>want to learn how to build a simple Eclipse RCP application</li>
+<li>are interested in watching the whole process of building a chess game from scratch</li>
+<li>want to see the minimax &amp; alpha-beta pruning algorithms in action</li>
+<li>are <strong>NOT</strong> looking for a detailed tutorial and discussion focused solely on AI or the alpha-beta pruning algorithm</li>
+</ul>
+<h4 id="Playlist-Overview"><a href="#Playlist-Overview" class="headerlink" title="Playlist Overview"></a>Playlist Overview</h4><p>There are a total of 30 videos in the playlist, which is organized as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Video #</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td>Introduction</td>
+</tr>
+<tr>
+<td align="center">2 to 11</td>
+<td>Coding the building blocks (board, square, piece etc.)</td>
+</tr>
+<tr>
+<td align="center">12 to 16</td>
+<td>Evaluating the legal moves for different chess pieces</td>
+</tr>
+<tr>
+<td align="center">17 to 23</td>
+<td>Building the GUI, UX and game mechanics</td>
+</tr>
+<tr>
+<td align="center">27 to 30</td>
+<td>Implementing the AI (minimax, alpha-beta-pruning &amp; iterative deepening)</td>
+</tr>
+</tbody></table>
+<h4 id="Sound-Issues"><a href="#Sound-Issues" class="headerlink" title="Sound Issues"></a>Sound Issues</h4><p>I apologize for the poor sound quality in the first several videos, especially the one after the intro. Unfortunately, I had to use my laptop’s built-in microphone because I didn’t have one. Thankfully the sound gets better <a href="https://www.youtube.com/watch?v=PWZ_6B7pKYc">after a while</a> because I managed to get my hands on a decent microphone later on.</p>
+<h4 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h4><p>Feel free to check out the <a href="https://github.com/utkuufuk/alpha-beta-chess">github repo</a> if you are interested in contributing. I’m aware that there are lots of missing features such as:</p>
+<ul>
+<li>En passant </li>
+<li>Pawn promotion</li>
+<li>Castling</li>
+<li>Check &amp; checkmate (I know…)</li>
+<li>Potential optimizations regarding the AI</li>
+<li>UX improvements</li>
+</ul>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>java</tag>
+        <tag>eclipse rcp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Training a Simple Binary Classifier Using Logistic Regression</title>
     <url>/2018/05/19/binary-logistic-regression/</url>
     <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
@@ -193,72 +259,6 @@ Looks pretty good. Let's also measure the training accuracy:
       </tags>
   </entry>
   <entry>
-    <title>Tutorial on Building a Chess Game &amp; AI Using Eclipse RCP</title>
-    <url>/2018/06/17/alpha-beta-chess/</url>
-    <content><![CDATA[<p>Hi all, I’ve put together a <a href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
-<a id="more"></a>
-
-<h4 id="TLDR-Here’s-the-YouTube-Playlist"><a href="#TLDR-Here’s-the-YouTube-Playlist" class="headerlink" title="TLDR: Here’s the YouTube Playlist"></a>TLDR: Here’s the YouTube Playlist</h4><iframe
-    src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL"
-    width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-</iframe>
-
-<h4 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It?"></a>What Is It?</h4><p>I started developing the first version of this application a few years ago while learning Java. After a while, I started to learn Eclipse RCP and thought it would be a good idea to build a GUI for my chess game on this platform. Then recently I took an AI course and learned about minimax and alpha-beta pruning algorithms. So I decided to rewrite the application and plug these algorithms in so that I could improve the AI, while recording the whole development process. It took a few months and most of my spare time, and finally it’s complete. I hope you like it!</p>
-<h4 id="Who-Is-It-For"><a href="#Who-Is-It-For" class="headerlink" title="Who Is It For?"></a>Who Is It For?</h4><p>You might like this tutorial if you</p>
-<ul>
-<li>are a beginner in Java and want to learn more about the language (or object-oriented programming in general)</li>
-<li>want to learn how to build a simple Eclipse RCP application</li>
-<li>are interested in watching the whole process of building a chess game from scratch</li>
-<li>want to see the minimax &amp; alpha-beta pruning algorithms in action</li>
-<li>are <strong>NOT</strong> looking for a detailed tutorial and discussion focused solely on AI or the alpha-beta pruning algorithm</li>
-</ul>
-<h4 id="Playlist-Overview"><a href="#Playlist-Overview" class="headerlink" title="Playlist Overview"></a>Playlist Overview</h4><p>There are a total of 30 videos in the playlist, which is organized as follows:</p>
-<table>
-<thead>
-<tr>
-<th align="center">Video #</th>
-<th>Topic</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td>Introduction</td>
-</tr>
-<tr>
-<td align="center">2 to 11</td>
-<td>Coding the building blocks (board, square, piece etc.)</td>
-</tr>
-<tr>
-<td align="center">12 to 16</td>
-<td>Evaluating the legal moves for different chess pieces</td>
-</tr>
-<tr>
-<td align="center">17 to 23</td>
-<td>Building the GUI, UX and game mechanics</td>
-</tr>
-<tr>
-<td align="center">27 to 30</td>
-<td>Implementing the AI (minimax, alpha-beta-pruning &amp; iterative deepening)</td>
-</tr>
-</tbody></table>
-<h4 id="Sound-Issues"><a href="#Sound-Issues" class="headerlink" title="Sound Issues"></a>Sound Issues</h4><p>I apologize for the poor sound quality in the first several videos, especially the one after the intro. Unfortunately, I had to use my laptop’s built-in microphone because I didn’t have one. Thankfully the sound gets better <a href="https://www.youtube.com/watch?v=PWZ_6B7pKYc">after a while</a> because I managed to get my hands on a decent microphone later on.</p>
-<h4 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h4><p>Feel free to check out the <a href="https://github.com/utkuufuk/alpha-beta-chess">github repo</a> if you are interested in contributing. I’m aware that there are lots of missing features such as:</p>
-<ul>
-<li>En passant </li>
-<li>Pawn promotion</li>
-<li>Castling</li>
-<li>Check &amp; checkmate (I know…)</li>
-<li>Potential optimizations regarding the AI</li>
-<li>UX improvements</li>
-</ul>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>java</tag>
-        <tag>eclipse rcp</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Training a Simple Linear Regression Model From Scratch</title>
     <url>/2018/04/21/linear-regression/</url>
     <content><![CDATA[<p>Hey everyone, welcome to my first blog post! This is going to be a walkthrough on training a simple linear regression model in Python. I’ll show you how to do it from scratch, without using any machine learning tools or libraries. We’ll only use <a href="http://www.numpy.org/">NumPy</a> and <a href="https://matplotlib.org/">Matplotlib</a> for matrix operations and data visualization.</p>
@@ -409,7 +409,7 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 <p>Unfortunately, that’s not the case for Vim equivalents (<code>h</code>, <code>l</code>, <code>k</code>, <code>j</code>). For instance, even if you press and hold the <code>j</code> key, it only advances to the next line and it gets stuck there by default. You have to run one of the following commands after installing the VSCodeVim extension to have the same fluid behavior, <a href="https://github.com/VSCodeVim/Vim#mac">as pointed out</a> in the GitHub page of the extension:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># For VS Code</span><br><span class="line">defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Code Insider</span><br><span class="line">defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Codium</span><br><span class="line">defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># If necessary, reset global default</span><br><span class="line">defaults delete -g ApplePressAndHoldEnabled</span><br></pre></td></tr></table></figure>
 
-<h3 id="A-Handy-Shortcut-Cmd-Space"><a href="#A-Handy-Shortcut-Cmd-Space" class="headerlink" title="A Handy Shortcut: Cmd + Space"></a>A Handy Shortcut: <code>Cmd + Space</code></h3><p>I think <code>⌃Space</code> is a very handy key combination and should be assigned to a frequently used shortcut. However, it’s assigned to another shortcut by default, so it needs to be unassigned first.</p>
+<h3 id="A-Handy-Shortcut-Control-Space"><a href="#A-Handy-Shortcut-Control-Space" class="headerlink" title="A Handy Shortcut: Control + Space"></a>A Handy Shortcut: <code>Control + Space</code></h3><p>I think <code>⌃Space</code> is a very handy key combination and should be assigned to a frequently used shortcut. However, it’s assigned to another shortcut by default, so it needs to be unassigned first.</p>
 <img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions-accept.gif" class="">
 
 <p>My command-line shell preference is <a href="https://www.zsh.org/">zsh</a> and one of my favorite zsh plugins is <a href="https://github.com/zsh-users/zsh-autosuggestions">zsh-autosuggestions</a>. It allows you to define a custom hotkey to accept the current suggestion. For me, <code>⌃Space</code> fits perfectly into this use case.</p>
@@ -425,6 +425,64 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 ]]></content>
       <tags>
         <tag>macOS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>One-vs-All Classification Using Logistic Regression</title>
+    <url>/2018/06/03/one-vs-all-classification/</url>
+    <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
+
+<a id="more"></a>
+
+<h4 id="One-vs-All-Classification"><a href="#One-vs-All-Classification" class="headerlink" title="One-vs-All Classification"></a>One-vs-All Classification</h4><p>First of all, let me briefly explain the idea behind one-vs-all classification. Say we have a classification problem and there are $N$ distinct classes. In this case, we’ll have to train a multi-class classifier instead of a binary one.</p>
+<p>One-vs-all classification is a method which involves training $N$ distinct binary classifiers, each designed for recognizing a particular class. Then those $N$ classifiers are collectively used for multi-class classification as demonstrated below:</p>
+<img src="/2018/06/03/one-vs-all-classification/one-vs-all.png" class="">
+<br>
+
+<p>We already know from the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a> how to train a binary classifier using logistic regression. So the only thing we have to do now really is to train $N$ binary classifiers instead of just one. And that’s pretty much it.</p>
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’re going to use this one-vs-all approach to solve a multi-class classification problem from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> thought by Andrew Ng. The goal in this problem is to identify digits from 0 to 9 by looking at 20x20 pixel drawings.</p>
+<p>Here the number of classes $N$ is equal to 10, which is the number of different digits. We’re going to treat each pixel as an individual feature, which adds up to 400 features per image. Here are some examples from our training sample of 5000 images:</p>
+<img src="/2018/06/03/one-vs-all-classification/examples-from-dataset.png" class="">
+<br>
+
+<p>The training data is stored in a file called <a href="/2018/06/03/one-vs-all-classification/digits.mat" title="digits.mat">digits.mat</a>. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a Matlab assignment. No big deal, since it’s pretty easy to import a <strong><code>.mat</code></strong> file in Python using the <strong><code>loadmat</code></strong> function from the <strong><code>scipy.io</code></strong> module. Here’s how to do it:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = sio.loadmat(<span class="string">&quot;digits.mat&quot;</span>)</span><br><span class="line">x = data[<span class="string">&#x27;X&#x27;</span>] <span class="comment"># the feature matrix is labeled with &#x27;X&#x27; inside the file</span></span><br><span class="line">y = np.squeeze(data[<span class="string">&#x27;y&#x27;</span>]) <span class="comment"># the target variable vector is labeled with &#x27;y&#x27; inside the file</span></span><br><span class="line">np.place(y, y == <span class="number">10</span>, <span class="number">0</span>) <span class="comment"># replace the label 10 with 0</span></span><br><span class="line">numExamples = x.shape[<span class="number">0</span>] <span class="comment"># 5000 examples</span></span><br><span class="line">numFeatures = x.shape[<span class="number">1</span>] <span class="comment"># 400 features</span></span><br><span class="line">numLabels = <span class="number">10</span> <span class="comment"># digits from 0 to 9</span></span><br></pre></td></tr></table></figure>
+<p>Let me point out two things here:</p>
+<ol>
+<li><p>We’re using the <strong><code>squeeze</code></strong> function on the <strong><code>y</code></strong> array in order to explicitly make it one dimensional. We’re doing this because <strong><code>y</code></strong> is stored as a 2D matrix in the <strong><code>.mat</code></strong> file although it’s actually a 1D array.</p>
+</li>
+<li><p>We’re replacing the label 10 with 0. This label actually stands for the digit 0 but it was converted to 10 because of array indexing issues in Matlab.</p>
+</li>
+</ol>
+<img src="/2018/06/03/one-vs-all-classification/matlab-index.png" class="">
+<br>
+
+<h4 id="Logistic-Regression-Recap"><a href="#Logistic-Regression-Recap" class="headerlink" title="Logistic Regression Recap"></a>Logistic Regression Recap</h4><p>Remember the <strong><code>sigmoid</code></strong>, <strong><code>cost</code></strong> and <strong><code>cost_gradient</code></strong> functions that we’ve come up with while training a logistic regression model in the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a>? Here we can reuse these functions exactly as they are, because we’re going to train nothing but logistic regression models also in this problem.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes error in division</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
+<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we have to do before starting to train our multi-class classifier is to add an initial column of ones to our feature matrix to take into account the intercept term:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
+<p>Now we’re ready to train our classifiers. Let’s create an array to store the model parameters $\theta$ for each classifier. Note that we need 10 sets of model parameters, each consisting of 401 parameters including the intercept term:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classifiers = np.zeros(shape=(numLabels, numFeatures + <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>Then we’re going to train 10 binary classifiers targeted for each digit inside a <strong><code>for</code></strong> loop:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, numLabels):</span><br><span class="line">    label = (y == c).astype(<span class="built_in">int</span>)</span><br><span class="line">    initial_theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    classifiers[c, :] = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, label), disp=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>Here we create a <strong><code>label</code></strong> vector in each iteration. We set its values to 1 where the corresponding values in <strong><code>y</code></strong> are equal to the current digit, and we set the rest of its values to 0. Hence the <strong><code>label</code></strong> vector acts as the target variable vector <strong><code>y</code></strong> of the binary classifier that we train for the current digit.</p>
+<h4 id="Predictions"><a href="#Predictions" class="headerlink" title="Predictions"></a>Predictions</h4><p>We can evaluate the probability estimations of our optimized model for each class as follows:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classProbabilities = sigmoid(X @ classifiers.transpose())</span><br></pre></td></tr></table></figure>
+<p>This will give us a matrix of 5000 rows and 10 columns, where the columns correspond to the estimated class (digit) probabilities for all 5000 images.</p>
+<p>However, we may need the final predictions of the optimized classifier instead of numerical probability estimations. We can find out our model’s predictions by simply selecting the label with the highest probability in each row :</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = classProbabilities.argmax(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>Now we have our model’s predictions as a vector with 5000 elements labeled from 0 to 9.</p>
+<h4 id="Accuracy"><a href="#Accuracy" class="headerlink" title="Accuracy"></a>Accuracy</h4><p>Finally, we can compute our model’s training accuracy by computing the percentage of successful predictions:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;Training accuracy:&quot;</span>, <span class="built_in">str</span>(<span class="number">100</span> * np.mean(predictions == y)) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Training accuracy: 94.54%</code></pre>
+<p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
+<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>numpy</tag>
+        <tag>matplotlib</tag>
+        <tag>scipy</tag>
       </tags>
   </entry>
   <entry>
@@ -521,61 +579,29 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
       </tags>
   </entry>
   <entry>
-    <title>One-vs-All Classification Using Logistic Regression</title>
-    <url>/2018/06/03/one-vs-all-classification/</url>
-    <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
-
+    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
+    <url>/2018/12/20/trello-budget/</url>
+    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
 <a id="more"></a>
 
-<h4 id="One-vs-All-Classification"><a href="#One-vs-All-Classification" class="headerlink" title="One-vs-All Classification"></a>One-vs-All Classification</h4><p>First of all, let me briefly explain the idea behind one-vs-all classification. Say we have a classification problem and there are $N$ distinct classes. In this case, we’ll have to train a multi-class classifier instead of a binary one.</p>
-<p>One-vs-all classification is a method which involves training $N$ distinct binary classifiers, each designed for recognizing a particular class. Then those $N$ classifiers are collectively used for multi-class classification as demonstrated below:</p>
-<img src="/2018/06/03/one-vs-all-classification/one-vs-all.png" class="">
-<br>
 
-<p>We already know from the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a> how to train a binary classifier using logistic regression. So the only thing we have to do now really is to train $N$ binary classifiers instead of just one. And that’s pretty much it.</p>
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’re going to use this one-vs-all approach to solve a multi-class classification problem from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> thought by Andrew Ng. The goal in this problem is to identify digits from 0 to 9 by looking at 20x20 pixel drawings.</p>
-<p>Here the number of classes $N$ is equal to 10, which is the number of different digits. We’re going to treat each pixel as an individual feature, which adds up to 400 features per image. Here are some examples from our training sample of 5000 images:</p>
-<img src="/2018/06/03/one-vs-all-classification/examples-from-dataset.png" class="">
-<br>
-
-<p>The training data is stored in a file called <a href="/2018/06/03/one-vs-all-classification/digits.mat" title="digits.mat">digits.mat</a>. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a Matlab assignment. No big deal, since it’s pretty easy to import a <strong><code>.mat</code></strong> file in Python using the <strong><code>loadmat</code></strong> function from the <strong><code>scipy.io</code></strong> module. Here’s how to do it:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = sio.loadmat(<span class="string">&quot;digits.mat&quot;</span>)</span><br><span class="line">x = data[<span class="string">&#x27;X&#x27;</span>] <span class="comment"># the feature matrix is labeled with &#x27;X&#x27; inside the file</span></span><br><span class="line">y = np.squeeze(data[<span class="string">&#x27;y&#x27;</span>]) <span class="comment"># the target variable vector is labeled with &#x27;y&#x27; inside the file</span></span><br><span class="line">np.place(y, y == <span class="number">10</span>, <span class="number">0</span>) <span class="comment"># replace the label 10 with 0</span></span><br><span class="line">numExamples = x.shape[<span class="number">0</span>] <span class="comment"># 5000 examples</span></span><br><span class="line">numFeatures = x.shape[<span class="number">1</span>] <span class="comment"># 400 features</span></span><br><span class="line">numLabels = <span class="number">10</span> <span class="comment"># digits from 0 to 9</span></span><br></pre></td></tr></table></figure>
-<p>Let me point out two things here:</p>
-<ol>
-<li><p>We’re using the <strong><code>squeeze</code></strong> function on the <strong><code>y</code></strong> array in order to explicitly make it one dimensional. We’re doing this because <strong><code>y</code></strong> is stored as a 2D matrix in the <strong><code>.mat</code></strong> file although it’s actually a 1D array.</p>
-</li>
-<li><p>We’re replacing the label 10 with 0. This label actually stands for the digit 0 but it was converted to 10 because of array indexing issues in Matlab.</p>
-</li>
-</ol>
-<img src="/2018/06/03/one-vs-all-classification/matlab-index.png" class="">
-<br>
-
-<h4 id="Logistic-Regression-Recap"><a href="#Logistic-Regression-Recap" class="headerlink" title="Logistic Regression Recap"></a>Logistic Regression Recap</h4><p>Remember the <strong><code>sigmoid</code></strong>, <strong><code>cost</code></strong> and <strong><code>cost_gradient</code></strong> functions that we’ve come up with while training a logistic regression model in the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a>? Here we can reuse these functions exactly as they are, because we’re going to train nothing but logistic regression models also in this problem.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes error in division</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
-<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we have to do before starting to train our multi-class classifier is to add an initial column of ones to our feature matrix to take into account the intercept term:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
-<p>Now we’re ready to train our classifiers. Let’s create an array to store the model parameters $\theta$ for each classifier. Note that we need 10 sets of model parameters, each consisting of 401 parameters including the intercept term:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classifiers = np.zeros(shape=(numLabels, numFeatures + <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>Then we’re going to train 10 binary classifiers targeted for each digit inside a <strong><code>for</code></strong> loop:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, numLabels):</span><br><span class="line">    label = (y == c).astype(<span class="built_in">int</span>)</span><br><span class="line">    initial_theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    classifiers[c, :] = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, label), disp=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<p>Here we create a <strong><code>label</code></strong> vector in each iteration. We set its values to 1 where the corresponding values in <strong><code>y</code></strong> are equal to the current digit, and we set the rest of its values to 0. Hence the <strong><code>label</code></strong> vector acts as the target variable vector <strong><code>y</code></strong> of the binary classifier that we train for the current digit.</p>
-<h4 id="Predictions"><a href="#Predictions" class="headerlink" title="Predictions"></a>Predictions</h4><p>We can evaluate the probability estimations of our optimized model for each class as follows:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classProbabilities = sigmoid(X @ classifiers.transpose())</span><br></pre></td></tr></table></figure>
-<p>This will give us a matrix of 5000 rows and 10 columns, where the columns correspond to the estimated class (digit) probabilities for all 5000 images.</p>
-<p>However, we may need the final predictions of the optimized classifier instead of numerical probability estimations. We can find out our model’s predictions by simply selecting the label with the highest probability in each row :</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = classProbabilities.argmax(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>Now we have our model’s predictions as a vector with 5000 elements labeled from 0 to 9.</p>
-<h4 id="Accuracy"><a href="#Accuracy" class="headerlink" title="Accuracy"></a>Accuracy</h4><p>Finally, we can compute our model’s training accuracy by computing the percentage of successful predictions:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;Training accuracy:&quot;</span>, <span class="built_in">str</span>(<span class="number">100</span> * np.mean(predictions == y)) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>Training accuracy: 94.54%</code></pre>
-<p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
-<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
+<ul>
+<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
+<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
+</ul>
+<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
+<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ]]></content>
       <tags>
         <tag>python</tag>
-        <tag>numpy</tag>
-        <tag>matplotlib</tag>
-        <tag>scipy</tag>
+        <tag>google sheets</tag>
+        <tag>trello</tag>
+        <tag>firebase</tag>
+        <tag>nodejs</tag>
+        <tag>javascript</tag>
       </tags>
   </entry>
   <entry>
@@ -653,32 +679,6 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 ]]></content>
       <tags>
         <tag>trello</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
-    <url>/2018/12/20/trello-budget/</url>
-    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
-<a id="more"></a>
-
-
-<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
-<ul>
-<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
-<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
-</ul>
-<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
-<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-]]></content>
-      <tags>
-        <tag>python</tag>
-        <tag>google sheets</tag>
-        <tag>trello</tag>
-        <tag>firebase</tag>
-        <tag>nodejs</tag>
-        <tag>javascript</tag>
       </tags>
   </entry>
   <entry>
