@@ -1,75 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Tutorial on Building a Chess Game &amp; AI Using Eclipse RCP</title>
-    <url>/2018/06/17/alpha-beta-chess/</url>
-    <content><![CDATA[<p>Hi all, I’ve put together a <a href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
-<a id="more"></a>
-
-<h4 id="TLDR-Here’s-the-YouTube-Playlist"><a href="#TLDR-Here’s-the-YouTube-Playlist" class="headerlink" title="TLDR: Here’s the YouTube Playlist"></a>TLDR: Here’s the YouTube Playlist</h4><iframe
-    src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL"
-    width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-</iframe>
-
-<h4 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It?"></a>What Is It?</h4><p>I started developing the first version of this application a few years ago while learning Java. After a while, I started to learn Eclipse RCP and thought it would be a good idea to build a GUI for my chess game on this platform. Then recently I took an AI course and learned about minimax and alpha-beta pruning algorithms. So I decided to rewrite the application and plug these algorithms in so that I could improve the AI, while recording the whole development process. It took a few months and most of my spare time, and finally it’s complete. I hope you like it!</p>
-<h4 id="Who-Is-It-For"><a href="#Who-Is-It-For" class="headerlink" title="Who Is It For?"></a>Who Is It For?</h4><p>You might like this tutorial if you</p>
-<ul>
-<li>are a beginner in Java and want to learn more about the language (or object-oriented programming in general)</li>
-<li>want to learn how to build a simple Eclipse RCP application</li>
-<li>are interested in watching the whole process of building a chess game from scratch</li>
-<li>want to see the minimax &amp; alpha-beta pruning algorithms in action</li>
-<li>are <strong>NOT</strong> looking for a detailed tutorial and discussion focused solely on AI or the alpha-beta pruning algorithm</li>
-</ul>
-<h4 id="Playlist-Overview"><a href="#Playlist-Overview" class="headerlink" title="Playlist Overview"></a>Playlist Overview</h4><p>There are a total of 30 videos in the playlist, which is organized as follows:</p>
-<table>
-<thead>
-<tr>
-<th align="center">Video #</th>
-<th>Topic</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td>Introduction</td>
-</tr>
-<tr>
-<td align="center">2 to 11</td>
-<td>Coding the building blocks (board, square, piece etc.)</td>
-</tr>
-<tr>
-<td align="center">12 to 16</td>
-<td>Evaluating the legal moves for different chess pieces</td>
-</tr>
-<tr>
-<td align="center">17 to 23</td>
-<td>Building the GUI, UX and game mechanics</td>
-</tr>
-<tr>
-<td align="center">27 to 30</td>
-<td>Implementing the AI (minimax, alpha-beta-pruning &amp; iterative deepening)</td>
-</tr>
-</tbody></table>
-<h4 id="Sound-Issues"><a href="#Sound-Issues" class="headerlink" title="Sound Issues"></a>Sound Issues</h4><p>I apologize for the poor sound quality in the first several videos, especially the one after the intro. Unfortunately, I had to use my laptop’s built-in microphone because I didn’t have one. Thankfully the sound gets better <a href="https://www.youtube.com/watch?v=PWZ_6B7pKYc">after a while</a> because I managed to get my hands on a decent microphone later on.</p>
-<h4 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h4><p>Feel free to check out the <a href="https://github.com/utkuufuk/alpha-beta-chess">github repo</a> if you are interested in contributing. I’m aware that there are lots of missing features such as:</p>
-<ul>
-<li>En passant </li>
-<li>Pawn promotion</li>
-<li>Castling</li>
-<li>Check &amp; checkmate (I know…)</li>
-<li>Potential optimizations regarding the AI</li>
-<li>UX improvements</li>
-</ul>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-]]></content>
-      <categories>
-        <category>Game Development</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>eclipse rcp</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Training a Simple Binary Classifier Using Logistic Regression</title>
     <url>/2018/05/19/binary-logistic-regression/</url>
     <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
@@ -138,9 +69,6 @@ Looks pretty good. Let's also measure the training accuracy:
 <pre><code>For a student with scores 45 and 85, we predict an admission probability of 0.776195474168</code></pre>
 <p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>Machine Learning</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>numpy</tag>
@@ -225,9 +153,6 @@ Looks pretty good. Let's also measure the training accuracy:
 
 <p>That’s it! Just run <code>./install.sh</code> from the project folder and you should be able to use the app. I hope you enjoyed this little walkthrough. If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>CLI Applications</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>google sheets</tag>
@@ -262,12 +187,75 @@ Looks pretty good. Let's also measure the training accuracy:
 <p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
 <p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>Web Scraping</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>mailgun</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Tutorial on Building a Chess Game &amp; AI Using Eclipse RCP</title>
+    <url>/2018/06/17/alpha-beta-chess/</url>
+    <content><![CDATA[<p>Hi all, I’ve put together a <a href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
+<a id="more"></a>
+
+<h4 id="TLDR-Here’s-the-YouTube-Playlist"><a href="#TLDR-Here’s-the-YouTube-Playlist" class="headerlink" title="TLDR: Here’s the YouTube Playlist"></a>TLDR: Here’s the YouTube Playlist</h4><iframe
+    src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL"
+    width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+</iframe>
+
+<h4 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It?"></a>What Is It?</h4><p>I started developing the first version of this application a few years ago while learning Java. After a while, I started to learn Eclipse RCP and thought it would be a good idea to build a GUI for my chess game on this platform. Then recently I took an AI course and learned about minimax and alpha-beta pruning algorithms. So I decided to rewrite the application and plug these algorithms in so that I could improve the AI, while recording the whole development process. It took a few months and most of my spare time, and finally it’s complete. I hope you like it!</p>
+<h4 id="Who-Is-It-For"><a href="#Who-Is-It-For" class="headerlink" title="Who Is It For?"></a>Who Is It For?</h4><p>You might like this tutorial if you</p>
+<ul>
+<li>are a beginner in Java and want to learn more about the language (or object-oriented programming in general)</li>
+<li>want to learn how to build a simple Eclipse RCP application</li>
+<li>are interested in watching the whole process of building a chess game from scratch</li>
+<li>want to see the minimax &amp; alpha-beta pruning algorithms in action</li>
+<li>are <strong>NOT</strong> looking for a detailed tutorial and discussion focused solely on AI or the alpha-beta pruning algorithm</li>
+</ul>
+<h4 id="Playlist-Overview"><a href="#Playlist-Overview" class="headerlink" title="Playlist Overview"></a>Playlist Overview</h4><p>There are a total of 30 videos in the playlist, which is organized as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Video #</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td>Introduction</td>
+</tr>
+<tr>
+<td align="center">2 to 11</td>
+<td>Coding the building blocks (board, square, piece etc.)</td>
+</tr>
+<tr>
+<td align="center">12 to 16</td>
+<td>Evaluating the legal moves for different chess pieces</td>
+</tr>
+<tr>
+<td align="center">17 to 23</td>
+<td>Building the GUI, UX and game mechanics</td>
+</tr>
+<tr>
+<td align="center">27 to 30</td>
+<td>Implementing the AI (minimax, alpha-beta-pruning &amp; iterative deepening)</td>
+</tr>
+</tbody></table>
+<h4 id="Sound-Issues"><a href="#Sound-Issues" class="headerlink" title="Sound Issues"></a>Sound Issues</h4><p>I apologize for the poor sound quality in the first several videos, especially the one after the intro. Unfortunately, I had to use my laptop’s built-in microphone because I didn’t have one. Thankfully the sound gets better <a href="https://www.youtube.com/watch?v=PWZ_6B7pKYc">after a while</a> because I managed to get my hands on a decent microphone later on.</p>
+<h4 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h4><p>Feel free to check out the <a href="https://github.com/utkuufuk/alpha-beta-chess">github repo</a> if you are interested in contributing. I’m aware that there are lots of missing features such as:</p>
+<ul>
+<li>En passant </li>
+<li>Pawn promotion</li>
+<li>Castling</li>
+<li>Check &amp; checkmate (I know…)</li>
+<li>Potential optimizations regarding the AI</li>
+<li>UX improvements</li>
+</ul>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>java</tag>
+        <tag>eclipse rcp</tag>
       </tags>
   </entry>
   <entry>
@@ -353,13 +341,90 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 <pre><code>For population = 70,000, we predict a profit of $ 45905.6621788</code></pre>
 <p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>Machine Learning</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>numpy</tag>
         <tag>matplotlib</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MacOS Keyboard Settings and Shortcuts for Coding</title>
+    <url>/2021/01/17/macos-keyboard-shortcuts/</url>
+    <content><![CDATA[<p>Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for general text editing, window management, iTerm2 and some other stuff. I’m going to go over everything I do step by step in this post. I’m sure you’ll find at least some of these tips &amp; tricks pretty useful.</p>
+<a id="more"></a>
+
+
+<h3 id="Keyboard-Type"><a href="#Keyboard-Type" class="headerlink" title="Keyboard Type"></a>Keyboard Type</h3><p>First of all, if you’re using an external keyboard, you should make sure that your keyboard is identified correctly. Usually you don’t have to worry about this, but recently my keyboard was identified incorrectly for some reason while I was setting up macOS for the first time on my new Mac Mini.</p>
+<p>You can check the identified keyboard type from <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Input Sources</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-layout.png" class="">
+
+<p>If you find out that it’s incorrect, go to <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong> and select <strong>Change Keyboard Type</strong></p>
+<p>For me, it turns out my keyboard was identified as <strong>ANSI</strong> while it’s actually <strong>ISO</strong>, so I had to change it:</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-type.png" class="">
+
+
+<h3 id="iTerm2-Natural-Text-Editing"><a href="#iTerm2-Natural-Text-Editing" class="headerlink" title="iTerm2 Natural Text Editing"></a>iTerm2 Natural Text Editing</h3><p>Natural text editing shortcuts such as the ones below do not work by default on iTerm2:</p>
+<ul>
+<li><code>⌥→</code> (next word)</li>
+<li><code>⌥←</code> (previous word)</li>
+<li><code>⌃→</code> (end of line)</li>
+<li><code>⌃←</code> (start of line)</li>
+</ul>
+<p>You have to set the preset as “<em>Natural Text Editing</em>“ in order to fix this:</p>
+<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Profiles</strong> &gt; <strong>[Profile Name]</strong> &gt; <strong>Keys</strong> &gt; <strong>Presets</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-natural-text-editing.png" class="">
+
+
+<h3 id="iTerm2-Tab-Pane-Switching"><a href="#iTerm2-Tab-Pane-Switching" class="headerlink" title="iTerm2 Tab/Pane Switching"></a>iTerm2 Tab/Pane Switching</h3><p>iTerm2 lets you create multiple tabs, and you can even split a tab into multiple panes.</p>
+<ul>
+<li><code>⌘T</code> creates a new tab</li>
+<li><code>⌘D</code> creates a new pane by splitting the existing tab horizontally</li>
+<li><code>⇧⌘D</code> creates a new pane by splitting the existing tab vertically</li>
+</ul>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-tabs.png" class="">
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-panes.png" class="">
+
+<p>These default shortcuts for creating tabs &amp; panes are pretty nice. However, I don’t like the default shortcuts for switching between tabs/panes. That’s why I override them like this:</p>
+<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Keys</strong> &gt; <strong>Key Bindings</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-tabs-and-panes.png" class="">
+
+
+<h3 id="Switching-Between-Windows-of-the-Same-App"><a href="#Switching-Between-Windows-of-the-Same-App" class="headerlink" title="Switching Between Windows of the Same App"></a>Switching Between Windows of the Same App</h3><p><code>⌘Tab</code> is pretty useful for switching between different apps. What if you need to switch between windows of the same app? Sometimes, I have multiple iTerm2 windows or multiple VSCode windows open at the same time and I want to be able to quickly switch between those. Here’s how you can (re)assign a shortcut for that:</p>
+<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Shortcuts</strong> &gt; <strong>Keyboard</strong> &gt; <em>Move focus to next window</em></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/move-focus-to-next-window.png" class="">
+
+
+<h3 id="Window-Organizer-Spectacle"><a href="#Window-Organizer-Spectacle" class="headerlink" title="Window Organizer: Spectacle"></a>Window Organizer: Spectacle</h3><p><a href="https://www.spectacleapp.com/">Spectacle</a> is a free app that lets you organize and resize your windows using keyboard shortcuts:</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/spectacle-shortcuts.png" class="">
+
+<p>It’s no longer actively maintained, but I’ve been using it for a couple of years and I had zero issues. It’s quite simple, and the default shortcuts are pretty good.</p>
+<h3 id="Key-Repeat-and-Delay"><a href="#Key-Repeat-and-Delay" class="headerlink" title="Key Repeat and Delay"></a>Key Repeat and Delay</h3><p>I use Vim for text editing, which means I don’t use my mouse to navigate in the text editor. That’s why I frequently need to press and hold some keys for scrolling up/down/left/right in the editor.</p>
+<p>By default, key repeat is too slow and the delay until repeat is too long to do that fluidly. I adjust the settings like this, but you should experiment with each option on your favorite text editor and see what works for you the best:</p>
+<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/key-repeat-and-delay.png" class="">
+
+
+<h3 id="VSCodeVim-Extension"><a href="#VSCodeVim-Extension" class="headerlink" title="VSCodeVim Extension"></a>VSCodeVim Extension</h3><p><em>You should only read this section if you use both <a href="https://code.visualstudio.com/">VSCode</a> and the <a href="https://marketplace.visualstudio.com/items?itemName=vscodevim.vim">VSCodeVim</a> extension.</em></p>
+<p>Pressing and holding the arrow keys (<code>←</code>, <code>→</code>, <code>↑</code>, <code>↓</code>) lets you fluidly navigate between rows (lines) and columns (characters) in the editor by default.</p>
+<p>Unfortunately, that’s not the case for Vim equivalents (<code>h</code>, <code>l</code>, <code>k</code>, <code>j</code>). For instance, even if you press and hold the <code>j</code> key, it only advances to the next line and it gets stuck there by default. You have to run one of the following commands after installing the VSCodeVim extension to have the same fluid behavior, <a href="https://github.com/VSCodeVim/Vim#mac">as pointed out</a> in the GitHub page of the extension:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># For VS Code</span><br><span class="line">defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Code Insider</span><br><span class="line">defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Codium</span><br><span class="line">defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># If necessary, reset global default</span><br><span class="line">defaults delete -g ApplePressAndHoldEnabled</span><br></pre></td></tr></table></figure>
+
+<h3 id="A-Handy-Shortcut-Cmd-Space"><a href="#A-Handy-Shortcut-Cmd-Space" class="headerlink" title="A Handy Shortcut: Cmd + Space"></a>A Handy Shortcut: <code>Cmd + Space</code></h3><p>I think <code>⌃Space</code> is a very handy key combination and should be assigned to a frequently used shortcut. However, it’s assigned to another shortcut by default, so it needs to be unassigned first.</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions-accept.gif" class="">
+
+<p>My command-line shell preference is <a href="https://www.zsh.org/">zsh</a> and one of my favorite zsh plugins is <a href="https://github.com/zsh-users/zsh-autosuggestions">zsh-autosuggestions</a>. It allows you to define a custom hotkey to accept the current suggestion. For me, <code>⌃Space</code> fits perfectly into this use case.</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions.png" class="">
+
+
+<h3 id="Bonus-Font-Smoothing"><a href="#Bonus-Font-Smoothing" class="headerlink" title="Bonus: Font Smoothing"></a>Bonus: Font Smoothing</h3><p>I know that this isn’t related to keyboard settings or shortcuts, but I still want to mention it because I think it’s important.</p>
+<p>I don’t know about your experience, but the default font smoothing is too much for me. What’s worse is, macOS doesn’t let you change this setting easily from system preferences anymore. You have to actually open the terminal and run this command:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 0, 1, 2, or 3</span></span><br><span class="line">defaults -currentHost write -globalDomain AppleFontSmoothing -int 1</span><br></pre></td></tr></table></figure>
+<p>Setting it to 1 works best for me. I suggest you to experiment with each option (0 is lowest, 3 is highest) and see whichever feels best. Keep in mind that in order to see the effects, you have to logout &amp; login back every time you change the setting.</p>
+<hr>
+<p>Feel free to leave a comment on <a href="https://twitter.com/utkufu">Twitter</a> if you have some other tips &amp; tricks that haven’t been covered in this article. I’d love to hear them!</p>
+]]></content>
+      <tags>
+        <tag>macOS</tag>
       </tags>
   </entry>
   <entry>
@@ -447,9 +512,6 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 <li><a href="/subscribe">Click here to subscribe to my future articles.</a></li>
 </ul>
 ]]></content>
-      <categories>
-        <category>Productivity</category>
-      </categories>
       <tags>
         <tag>google sheets</tag>
         <tag>go</tag>
@@ -509,43 +571,11 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 <p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
 <p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>Machine Learning</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>numpy</tag>
         <tag>matplotlib</tag>
         <tag>scipy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
-    <url>/2018/12/20/trello-budget/</url>
-    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
-<a id="more"></a>
-
-
-<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
-<ul>
-<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
-<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
-</ul>
-<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
-<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-]]></content>
-      <categories>
-        <category>Cloud Programming</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>google sheets</tag>
-        <tag>trello</tag>
-        <tag>firebase</tag>
-        <tag>nodejs</tag>
-        <tag>javascript</tag>
       </tags>
   </entry>
   <entry>
@@ -621,11 +651,177 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 </ul>
 <p>That’s it, I hope you found this useful. Feel free to <a href="/about">reach out</a> if you have any comments or questions. Also, don’t forget to <a href="/subscribe">subscribe</a> if you want to get notified when I post new stuff.</p>
 ]]></content>
-      <categories>
-        <category>Productivity</category>
-      </categories>
       <tags>
         <tag>trello</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
+    <url>/2018/12/20/trello-budget/</url>
+    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
+<a id="more"></a>
+
+
+<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
+<ul>
+<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
+<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
+</ul>
+<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
+<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>google sheets</tag>
+        <tag>trello</tag>
+        <tag>firebase</tag>
+        <tag>nodejs</tag>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>A Beginner&#39;s Roadmap to Becoming a Full-Stack Web Developer</title>
+    <url>/2019/05/12/fullstack-roadmap/</url>
+    <content><![CDATA[<p>I’ve been learning about web development for a while pretty much from scratch. I’ve gone over numerous guides, tutorials and documentation from various resources, among which I took note of the important and beneficial ones that I believe a beginner will benefit from the most. In this article, I’m going to share them with you as a roadmap that you can follow if you want to become a full-stack web developer in a fun and efficient way.</p>
+<a id="more"></a>
+
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>Let’s make one thing clear. There are <em>lots</em> of programming languages, tools and frameworks out there in the world of web development. In most cases, there’s not a single best way to solve a problem. However, as a beginner, you shouldn’t attempt to learn every new thing for the sole sake of learning, or just because some people are hyped about it. On the contrary, you should aim to acquire the bare minimum skill set so that you can start building stuff as soon as possible.</p>
+<p>For instance, you’re going to have to learn JavaScript in order to write browser (front-end) code no matter what. And guess what, there’s something called <a href="https://nodejs.org/en/">Node.js</a> which lets you write server-side code using JavaScript as well. Now I’m not arguing here whether Node.js is the best option for developing your back-end or not. However, it’s certainly convenient to be able to build an entire web application by having to learn just one programming language. A deal too good to pass up, don’t you think?</p>
+<p>You can (and should) always learn about other technology trends once you master the basics and have a solid understanding of how the web works.</p>
+<h3 id="Roadmap"><a href="#Roadmap" class="headerlink" title="Roadmap"></a>Roadmap</h3><p>I’m going to divide the steps in this roadmap into several chapters which are sorted below from basic to advanced:</p>
+<ol>
+<li><a href="#Chapter-1-HTML-amp-CSS">HTML &amp; CSS</a></li>
+<li><a href="#Chapter-2-JavaScript">JavaScript</a></li>
+<li><a href="#Chapter-3-Node-js">Node.js</a></li>
+<li><a href="#Chapter-4-MySQL">MySQL</a></li>
+<li><a href="#Chapter-5-React">React</a></li>
+<li><a href="#Chapter-6-Docker">Docker</a></li>
+</ol>
+<p>I’m also going to label each item in a category as <em>fundamental</em>, <em>optional</em> or <em>reference</em>. I strongly advise against advancing to a category before completing all the <em>fundamental</em> steps in a previous category. You can postpone <em>optional</em> steps if you want, or skip them altogether if you’re feeling too lazy. <em>References</em> are not meant to be gone through from start to end. You’ll find them useful in the future when you forget some detail and want to quickly look it up, or when you need further information about a specific topic in the corresponding category.</p>
+<p>By the way, I didn’t mention this above but if you don’t know how to use <a href="https://git-scm.com/">Git</a>, stop whatever you’re doing and learn it ASAP. Don’t worry, it’s not going to take long. Actually <a href="https://www.youtube.com/watch?v=SWYqp7iY_Tc">this 30 min YouTube video</a> is more than enough to get you started. Just make sure that you know how to use the following 7 simple commands for starters:</p>
+<ul>
+<li><a href="https://git-scm.com/docs/git-init"><code>git init</code></a></li>
+<li><a href="https://git-scm.com/docs/git-status"><code>git status</code></a></li>
+<li><a href="https://git-scm.com/docs/git-add"><code>git add</code></a></li>
+<li><a href="https://git-scm.com/docs/git-commit"><code>git commit</code></a></li>
+<li><a href="https://git-scm.com/docs/git-clone"><code>git clone</code></a></li>
+<li><a href="https://git-scm.com/docs/git-pull"><code>git pull</code></a></li>
+<li><a href="https://git-scm.com/docs/git-push"><code>git push</code></a></li>
+</ul>
+<p>Lastly I just want to say that if you haven’t used <a href="https://code.visualstudio.com/">Visual Studio Code</a> yet, you should definitely give it a try. I think it’s an amazing code editor, especially for JavaScript.</p>
+<p>Alright let’s begin…</p>
+<h4 id="Chapter-1-HTML-amp-CSS"><a href="#Chapter-1-HTML-amp-CSS" class="headerlink" title="Chapter 1 - HTML &amp; CSS"></a>Chapter 1 - HTML &amp; CSS</h4><img src="/2019/05/12/fullstack-roadmap/html-css.png" class="">
+<p>Learning HTML &amp; CSS is definitely where you want to start as a beginner. Once you have a solid knowledge, these two will let you build structured, elegant and responsive websites with static content such as a blog or a portfolio page. You’ll also use this knowledge in the following chapters where you’ll deal with browser-side JavaScript code or a front-end framework such as React.</p>
+<h5 id="Fundamentals"><a href="#Fundamentals" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
+<li><strong><a href="https://www.youtube.com/watch?v=UB1O30fR-EE">HTML Crash Course</a>:</strong> HTML for absolute beginners.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=yfoY53QXEnI">CSS Crash Course</a>:</strong> CSS for absolute beginners.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=fgOO9YUFlGI&list=PLoYCgNOIyGABDU532eesybur5HPBVfC1G&index=9">Responsive Design Tutorial</a>:</strong> Responsiveness isn’t just a nice feature anymore in modern web design, it’s the default.</li>
+<li><strong><a href="https://scrimba.com/g/gR8PTE">CSS Grid Tutorial</a>:</strong> CSS Grid lets you easily arrange HTML elements in two dimensions on a web page. </li>
+</ol>
+<h5 id="Optionals"><a href="#Optionals" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
+<li><strong><a href="https://www.youtube.com/playlist?list=PLC3y8-rFHvwg6rjbiMadCILrjh7QkvzoQ">CSS Flexbox Tutorial</a>:</strong> This is a useful yet optional item because it doesn’t really provide any extra functionality if you already know CSS Grid.</li>
+<li><strong><a href="https://sass-lang.com/guide">SASS Basics</a>:</strong> SASS makes it simple to deal with CSS in complex websites. You’ll most likely find it useful in the future, but it’s not mandatory at this point.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=IFM9hbapeA0&list=PLillGF-Rfqba3xeEvDzIcUCxwMlGiewfV">Social Network Theme With SASS</a>:</strong> This video clearly explains how to design a realistic website from scratch using SASS.</li>
+</ol>
+<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><ol>
+<li><strong><a href="https://www.w3schools.com/html/default.asp">HTML</a></strong> and <strong><a href="https://www.w3schools.com/css/default.asp">CSS</a>:</strong> Don’t try to memorize everything. You can always look it up.</li>
+<li><strong><a href="https://www.netlify.com/docs/">Netlify</a></strong> and <strong><a href="https://devcenter.heroku.com/">Heroku</a>:</strong> Come back here when you want to deploy your app.</li>
+</ol>
+<p>At this point, I have to also mention some CSS frameworks such as <a href="https://getbootstrap.com/docs/4.3/getting-started/introduction/">Bootstrap</a> and <a href="https://materializecss.com/">Materialize</a>. Most people will advise you to learn one because these can really speed up your development process. IMHO this approach isn’t going to help you fully grasp the basics of web design. I think you should stay away from them until you’re comfortable with styling websites with your bare hands.</p>
+<h4 id="Chapter-2-JavaScript"><a href="#Chapter-2-JavaScript" class="headerlink" title="Chapter 2 - JavaScript"></a>Chapter 2 - JavaScript</h4><img src="/2019/05/12/fullstack-roadmap/javascript.jpg" class="">
+<span style="height:0.1rem">
+Being the only programming language that can possibly be used on the front-end side, JavaScript is an essential part of web development. As I mentioned earlier, you're going to be able to develop back-end code with it too, once you learn Node.js as well.
+
+<h5 id="Fundamentals-1"><a href="#Fundamentals-1" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
+<li><strong><a href="http://javascript.info/">The Modern JavaScript Tutorial</a>:</strong> This is by far the most important item in this list, maybe even in this whole roadmap. It’s going to take some time, but you should absolutely complete at least the first two parts. Since JavaScript is going to be your primary tool as a web developer, you won’t regret investing your time on learning it properly. The good news is, learning JavaScript is fun and you can build cool stuff with it as you learn.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">What the heck is the event loop anyway?</a>:</strong> Knowing how JavaScript works behind the scenes will give you a deeper understanding of the code you write.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=568g8hxJJp4">async &amp; await in JavaScript</a>:</strong> Promises and <code>async/await</code> might get confusing if you’re not familiar with asynchronous programming. Check this video out after reading the corresponding section in <a href="http://javascript.info/">The Modern JavaScript Tutorial</a> in order to see some real action.</li>
+</ol>
+<h5 id="Optionals-1"><a href="#Optionals-1" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
+<li><strong><a href="https://watchandcode.com/courses/60264/lectures/896960">Practical JavaScript</a>:</strong> I’m listing this one here because <a href="http://javascript.info/">The Modern JavaScript Tutorial</a> covers everything in it and then some. You can consider it as an optional preliminary step for this chapter.</li>
+<li><strong><a href="https://www.youtube.com/playlist?list=PLoYCgNOIyGABs-wDaaxChu82q_xQgUb4f">Modular Javascript</a>:</strong> This one is a bit outdated in terms of JavaScript language features, but it’s still a good tutorial for learning basic design patterns.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=r6I-Ahc0HB4&list=PL4cUxeGkcC9g6m_6Sld9Q4jzqdqHd2HiD">RegEx Tutorial 1</a></strong> and/or <strong><a href="https://www.youtube.com/watch?v=sa-TUpSx1JA">RegEx Tutorial 2</a>:</strong> While not strictly a JavaScript thing, knowing a little bit of RegEx can make a big difference in your efficiency as a developer.</li>
+</ol>
+<p>On a side note, it’s not necessary to learn <a href="https://jquery.com/">jQuery</a> unless you have to read and/or modify existing code that uses it. Vanilla JavaScript is equally powerful today except for a few use cases.</p>
+<h5 id="References-1"><a href="#References-1" class="headerlink" title="References"></a>References</h5><ol>
+<li><strong><a href="http://javascript.info/">The Modern JavaScript Tutorial</a>:</strong> Let’s face it, you won’t remember everything in this tutorial after reading it once.</li>
+<li><strong><a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a>:</strong> This is an excellent reference if you use Chrome developer tools. Besides JavaScript, you can find lots of useful information in it regarding HTML &amp; CSS too.</li>
+</ol>
+<h4 id="Chapter-3-Node-js"><a href="#Chapter-3-Node-js" class="headerlink" title="Chapter 3 - Node.js"></a>Chapter 3 - Node.js</h4><img src="/2019/05/12/fullstack-roadmap/nodejs.jpg" class="">
+<p>Node.js is an asynchronous event-driven JavaScript runtime built on Chrome’s V8 JavaScript engine, which is designed to build scalable web applications. You’ll have acquired the minimum skill set to build an entire dynamic web application after completing this chapter.</p>
+<h5 id="Fundamentals-2"><a href="#Fundamentals-2" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
+<li><strong><a href="https://www.sitepoint.com/beginners-guide-node-package-manager/">A Beginner’s Guide to NPM</a>:</strong> This is a quick guide on how to install and get started with Node.js and the Node Package Manager (NPM).</li>
+<li><strong><a href="https://www.youtube.com/watch?v=fBNz5xF-Kx4">Node.js Crash Course</a>:</strong> A good introductory video to learn Node.js basics.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=L72fhGm1tfE">Express Crash Course</a>:</strong> In this video, you’re going to learn about a very popular Node.js framework called Express, which is widely used for developing web applications. </li>
+<li><strong><a href="https://www.youtube.com/playlist?list=PL55RiY5tL51q4D-B63KBnygU6opNPFk_q">Building a RESTful API with Node.js</a>:</strong> An amazing YouTube playlist which walks you through the process of building a practical REST API using Node.js and Express. You’ll also learn how to interact with a NoSQL database called MongoDB along the way.</li>
+</ol>
+<h5 id="Optionals-2"><a href="#Optionals-2" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
+<li><strong><a href="https://www.youtube.com/watch?v=ztspvPYybIY">Node.js Presentation</a>:</strong> A presentation of Node.js by its original developer Ryan Dahl. Check it out if you want to learn what kinds of problems Node.js has been designed to solve and how it handles I/O compared to some other back-end frameworks.</li>
+</ol>
+<h5 id="References-2"><a href="#References-2" class="headerlink" title="References"></a>References</h5><ol>
+<li><strong><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP">HTTP Reference</a>:</strong> Lots of useful information including HTTP request methods, response codes, headers and so on.</li>
+</ol>
+<h4 id="Chapter-4-MySQL"><a href="#Chapter-4-MySQL" class="headerlink" title="Chapter 4 - MySQL"></a>Chapter 4 - MySQL</h4><img src="/2019/05/12/fullstack-roadmap/mysql.png" class="">
+<p>You should’ve learned a little bit about MongoDB in the last chapter if you completed all the fundamentals. Now it’s time to learn some SQL. I think MySQL is a good place to start learning about relational databases.</p>
+<p>One thing I would recommend you is, don’t just go with the flow and automatically opt for NoSQL just because everyone is using MongoDB with Node.js these days. This decision requires rational thinking and comparing the pros and cons of each option. There’s a good chance that a relational database is going to fit your needs better for your first real application as a beginner.</p>
+<h5 id="Fundamentals-3"><a href="#Fundamentals-3" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
+<li><strong><a href="https://www.youtube.com/watch?v=9ylj9NR0Lcg">MySQL Crash Course</a>:</strong> A very good intro to SQL.</li>
+<li><strong><a href="https://youtu.be/EN6Dx22cPRI">Using MySQL with Node.js</a>:</strong> Learn how to make use of SQL queries as part of a REST API built with Node.</li>
+</ol>
+<h5 id="References-3"><a href="#References-3" class="headerlink" title="References"></a>References</h5><ol>
+<li><strong><a href="https://www.w3schools.com/sql/sql_quickref.asp">SQL Quick Reference</a></strong> and <strong><a href="https://www.w3schools.com/sql/sql_ref_keywords.asp">SQL Keywords Reference</a>:</strong> Because ain’t nobody got time for memorizing all that.</li>
+</ol>
+<p>Lastly, Object Relational Mapping (ORM), e.g. <a href="http://docs.sequelizejs.com/">Sequelize</a> can be tempting to use at first but I say stay away from them before fully grasping SQL. Have a look at <a href="https://blog.logrocket.com/why-you-should-avoid-orms-with-examples-in-node-js-e0baab73fa5">this</a> if you want to know why.</p>
+<h4 id="Chapter-5-React"><a href="#Chapter-5-React" class="headerlink" title="Chapter 5 - React"></a>Chapter 5 - React</h4><img src="/2019/05/12/fullstack-roadmap/react.png" class="">
+<span style="height:0.1rem">
+So far you've been building your front-end using plain JavaScript. And that's perfectly fine if you want to become a back-end developer. In that case, please proceed to the next chapter in an orderly fashion.
+
+<p>If you’re still here, we’ve got a little bit of additional work to do. Almost all front-end or full-stack development job openings these days require some knowledge about a front-end framework, particularly either <a href="https://reactjs.org/">React</a>, <a href="https://angular.io/">Angular</a> or <a href="https://vuejs.org/">Vue</a>.</p>
+<p>At the end of the day, choosing between them really boils down to personal preference unless you want to apply to a specific job. I opted for React after some research, and therefore that’s what I recommend you to learn as well. You might also want to check out some <a href="https://gist.github.com/tkrotoff/b1caa4c3a185629299ec234d2314e190">statistics</a> if you’re feeling skeptical about it.</p>
+<h5 id="Fundamentals-4"><a href="#Fundamentals-4" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
+<li><strong><a href="https://reactjs.org/tutorial/tutorial.html">Intro to React</a>:</strong> Learn React by building your own tic-tac-toe game!</li>
+<li><strong><a href="https://facebook.github.io/create-react-app/docs/getting-started">Create React App</a>:</strong> Learn how to quickly initialize a React project in a Node.js environment.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=sBws8MSXN7A">React Crash Course</a>:</strong> Come on now, finish off all the React on your plate.</li>
+</ol>
+<h5 id="Optionals-3"><a href="#Optionals-3" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
+<li><strong><a href="https://www.youtube.com/playlist?list=PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG">React &amp; Redux Tutorial</a>:</strong> This is optional because it might feel a bit repetitive after completing the fundamentals. You still might want to watch this series if you want to learn about <a href="https://redux.js.org/">Redux</a>.</li>
+<li><strong><a href="https://www.youtube.com/watch?v=-MlNBTSg_Ww">React Hooks</a>:</strong> React Hooks is a relatively new and cool feature, although I don’t think it’s something you absolutely have to learn at this point.</li>
+<li><strong><a href="https://facebook.github.io/create-react-app/docs/adding-a-sass-stylesheet">Adding SASS to React</a>:</strong> This will only make sense if you haven’t skipped SASS in the first chapter.</li>
+</ol>
+<h4 id="Chapter-6-Docker"><a href="#Chapter-6-Docker" class="headerlink" title="Chapter 6 - Docker"></a>Chapter 6 - Docker</h4><img src="/2019/05/12/fullstack-roadmap/docker.jpg" class="">
+<span style="height:0.1rem">
+Congratulations! You're now officially a full-stack developer. Go ahead and pat yourself on the back. You must feel like how Neo felt just after he learned Kung Fu. But you still have to complete this chapter if you don't want to get your ass kicked by Morpheus.
+<img src="/2019/05/12/fullstack-roadmap/morpheus.gif" class="">
+
+<p>To some of you, Docker might not appear as an absolutely necessary thing to learn. While that’s <em>not incorrect,</em> it’s an investment you’re not going to regret. </p>
+<h5 id="Fundamentals-5"><a href="#Fundamentals-5" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
+<li><strong><a href="https://docs.docker.com/engine/docker-overview/">Docker Overview</a>:</strong> Just so you know what you’re getting yourself into.</li>
+<li><strong><a href="https://docs.docker.com/get-started/">Get Started Part 1</a></strong> and <strong><a href="https://docs.docker.com/get-started/part2/">Part 2</a>:</strong> Learn how to set up your Docker environment, build an image and run it as a container.</li>
+<li><strong><a href="https://takacsmark.com/dockerfile-tutorial-by-example-dockerfile-best-practices-2018/">Dockerfile Tutorial by Example</a>:</strong> Learn why and how to create a Dockerfile.</li>
+<li><strong><a href="https://docs.docker.com/compose/gettingstarted/">Getting Started with Docker Compose</a>:</strong> Because single-container apps are for losers.</li>
+<li><strong><a href="https://takacsmark.com/docker-compose-tutorial-beginners-by-example-basics/">Docker Compose Tutorial</a>:</strong> Keep calm and Docker Compose.</li>
+</ol>
+<h5 id="Optionals-4"><a href="#Optionals-4" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
+<li><strong><a href="https://docs.docker.com/storage/">Data Management in Docker</a>:</strong> Learn how to persist data in host machine even after the container stops.</li>
+<li><strong><a href="https://docs.docker.com/compose/environment-variables/">Environment Variables in Docker Compose</a>:</strong> Learn how to deal with environment variables in Docker Compose.</li>
+<li><strong><a href="https://docs.docker.com/compose/networking/">Networking in Docker Compose</a>:</strong> Learn how to specify custom networks for your services.</li>
+</ol>
+<h5 id="References-4"><a href="#References-4" class="headerlink" title="References"></a>References</h5><ol>
+<li><strong><a href="https://docs.docker.com/engine/reference/builder/">Dockerfile Reference</a>:</strong> In case you forget how to create a Dockerfile.</li>
+<li><strong><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">Dockerfile Best Practices</a>:</strong> In case you forget how you <em>should</em> create a Dockerfile.</li>
+<li><strong><a href="https://docs.docker.com/compose/compose-file/">Docker Compose File Reference (v3)</a>:</strong> In case you forget how to create a Docker Compose file.</li>
+<li><strong><a href="https://docs.docker.com/compose/reference/">Docker Compose Command Line Reference</a>:</strong> Usage information for the <code>docker-compose</code> subcommands.</li>
+</ol>
+<p>That’s it, I hope you enjoyed following this roadmap. Don’t forget to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>nodejs</tag>
+        <tag>javascript</tag>
+        <tag>mysql</tag>
+        <tag>react</tag>
+        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -763,162 +959,11 @@ Test Error = 17.2624144407 | Polynomial Regression
 Test Error = 3.85988782246 | Regularized Polynomial Regression (at lambda = 3)</code></pre>
 <p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>Machine Learning</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>numpy</tag>
         <tag>matplotlib</tag>
         <tag>scipy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>A Beginner&#39;s Roadmap to Becoming a Full-Stack Web Developer</title>
-    <url>/2019/05/12/fullstack-roadmap/</url>
-    <content><![CDATA[<p>I’ve been learning about web development for a while pretty much from scratch. I’ve gone over numerous guides, tutorials and documentation from various resources, among which I took note of the important and beneficial ones that I believe a beginner will benefit from the most. In this article, I’m going to share them with you as a roadmap that you can follow if you want to become a full-stack web developer in a fun and efficient way.</p>
-<a id="more"></a>
-
-<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>Let’s make one thing clear. There are <em>lots</em> of programming languages, tools and frameworks out there in the world of web development. In most cases, there’s not a single best way to solve a problem. However, as a beginner, you shouldn’t attempt to learn every new thing for the sole sake of learning, or just because some people are hyped about it. On the contrary, you should aim to acquire the bare minimum skill set so that you can start building stuff as soon as possible.</p>
-<p>For instance, you’re going to have to learn JavaScript in order to write browser (front-end) code no matter what. And guess what, there’s something called <a href="https://nodejs.org/en/">Node.js</a> which lets you write server-side code using JavaScript as well. Now I’m not arguing here whether Node.js is the best option for developing your back-end or not. However, it’s certainly convenient to be able to build an entire web application by having to learn just one programming language. A deal too good to pass up, don’t you think?</p>
-<p>You can (and should) always learn about other technology trends once you master the basics and have a solid understanding of how the web works.</p>
-<h3 id="Roadmap"><a href="#Roadmap" class="headerlink" title="Roadmap"></a>Roadmap</h3><p>I’m going to divide the steps in this roadmap into several chapters which are sorted below from basic to advanced:</p>
-<ol>
-<li><a href="#Chapter-1-HTML-amp-CSS">HTML &amp; CSS</a></li>
-<li><a href="#Chapter-2-JavaScript">JavaScript</a></li>
-<li><a href="#Chapter-3-Node-js">Node.js</a></li>
-<li><a href="#Chapter-4-MySQL">MySQL</a></li>
-<li><a href="#Chapter-5-React">React</a></li>
-<li><a href="#Chapter-6-Docker">Docker</a></li>
-</ol>
-<p>I’m also going to label each item in a category as <em>fundamental</em>, <em>optional</em> or <em>reference</em>. I strongly advise against advancing to a category before completing all the <em>fundamental</em> steps in a previous category. You can postpone <em>optional</em> steps if you want, or skip them altogether if you’re feeling too lazy. <em>References</em> are not meant to be gone through from start to end. You’ll find them useful in the future when you forget some detail and want to quickly look it up, or when you need further information about a specific topic in the corresponding category.</p>
-<p>By the way, I didn’t mention this above but if you don’t know how to use <a href="https://git-scm.com/">Git</a>, stop whatever you’re doing and learn it ASAP. Don’t worry, it’s not going to take long. Actually <a href="https://www.youtube.com/watch?v=SWYqp7iY_Tc">this 30 min YouTube video</a> is more than enough to get you started. Just make sure that you know how to use the following 7 simple commands for starters:</p>
-<ul>
-<li><a href="https://git-scm.com/docs/git-init"><code>git init</code></a></li>
-<li><a href="https://git-scm.com/docs/git-status"><code>git status</code></a></li>
-<li><a href="https://git-scm.com/docs/git-add"><code>git add</code></a></li>
-<li><a href="https://git-scm.com/docs/git-commit"><code>git commit</code></a></li>
-<li><a href="https://git-scm.com/docs/git-clone"><code>git clone</code></a></li>
-<li><a href="https://git-scm.com/docs/git-pull"><code>git pull</code></a></li>
-<li><a href="https://git-scm.com/docs/git-push"><code>git push</code></a></li>
-</ul>
-<p>Lastly I just want to say that if you haven’t used <a href="https://code.visualstudio.com/">Visual Studio Code</a> yet, you should definitely give it a try. I think it’s an amazing code editor, especially for JavaScript.</p>
-<p>Alright let’s begin…</p>
-<h4 id="Chapter-1-HTML-amp-CSS"><a href="#Chapter-1-HTML-amp-CSS" class="headerlink" title="Chapter 1 - HTML &amp; CSS"></a>Chapter 1 - HTML &amp; CSS</h4><img src="/2019/05/12/fullstack-roadmap/html-css.png" class="">
-<span style="height:0.1rem">
-Learning HTML & CSS is definitely where you want to start as a beginner. Once you have a solid knowledge, these two will let you build structured, elegant and responsive websites with static content such as a blog or a portfolio page. You'll also use this knowledge in the following chapters where you'll deal with browser-side JavaScript code or a front-end framework such as React.
-
-<h5 id="Fundamentals"><a href="#Fundamentals" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
-<li><strong><a href="https://www.youtube.com/watch?v=UB1O30fR-EE">HTML Crash Course</a>:</strong> HTML for absolute beginners.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=yfoY53QXEnI">CSS Crash Course</a>:</strong> CSS for absolute beginners.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=fgOO9YUFlGI&list=PLoYCgNOIyGABDU532eesybur5HPBVfC1G&index=9">Responsive Design Tutorial</a>:</strong> Responsiveness isn’t just a nice feature anymore in modern web design, it’s the default.</li>
-<li><strong><a href="https://scrimba.com/g/gR8PTE">CSS Grid Tutorial</a>:</strong> CSS Grid lets you easily arrange HTML elements in two dimensions on a web page. </li>
-</ol>
-<h5 id="Optionals"><a href="#Optionals" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
-<li><strong><a href="https://www.youtube.com/playlist?list=PLC3y8-rFHvwg6rjbiMadCILrjh7QkvzoQ">CSS Flexbox Tutorial</a>:</strong> This is a useful yet optional item because it doesn’t really provide any extra functionality if you already know CSS Grid.</li>
-<li><strong><a href="https://sass-lang.com/guide">SASS Basics</a>:</strong> SASS makes it simple to deal with CSS in complex websites. You’ll most likely find it useful in the future, but it’s not mandatory at this point.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=IFM9hbapeA0&list=PLillGF-Rfqba3xeEvDzIcUCxwMlGiewfV">Social Network Theme With SASS</a>:</strong> This video clearly explains how to design a realistic website from scratch using SASS.</li>
-</ol>
-<h5 id="References"><a href="#References" class="headerlink" title="References"></a>References</h5><ol>
-<li><strong><a href="https://www.w3schools.com/html/default.asp">HTML</a></strong> and <strong><a href="https://www.w3schools.com/css/default.asp">CSS</a>:</strong> Don’t try to memorize everything. You can always look it up.</li>
-<li><strong><a href="https://www.netlify.com/docs/">Netlify</a></strong> and <strong><a href="https://devcenter.heroku.com/">Heroku</a>:</strong> Come back here when you want to deploy your app.</li>
-</ol>
-<p>At this point, I have to also mention some CSS frameworks such as <a href="https://getbootstrap.com/docs/4.3/getting-started/introduction/">Bootstrap</a> and <a href="https://materializecss.com/">Materialize</a>. Most people will advise you to learn one because these can really speed up your development process. IMHO this approach isn’t going to help you fully grasp the basics of web design. I think you should stay away from them until you’re comfortable with styling websites with your bare hands.</p>
-<h4 id="Chapter-2-JavaScript"><a href="#Chapter-2-JavaScript" class="headerlink" title="Chapter 2 - JavaScript"></a>Chapter 2 - JavaScript</h4><img src="/2019/05/12/fullstack-roadmap/javascript.jpg" class="">
-<span style="height:0.1rem">
-Being the only programming language that can possibly be used on the front-end side, JavaScript is an essential part of web development. As I mentioned earlier, you're going to be able to develop back-end code with it too, once you learn Node.js as well.
-
-<h5 id="Fundamentals-1"><a href="#Fundamentals-1" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
-<li><strong><a href="http://javascript.info/">The Modern JavaScript Tutorial</a>:</strong> This is by far the most important item in this list, maybe even in this whole roadmap. It’s going to take some time, but you should absolutely complete at least the first two parts. Since JavaScript is going to be your primary tool as a web developer, you won’t regret investing your time on learning it properly. The good news is, learning JavaScript is fun and you can build cool stuff with it as you learn.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">What the heck is the event loop anyway?</a>:</strong> Knowing how JavaScript works behind the scenes will give you a deeper understanding of the code you write.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=568g8hxJJp4">async &amp; await in JavaScript</a>:</strong> Promises and <code>async/await</code> might get confusing if you’re not familiar with asynchronous programming. Check this video out after reading the corresponding section in <a href="http://javascript.info/">The Modern JavaScript Tutorial</a> in order to see some real action.</li>
-</ol>
-<h5 id="Optionals-1"><a href="#Optionals-1" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
-<li><strong><a href="https://watchandcode.com/courses/60264/lectures/896960">Practical JavaScript</a>:</strong> I’m listing this one here because <a href="http://javascript.info/">The Modern JavaScript Tutorial</a> covers everything in it and then some. You can consider it as an optional preliminary step for this chapter.</li>
-<li><strong><a href="https://www.youtube.com/playlist?list=PLoYCgNOIyGABs-wDaaxChu82q_xQgUb4f">Modular Javascript</a>:</strong> This one is a bit outdated in terms of JavaScript language features, but it’s still a good tutorial for learning basic design patterns.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=r6I-Ahc0HB4&list=PL4cUxeGkcC9g6m_6Sld9Q4jzqdqHd2HiD">RegEx Tutorial 1</a></strong> and/or <strong><a href="https://www.youtube.com/watch?v=sa-TUpSx1JA">RegEx Tutorial 2</a>:</strong> While not strictly a JavaScript thing, knowing a little bit of RegEx can make a big difference in your efficiency as a developer.</li>
-</ol>
-<p>On a side note, it’s not necessary to learn <a href="https://jquery.com/">jQuery</a> unless you have to read and/or modify existing code that uses it. Vanilla JavaScript is equally powerful today except for a few use cases.</p>
-<h5 id="References-1"><a href="#References-1" class="headerlink" title="References"></a>References</h5><ol>
-<li><strong><a href="http://javascript.info/">The Modern JavaScript Tutorial</a>:</strong> Let’s face it, you won’t remember everything in this tutorial after reading it once.</li>
-<li><strong><a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a>:</strong> This is an excellent reference if you use Chrome developer tools. Besides JavaScript, you can find lots of useful information in it regarding HTML &amp; CSS too.</li>
-</ol>
-<h4 id="Chapter-3-Node-js"><a href="#Chapter-3-Node-js" class="headerlink" title="Chapter 3 - Node.js"></a>Chapter 3 - Node.js</h4><img src="/2019/05/12/fullstack-roadmap/nodejs.jpg" class="">
-<p>Node.js is an asynchronous event-driven JavaScript runtime built on Chrome’s V8 JavaScript engine, which is designed to build scalable web applications. You’ll have acquired the minimum skill set to build an entire dynamic web application after completing this chapter.</p>
-<h5 id="Fundamentals-2"><a href="#Fundamentals-2" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
-<li><strong><a href="https://www.sitepoint.com/beginners-guide-node-package-manager/">A Beginner’s Guide to NPM</a>:</strong> This is a quick guide on how to install and get started with Node.js and the Node Package Manager (NPM).</li>
-<li><strong><a href="https://www.youtube.com/watch?v=fBNz5xF-Kx4">Node.js Crash Course</a>:</strong> A good introductory video to learn Node.js basics.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=L72fhGm1tfE">Express Crash Course</a>:</strong> In this video, you’re going to learn about a very popular Node.js framework called Express, which is widely used for developing web applications. </li>
-<li><strong><a href="https://www.youtube.com/playlist?list=PL55RiY5tL51q4D-B63KBnygU6opNPFk_q">Building a RESTful API with Node.js</a>:</strong> An amazing YouTube playlist which walks you through the process of building a practical REST API using Node.js and Express. You’ll also learn how to interact with a NoSQL database called MongoDB along the way.</li>
-</ol>
-<h5 id="Optionals-2"><a href="#Optionals-2" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
-<li><strong><a href="https://www.youtube.com/watch?v=ztspvPYybIY">Node.js Presentation</a>:</strong> A presentation of Node.js by its original developer Ryan Dahl. Check it out if you want to learn what kinds of problems Node.js has been designed to solve and how it handles I/O compared to some other back-end frameworks.</li>
-</ol>
-<h5 id="References-2"><a href="#References-2" class="headerlink" title="References"></a>References</h5><ol>
-<li><strong><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP">HTTP Reference</a>:</strong> Lots of useful information including HTTP request methods, response codes, headers and so on.</li>
-</ol>
-<h4 id="Chapter-4-MySQL"><a href="#Chapter-4-MySQL" class="headerlink" title="Chapter 4 - MySQL"></a>Chapter 4 - MySQL</h4><img src="/2019/05/12/fullstack-roadmap/mysql.png" class="">
-<p>You should’ve learned a little bit about MongoDB in the last chapter if you completed all the fundamentals. Now it’s time to learn some SQL. I think MySQL is a good place to start learning about relational databases.</p>
-<p>One thing I would recommend you is, don’t just go with the flow and automatically opt for NoSQL just because everyone is using MongoDB with Node.js these days. This decision requires rational thinking and comparing the pros and cons of each option. There’s a good chance that a relational database is going to fit your needs better for your first real application as a beginner.</p>
-<h5 id="Fundamentals-3"><a href="#Fundamentals-3" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
-<li><strong><a href="https://www.youtube.com/watch?v=9ylj9NR0Lcg">MySQL Crash Course</a>:</strong> A very good intro to SQL.</li>
-<li><strong><a href="https://youtu.be/EN6Dx22cPRI">Using MySQL with Node.js</a>:</strong> Learn how to make use of SQL queries as part of a REST API built with Node.</li>
-</ol>
-<h5 id="References-3"><a href="#References-3" class="headerlink" title="References"></a>References</h5><ol>
-<li><strong><a href="https://www.w3schools.com/sql/sql_quickref.asp">SQL Quick Reference</a></strong> and <strong><a href="https://www.w3schools.com/sql/sql_ref_keywords.asp">SQL Keywords Reference</a>:</strong> Because ain’t nobody got time for memorizing all that.</li>
-</ol>
-<p>Lastly, Object Relational Mapping (ORM), e.g. <a href="http://docs.sequelizejs.com/">Sequelize</a> can be tempting to use at first but I say stay away from them before fully grasping SQL. Have a look at <a href="https://blog.logrocket.com/why-you-should-avoid-orms-with-examples-in-node-js-e0baab73fa5">this</a> if you want to know why.</p>
-<h4 id="Chapter-5-React"><a href="#Chapter-5-React" class="headerlink" title="Chapter 5 - React"></a>Chapter 5 - React</h4><img src="/2019/05/12/fullstack-roadmap/react.png" class="">
-<span style="height:0.1rem">
-So far you've been building your front-end using plain JavaScript. And that's perfectly fine if you want to become a back-end developer. In that case, please proceed to the next chapter in an orderly fashion.
-
-<p>If you’re still here, we’ve got a little bit of additional work to do. Almost all front-end or full-stack development job openings these days require some knowledge about a front-end framework, particularly either <a href="https://reactjs.org/">React</a>, <a href="https://angular.io/">Angular</a> or <a href="https://vuejs.org/">Vue</a>.</p>
-<p>At the end of the day, choosing between them really boils down to personal preference unless you want to apply to a specific job. I opted for React after some research, and therefore that’s what I recommend you to learn as well. You might also want to check out some <a href="https://gist.github.com/tkrotoff/b1caa4c3a185629299ec234d2314e190">statistics</a> if you’re feeling skeptical about it.</p>
-<h5 id="Fundamentals-4"><a href="#Fundamentals-4" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
-<li><strong><a href="https://reactjs.org/tutorial/tutorial.html">Intro to React</a>:</strong> Learn React by building your own tic-tac-toe game!</li>
-<li><strong><a href="https://facebook.github.io/create-react-app/docs/getting-started">Create React App</a>:</strong> Learn how to quickly initialize a React project in a Node.js environment.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=sBws8MSXN7A">React Crash Course</a>:</strong> Come on now, finish off all the React on your plate.</li>
-</ol>
-<h5 id="Optionals-3"><a href="#Optionals-3" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
-<li><strong><a href="https://www.youtube.com/playlist?list=PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG">React &amp; Redux Tutorial</a>:</strong> This is optional because it might feel a bit repetitive after completing the fundamentals. You still might want to watch this series if you want to learn about <a href="https://redux.js.org/">Redux</a>.</li>
-<li><strong><a href="https://www.youtube.com/watch?v=-MlNBTSg_Ww">React Hooks</a>:</strong> React Hooks is a relatively new and cool feature, although I don’t think it’s something you absolutely have to learn at this point.</li>
-<li><strong><a href="https://facebook.github.io/create-react-app/docs/adding-a-sass-stylesheet">Adding SASS to React</a>:</strong> This will only make sense if you haven’t skipped SASS in the first chapter.</li>
-</ol>
-<h4 id="Chapter-6-Docker"><a href="#Chapter-6-Docker" class="headerlink" title="Chapter 6 - Docker"></a>Chapter 6 - Docker</h4><img src="/2019/05/12/fullstack-roadmap/docker.jpg" class="">
-<span style="height:0.1rem">
-Congratulations! You're now officially a full-stack developer. Go ahead and pat yourself on the back. You must feel like how Neo felt just after he learned Kung Fu. But you still have to complete this chapter if you don't want to get your ass kicked by Morpheus.
-<img src="/2019/05/12/fullstack-roadmap/morpheus.gif" class="">
-
-<p>To some of you, Docker might not appear as an absolutely necessary thing to learn. While that’s <em>not incorrect,</em> it’s an investment you’re not going to regret. </p>
-<h5 id="Fundamentals-5"><a href="#Fundamentals-5" class="headerlink" title="Fundamentals"></a>Fundamentals</h5><ol>
-<li><strong><a href="https://docs.docker.com/engine/docker-overview/">Docker Overview</a>:</strong> Just so you know what you’re getting yourself into.</li>
-<li><strong><a href="https://docs.docker.com/get-started/">Get Started Part 1</a></strong> and <strong><a href="https://docs.docker.com/get-started/part2/">Part 2</a>:</strong> Learn how to set up your Docker environment, build an image and run it as a container.</li>
-<li><strong><a href="https://takacsmark.com/dockerfile-tutorial-by-example-dockerfile-best-practices-2018/">Dockerfile Tutorial by Example</a>:</strong> Learn why and how to create a Dockerfile.</li>
-<li><strong><a href="https://docs.docker.com/compose/gettingstarted/">Getting Started with Docker Compose</a>:</strong> Because single-container apps are for losers.</li>
-<li><strong><a href="https://takacsmark.com/docker-compose-tutorial-beginners-by-example-basics/">Docker Compose Tutorial</a>:</strong> Keep calm and Docker Compose.</li>
-</ol>
-<h5 id="Optionals-4"><a href="#Optionals-4" class="headerlink" title="Optionals"></a>Optionals</h5><ol>
-<li><strong><a href="https://docs.docker.com/storage/">Data Management in Docker</a>:</strong> Learn how to persist data in host machine even after the container stops.</li>
-<li><strong><a href="https://docs.docker.com/compose/environment-variables/">Environment Variables in Docker Compose</a>:</strong> Learn how to deal with environment variables in Docker Compose.</li>
-<li><strong><a href="https://docs.docker.com/compose/networking/">Networking in Docker Compose</a>:</strong> Learn how to specify custom networks for your services.</li>
-</ol>
-<h5 id="References-4"><a href="#References-4" class="headerlink" title="References"></a>References</h5><ol>
-<li><strong><a href="https://docs.docker.com/engine/reference/builder/">Dockerfile Reference</a>:</strong> In case you forget how to create a Dockerfile.</li>
-<li><strong><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">Dockerfile Best Practices</a>:</strong> In case you forget how you <em>should</em> create a Dockerfile.</li>
-<li><strong><a href="https://docs.docker.com/compose/compose-file/">Docker Compose File Reference (v3)</a>:</strong> In case you forget how to create a Docker Compose file.</li>
-<li><strong><a href="https://docs.docker.com/compose/reference/">Docker Compose Command Line Reference</a>:</strong> Usage information for the <code>docker-compose</code> subcommands.</li>
-</ol>
-<p>That’s it, I hope you enjoyed following this roadmap. Don’t forget to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-]]></content>
-      <categories>
-        <category>Web Development</category>
-      </categories>
-      <tags>
-        <tag>nodejs</tag>
-        <tag>javascript</tag>
-        <tag>mysql</tag>
-        <tag>react</tag>
-        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -1047,9 +1092,6 @@ Congratulations! You're now officially a full-stack developer. Go ahead and pat 
 <p>This simple technique alone will greatly speed-up the performance. For instance when I perform a search involving 163 posts in my machine, the serial version of the program takes 150 seconds to execute, corresponding to approximately 1 post per second. On the other hand, the parallel version only takes 15 seconds to execute (~10 posts per second) which is 10x faster.</p>
 <p>You can check out the complete <a href="https://github.com/utkuufuk/reddit-scraper">source code on Github</a>. Also, make sure to <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
-      <categories>
-        <category>Web Scraping</category>
-      </categories>
       <tags>
         <tag>python</tag>
         <tag>beautifulsoup</tag>

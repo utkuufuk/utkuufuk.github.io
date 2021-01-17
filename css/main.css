@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #bdb808;
+  background: #fff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2600,6 +2600,11 @@ hr {
 }
 .sub-menu .menu-item {
   display: inline-block;
+}
+@media only screen and (min-width: 1200px) {
+  .container .header-inner {
+    width: 900px;
+  }
 }
 code {
   font-size: 0.875em;
