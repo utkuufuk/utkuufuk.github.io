@@ -397,7 +397,7 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 <h3 id="Window-Organizer-Spectacle"><a href="#Window-Organizer-Spectacle" class="headerlink" title="Window Organizer: Spectacle"></a>Window Organizer: Spectacle</h3><p><a href="https://www.spectacleapp.com/">Spectacle</a> is a free app that lets you organize and resize your windows using keyboard shortcuts:</p>
 <img src="/2021/01/17/macos-keyboard-shortcuts/spectacle-shortcuts.png" class="">
 
-<p>It’s no longer actively maintained, but I’ve been using it for a couple of years and I had zero issues. It’s quite simple, and the default shortcuts are pretty good.</p>
+<p>It’s no longer actively maintained, but I’ve been using it for a couple of years and I’ve had zero issues so far. It’s quite simple, and the default shortcuts are pretty good.</p>
 <h3 id="Key-Repeat-and-Delay"><a href="#Key-Repeat-and-Delay" class="headerlink" title="Key Repeat and Delay"></a>Key Repeat and Delay</h3><p>I use Vim for text editing, which means I don’t use my mouse to navigate in the text editor. That’s why I frequently need to press and hold some keys for scrolling up/down/left/right in the editor.</p>
 <p>By default, key repeat is too slow and the delay until repeat is too long to do that fluidly. I adjust the settings like this, but you should experiment with each option on your favorite text editor and see what works for you the best:</p>
 <p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong></p>
@@ -425,64 +425,6 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 ]]></content>
       <tags>
         <tag>macOS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>One-vs-All Classification Using Logistic Regression</title>
-    <url>/2018/06/03/one-vs-all-classification/</url>
-    <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
-
-<a id="more"></a>
-
-<h4 id="One-vs-All-Classification"><a href="#One-vs-All-Classification" class="headerlink" title="One-vs-All Classification"></a>One-vs-All Classification</h4><p>First of all, let me briefly explain the idea behind one-vs-all classification. Say we have a classification problem and there are $N$ distinct classes. In this case, we’ll have to train a multi-class classifier instead of a binary one.</p>
-<p>One-vs-all classification is a method which involves training $N$ distinct binary classifiers, each designed for recognizing a particular class. Then those $N$ classifiers are collectively used for multi-class classification as demonstrated below:</p>
-<img src="/2018/06/03/one-vs-all-classification/one-vs-all.png" class="">
-<br>
-
-<p>We already know from the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a> how to train a binary classifier using logistic regression. So the only thing we have to do now really is to train $N$ binary classifiers instead of just one. And that’s pretty much it.</p>
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’re going to use this one-vs-all approach to solve a multi-class classification problem from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> thought by Andrew Ng. The goal in this problem is to identify digits from 0 to 9 by looking at 20x20 pixel drawings.</p>
-<p>Here the number of classes $N$ is equal to 10, which is the number of different digits. We’re going to treat each pixel as an individual feature, which adds up to 400 features per image. Here are some examples from our training sample of 5000 images:</p>
-<img src="/2018/06/03/one-vs-all-classification/examples-from-dataset.png" class="">
-<br>
-
-<p>The training data is stored in a file called <a href="/2018/06/03/one-vs-all-classification/digits.mat" title="digits.mat">digits.mat</a>. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a Matlab assignment. No big deal, since it’s pretty easy to import a <strong><code>.mat</code></strong> file in Python using the <strong><code>loadmat</code></strong> function from the <strong><code>scipy.io</code></strong> module. Here’s how to do it:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = sio.loadmat(<span class="string">&quot;digits.mat&quot;</span>)</span><br><span class="line">x = data[<span class="string">&#x27;X&#x27;</span>] <span class="comment"># the feature matrix is labeled with &#x27;X&#x27; inside the file</span></span><br><span class="line">y = np.squeeze(data[<span class="string">&#x27;y&#x27;</span>]) <span class="comment"># the target variable vector is labeled with &#x27;y&#x27; inside the file</span></span><br><span class="line">np.place(y, y == <span class="number">10</span>, <span class="number">0</span>) <span class="comment"># replace the label 10 with 0</span></span><br><span class="line">numExamples = x.shape[<span class="number">0</span>] <span class="comment"># 5000 examples</span></span><br><span class="line">numFeatures = x.shape[<span class="number">1</span>] <span class="comment"># 400 features</span></span><br><span class="line">numLabels = <span class="number">10</span> <span class="comment"># digits from 0 to 9</span></span><br></pre></td></tr></table></figure>
-<p>Let me point out two things here:</p>
-<ol>
-<li><p>We’re using the <strong><code>squeeze</code></strong> function on the <strong><code>y</code></strong> array in order to explicitly make it one dimensional. We’re doing this because <strong><code>y</code></strong> is stored as a 2D matrix in the <strong><code>.mat</code></strong> file although it’s actually a 1D array.</p>
-</li>
-<li><p>We’re replacing the label 10 with 0. This label actually stands for the digit 0 but it was converted to 10 because of array indexing issues in Matlab.</p>
-</li>
-</ol>
-<img src="/2018/06/03/one-vs-all-classification/matlab-index.png" class="">
-<br>
-
-<h4 id="Logistic-Regression-Recap"><a href="#Logistic-Regression-Recap" class="headerlink" title="Logistic Regression Recap"></a>Logistic Regression Recap</h4><p>Remember the <strong><code>sigmoid</code></strong>, <strong><code>cost</code></strong> and <strong><code>cost_gradient</code></strong> functions that we’ve come up with while training a logistic regression model in the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a>? Here we can reuse these functions exactly as they are, because we’re going to train nothing but logistic regression models also in this problem.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes error in division</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
-<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we have to do before starting to train our multi-class classifier is to add an initial column of ones to our feature matrix to take into account the intercept term:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
-<p>Now we’re ready to train our classifiers. Let’s create an array to store the model parameters $\theta$ for each classifier. Note that we need 10 sets of model parameters, each consisting of 401 parameters including the intercept term:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classifiers = np.zeros(shape=(numLabels, numFeatures + <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>Then we’re going to train 10 binary classifiers targeted for each digit inside a <strong><code>for</code></strong> loop:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, numLabels):</span><br><span class="line">    label = (y == c).astype(<span class="built_in">int</span>)</span><br><span class="line">    initial_theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    classifiers[c, :] = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, label), disp=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<p>Here we create a <strong><code>label</code></strong> vector in each iteration. We set its values to 1 where the corresponding values in <strong><code>y</code></strong> are equal to the current digit, and we set the rest of its values to 0. Hence the <strong><code>label</code></strong> vector acts as the target variable vector <strong><code>y</code></strong> of the binary classifier that we train for the current digit.</p>
-<h4 id="Predictions"><a href="#Predictions" class="headerlink" title="Predictions"></a>Predictions</h4><p>We can evaluate the probability estimations of our optimized model for each class as follows:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classProbabilities = sigmoid(X @ classifiers.transpose())</span><br></pre></td></tr></table></figure>
-<p>This will give us a matrix of 5000 rows and 10 columns, where the columns correspond to the estimated class (digit) probabilities for all 5000 images.</p>
-<p>However, we may need the final predictions of the optimized classifier instead of numerical probability estimations. We can find out our model’s predictions by simply selecting the label with the highest probability in each row :</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = classProbabilities.argmax(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>Now we have our model’s predictions as a vector with 5000 elements labeled from 0 to 9.</p>
-<h4 id="Accuracy"><a href="#Accuracy" class="headerlink" title="Accuracy"></a>Accuracy</h4><p>Finally, we can compute our model’s training accuracy by computing the percentage of successful predictions:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;Training accuracy:&quot;</span>, <span class="built_in">str</span>(<span class="number">100</span> * np.mean(predictions == y)) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>Training accuracy: 94.54%</code></pre>
-<p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
-<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>python</tag>
-        <tag>numpy</tag>
-        <tag>matplotlib</tag>
-        <tag>scipy</tag>
       </tags>
   </entry>
   <entry>
@@ -576,6 +518,64 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
         <tag>trello</tag>
         <tag>firebase</tag>
         <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>One-vs-All Classification Using Logistic Regression</title>
+    <url>/2018/06/03/one-vs-all-classification/</url>
+    <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
+
+<a id="more"></a>
+
+<h4 id="One-vs-All-Classification"><a href="#One-vs-All-Classification" class="headerlink" title="One-vs-All Classification"></a>One-vs-All Classification</h4><p>First of all, let me briefly explain the idea behind one-vs-all classification. Say we have a classification problem and there are $N$ distinct classes. In this case, we’ll have to train a multi-class classifier instead of a binary one.</p>
+<p>One-vs-all classification is a method which involves training $N$ distinct binary classifiers, each designed for recognizing a particular class. Then those $N$ classifiers are collectively used for multi-class classification as demonstrated below:</p>
+<img src="/2018/06/03/one-vs-all-classification/one-vs-all.png" class="">
+<br>
+
+<p>We already know from the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a> how to train a binary classifier using logistic regression. So the only thing we have to do now really is to train $N$ binary classifiers instead of just one. And that’s pretty much it.</p>
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’re going to use this one-vs-all approach to solve a multi-class classification problem from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> thought by Andrew Ng. The goal in this problem is to identify digits from 0 to 9 by looking at 20x20 pixel drawings.</p>
+<p>Here the number of classes $N$ is equal to 10, which is the number of different digits. We’re going to treat each pixel as an individual feature, which adds up to 400 features per image. Here are some examples from our training sample of 5000 images:</p>
+<img src="/2018/06/03/one-vs-all-classification/examples-from-dataset.png" class="">
+<br>
+
+<p>The training data is stored in a file called <a href="/2018/06/03/one-vs-all-classification/digits.mat" title="digits.mat">digits.mat</a>. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a Matlab assignment. No big deal, since it’s pretty easy to import a <strong><code>.mat</code></strong> file in Python using the <strong><code>loadmat</code></strong> function from the <strong><code>scipy.io</code></strong> module. Here’s how to do it:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = sio.loadmat(<span class="string">&quot;digits.mat&quot;</span>)</span><br><span class="line">x = data[<span class="string">&#x27;X&#x27;</span>] <span class="comment"># the feature matrix is labeled with &#x27;X&#x27; inside the file</span></span><br><span class="line">y = np.squeeze(data[<span class="string">&#x27;y&#x27;</span>]) <span class="comment"># the target variable vector is labeled with &#x27;y&#x27; inside the file</span></span><br><span class="line">np.place(y, y == <span class="number">10</span>, <span class="number">0</span>) <span class="comment"># replace the label 10 with 0</span></span><br><span class="line">numExamples = x.shape[<span class="number">0</span>] <span class="comment"># 5000 examples</span></span><br><span class="line">numFeatures = x.shape[<span class="number">1</span>] <span class="comment"># 400 features</span></span><br><span class="line">numLabels = <span class="number">10</span> <span class="comment"># digits from 0 to 9</span></span><br></pre></td></tr></table></figure>
+<p>Let me point out two things here:</p>
+<ol>
+<li><p>We’re using the <strong><code>squeeze</code></strong> function on the <strong><code>y</code></strong> array in order to explicitly make it one dimensional. We’re doing this because <strong><code>y</code></strong> is stored as a 2D matrix in the <strong><code>.mat</code></strong> file although it’s actually a 1D array.</p>
+</li>
+<li><p>We’re replacing the label 10 with 0. This label actually stands for the digit 0 but it was converted to 10 because of array indexing issues in Matlab.</p>
+</li>
+</ol>
+<img src="/2018/06/03/one-vs-all-classification/matlab-index.png" class="">
+<br>
+
+<h4 id="Logistic-Regression-Recap"><a href="#Logistic-Regression-Recap" class="headerlink" title="Logistic Regression Recap"></a>Logistic Regression Recap</h4><p>Remember the <strong><code>sigmoid</code></strong>, <strong><code>cost</code></strong> and <strong><code>cost_gradient</code></strong> functions that we’ve come up with while training a logistic regression model in the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a>? Here we can reuse these functions exactly as they are, because we’re going to train nothing but logistic regression models also in this problem.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes error in division</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
+<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we have to do before starting to train our multi-class classifier is to add an initial column of ones to our feature matrix to take into account the intercept term:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
+<p>Now we’re ready to train our classifiers. Let’s create an array to store the model parameters $\theta$ for each classifier. Note that we need 10 sets of model parameters, each consisting of 401 parameters including the intercept term:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classifiers = np.zeros(shape=(numLabels, numFeatures + <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>Then we’re going to train 10 binary classifiers targeted for each digit inside a <strong><code>for</code></strong> loop:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, numLabels):</span><br><span class="line">    label = (y == c).astype(<span class="built_in">int</span>)</span><br><span class="line">    initial_theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    classifiers[c, :] = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, label), disp=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>Here we create a <strong><code>label</code></strong> vector in each iteration. We set its values to 1 where the corresponding values in <strong><code>y</code></strong> are equal to the current digit, and we set the rest of its values to 0. Hence the <strong><code>label</code></strong> vector acts as the target variable vector <strong><code>y</code></strong> of the binary classifier that we train for the current digit.</p>
+<h4 id="Predictions"><a href="#Predictions" class="headerlink" title="Predictions"></a>Predictions</h4><p>We can evaluate the probability estimations of our optimized model for each class as follows:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classProbabilities = sigmoid(X @ classifiers.transpose())</span><br></pre></td></tr></table></figure>
+<p>This will give us a matrix of 5000 rows and 10 columns, where the columns correspond to the estimated class (digit) probabilities for all 5000 images.</p>
+<p>However, we may need the final predictions of the optimized classifier instead of numerical probability estimations. We can find out our model’s predictions by simply selecting the label with the highest probability in each row :</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = classProbabilities.argmax(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>Now we have our model’s predictions as a vector with 5000 elements labeled from 0 to 9.</p>
+<h4 id="Accuracy"><a href="#Accuracy" class="headerlink" title="Accuracy"></a>Accuracy</h4><p>Finally, we can compute our model’s training accuracy by computing the percentage of successful predictions:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;Training accuracy:&quot;</span>, <span class="built_in">str</span>(<span class="number">100</span> * np.mean(predictions == y)) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Training accuracy: 94.54%</code></pre>
+<p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
+<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>numpy</tag>
+        <tag>matplotlib</tag>
+        <tag>scipy</tag>
       </tags>
   </entry>
   <entry>
