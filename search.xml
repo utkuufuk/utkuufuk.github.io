@@ -67,82 +67,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Training a Simple Binary Classifier Using Logistic Regression</title>
-    <url>/2018/05/19/binary-logistic-regression/</url>
-    <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
-<a id="more"></a>
-
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll be looking at another assignment from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem is to estimate an applicant’s probability of admission into a university based on his/her results on two exams. Our <a href="/2018/05/19/binary-logistic-regression/university_admission.txt" title="dataset">dataset</a> contains some historical data from previous applicants, which we’ll use as a training sample. Let’s read the dataset file and take a look at the first few examples:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;university_admission.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">y = data[:, <span class="number">2</span>]</span><br><span class="line">print(data[:<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>[[ 34.62365962  78.02469282   0.        ]
- [ 30.28671077  43.89499752   0.        ]
- [ 35.84740877  72.90219803   0.        ]
- [ 60.18259939  86.3085521    1.        ]
- [ 79.03273605  75.34437644   1.        ]]</code></pre>
-<p>The first two columns correspond to the exam scores and the third column indicates whether the applicant has been admitted to the university. We can visualize this data using a scatter plot:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">positives = np.where(y == <span class="number">1</span>)</span><br><span class="line">negatives = np.where(y == <span class="number">0</span>)</span><br><span class="line">ax.scatter(x[positives, <span class="number">0</span>], x[positives, <span class="number">1</span>], marker=<span class="string">&quot;+&quot;</span>, c=<span class="string">&#x27;green&#x27;</span>)</span><br><span class="line">ax.scatter(x[negatives, <span class="number">0</span>], x[negatives, <span class="number">1</span>], marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&#x27;red&#x27;</span>, linewidth=<span class="number">1</span>)</span><br><span class="line">plt.title(<span class="string">&quot;University Admission&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;exam 1 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;exam 2 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend([<span class="string">&quot;admitted&quot;</span>, <span class="string">&quot;not admitted&quot;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/05/19/binary-logistic-regression/logistic-regression_5_0.png" class="">
-
-<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Logistic regression is a linear model, which means that the <strong>decision boundary</strong> has to be a straight line. This can be achieved with a a simple hypothesis function in the following form:</p>
-<p>$h_\theta(x) = g(\theta^Tx)$</p>
-<p>where $g$ is the <strong>sigmoid function</strong> which is defined as:</p>
-<p>$g(z) = \dfrac{1}{1 + e^{-z}}$</p>
-<img src="/2018/05/19/binary-logistic-regression/sigmoid.png" class="" title="Sigmoid">
-<br>
-
-<p>Here’s the Python version of the sigmoid function:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br></pre></td></tr></table></figure>
-<p>The numeric output of the hypothesis function $h_\theta(x)$ corresponds to the model’s confidence in labeling the input:</p>
-<ul>
-<li>If the output is $0.5$, both classes are equally probable as far as the classifier is concerned.</li>
-<li>If the output is $1$, the classifier is 100% confident about class 1.</li>
-<li>If the output is $0$, the classifier is 100% confident about class 0.</li>
-</ul>
-<p>In other words, the classifier labels the input based on whether $\theta^Tx$ is positive or negative. Of course this is based on the assumption that the treshold is selected as $0.5$.</p>
-<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>In the training stage, we’ll try to minimize the cost function below:</p>
-<p>$J(\theta) = \dfrac{1}{m}\sum\limits_{i=1}^{m}[-y^{(i)}log(h_\theta(x^{(i)})) - (1 - y^{(i)})log(1 - h_\theta(x^{(i)}))]$</p>
-<p>Notice that this cost function penalizes the hypothesis according to its probability estimation error, as demonstrated below:</p>
-<img src="/2018/05/19/binary-logistic-regression/cost.svg" class="" title="Cost">
-<p>&lt;br &gt;</p>
-<p>We can use the following Python function to compute this cost in our script:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes division error during optimization</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br></pre></td></tr></table></figure>
-<h4 id="Optimization-Algorithm"><a href="#Optimization-Algorithm" class="headerlink" title="Optimization Algorithm"></a>Optimization Algorithm</h4><p>We’re going to use the <strong><code>fmin_cg</code></strong> function from <strong><code>scipy.optimize</code></strong> to minimize our cost. <strong><code>fmin_cg</code></strong> needs the gradient of the cost function as well as the cost function itself. Here’s the formula for the cost gradient:</p>
-<p>$\dfrac{\partial{J(\theta)}}{\partial{\theta_j}} = \dfrac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
-<p>where $m$ is the number of training examples.</p>
-<p>And the Python version is:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
-<p>If you’re not familiar with <strong><code>fmin_cg</code></strong>, it might be a good idea to check out my <a href="/2018/05/04/learning-curves/" title="previous post">previous post</a> and/or the <a href="https://docs.scipy.org/doc/scipy-0.19.0/reference/generated/scipy.optimize.fmin_cg.html">official docs</a> before proceeding to the next section.</p>
-<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we need to do before training our model is to add an additional first column to $x$, in order to account for the intercept term $\theta_0$:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
-<p>Finally we can train our logistic regression model:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">initial_theta = np.zeros(X.shape[<span class="number">1</span>]) <span class="comment"># set initial model parameters to zero</span></span><br><span class="line">theta = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, y))</span><br></pre></td></tr></table></figure>
-<pre><code>Optimization terminated successfully.
-         Current function value: 0.203498
-         Iterations: 51
-         Function evaluations: 122
-         Gradient evaluations: 122</code></pre>
-<p>Now let’s plot the decision boundary of our optimized model:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_axis = np.array([<span class="built_in">min</span>(X[:, <span class="number">1</span>]) - <span class="number">2</span>, <span class="built_in">max</span>(X[:, <span class="number">1</span>]) + <span class="number">2</span>])</span><br><span class="line">y_axis = (-<span class="number">1</span> / theta[<span class="number">2</span>]) * (theta[<span class="number">1</span>] * x_axis + theta[<span class="number">0</span>])</span><br><span class="line">ax.plot(x_axis, y_axis, linewidth=<span class="number">2</span>)</span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
-<img src="/2018/05/19/binary-logistic-regression/logistic-regression_13_0.png" class="">
-<br>
-Looks pretty good. Let's also measure the training accuracy:
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = np.zeros(<span class="built_in">len</span>(y))</span><br><span class="line">predictions[sigmoid(X @ theta) &gt;= <span class="number">0.5</span>] = <span class="number">1</span></span><br><span class="line">print(<span class="string">&quot;Training Accuracy =&quot;</span>, <span class="built_in">str</span>(np.mean(predictions == y) * <span class="number">100</span>) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>Training Accuracy = 89.0%</code></pre>
-<p>Not bad at all. We would probably need something little more flexible than logistic regression if we wanted to come up with a more accurate classifier.</p>
-<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Finally, here’s how we can predict the probability of admission for a student with arbitrary exam scores:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">probability = sigmoid(np.array([<span class="number">1</span>, <span class="number">45</span>, <span class="number">85</span>]) @ theta)</span><br><span class="line">print(<span class="string">&quot;For a student with scores 45 and 85, we predict an admission probability of&quot;</span>, probability)</span><br></pre></td></tr></table></figure>
-<pre><code>For a student with scores 45 and 85, we predict an admission probability of 0.776195474168</code></pre>
-<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>python</tag>
-        <tag>numpy</tag>
-        <tag>matplotlib</tag>
-        <tag>scipy</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>A CLI App to Insert Budget Transactions in Google Spreadsheets</title>
     <url>/2018/11/10/budget-cli/</url>
     <content><![CDATA[<p>If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a <a href="https://github.com/utkuufuk/budget-cli">CLI app</a> to insert transaction entries in monthly budget spreadsheets with simple commands from CLI. Today I’ll be walking you through the process of building this app.</p>
@@ -222,6 +146,82 @@ Looks pretty good. Let's also measure the training accuracy:
       <tags>
         <tag>python</tag>
         <tag>google sheets</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Training a Simple Binary Classifier Using Logistic Regression</title>
+    <url>/2018/05/19/binary-logistic-regression/</url>
+    <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
+<a id="more"></a>
+
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll be looking at another assignment from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem is to estimate an applicant’s probability of admission into a university based on his/her results on two exams. Our <a href="/2018/05/19/binary-logistic-regression/university_admission.txt" title="dataset">dataset</a> contains some historical data from previous applicants, which we’ll use as a training sample. Let’s read the dataset file and take a look at the first few examples:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;university_admission.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">y = data[:, <span class="number">2</span>]</span><br><span class="line">print(data[:<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[[ 34.62365962  78.02469282   0.        ]
+ [ 30.28671077  43.89499752   0.        ]
+ [ 35.84740877  72.90219803   0.        ]
+ [ 60.18259939  86.3085521    1.        ]
+ [ 79.03273605  75.34437644   1.        ]]</code></pre>
+<p>The first two columns correspond to the exam scores and the third column indicates whether the applicant has been admitted to the university. We can visualize this data using a scatter plot:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">positives = np.where(y == <span class="number">1</span>)</span><br><span class="line">negatives = np.where(y == <span class="number">0</span>)</span><br><span class="line">ax.scatter(x[positives, <span class="number">0</span>], x[positives, <span class="number">1</span>], marker=<span class="string">&quot;+&quot;</span>, c=<span class="string">&#x27;green&#x27;</span>)</span><br><span class="line">ax.scatter(x[negatives, <span class="number">0</span>], x[negatives, <span class="number">1</span>], marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&#x27;red&#x27;</span>, linewidth=<span class="number">1</span>)</span><br><span class="line">plt.title(<span class="string">&quot;University Admission&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;exam 1 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;exam 2 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend([<span class="string">&quot;admitted&quot;</span>, <span class="string">&quot;not admitted&quot;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/19/binary-logistic-regression/logistic-regression_5_0.png" class="">
+
+<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Logistic regression is a linear model, which means that the <strong>decision boundary</strong> has to be a straight line. This can be achieved with a a simple hypothesis function in the following form:</p>
+<p>$h_\theta(x) = g(\theta^Tx)$</p>
+<p>where $g$ is the <strong>sigmoid function</strong> which is defined as:</p>
+<p>$g(z) = \dfrac{1}{1 + e^{-z}}$</p>
+<img src="/2018/05/19/binary-logistic-regression/sigmoid.png" class="" title="Sigmoid">
+<br>
+
+<p>Here’s the Python version of the sigmoid function:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br></pre></td></tr></table></figure>
+<p>The numeric output of the hypothesis function $h_\theta(x)$ corresponds to the model’s confidence in labeling the input:</p>
+<ul>
+<li>If the output is $0.5$, both classes are equally probable as far as the classifier is concerned.</li>
+<li>If the output is $1$, the classifier is 100% confident about class 1.</li>
+<li>If the output is $0$, the classifier is 100% confident about class 0.</li>
+</ul>
+<p>In other words, the classifier labels the input based on whether $\theta^Tx$ is positive or negative. Of course this is based on the assumption that the treshold is selected as $0.5$.</p>
+<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>In the training stage, we’ll try to minimize the cost function below:</p>
+<p>$J(\theta) = \dfrac{1}{m}\sum\limits_{i=1}^{m}[-y^{(i)}log(h_\theta(x^{(i)})) - (1 - y^{(i)})log(1 - h_\theta(x^{(i)}))]$</p>
+<p>Notice that this cost function penalizes the hypothesis according to its probability estimation error, as demonstrated below:</p>
+<img src="/2018/05/19/binary-logistic-regression/cost.svg" class="" title="Cost">
+<p>&lt;br &gt;</p>
+<p>We can use the following Python function to compute this cost in our script:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes division error during optimization</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br></pre></td></tr></table></figure>
+<h4 id="Optimization-Algorithm"><a href="#Optimization-Algorithm" class="headerlink" title="Optimization Algorithm"></a>Optimization Algorithm</h4><p>We’re going to use the <strong><code>fmin_cg</code></strong> function from <strong><code>scipy.optimize</code></strong> to minimize our cost. <strong><code>fmin_cg</code></strong> needs the gradient of the cost function as well as the cost function itself. Here’s the formula for the cost gradient:</p>
+<p>$\dfrac{\partial{J(\theta)}}{\partial{\theta_j}} = \dfrac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
+<p>where $m$ is the number of training examples.</p>
+<p>And the Python version is:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
+<p>If you’re not familiar with <strong><code>fmin_cg</code></strong>, it might be a good idea to check out my <a href="/2018/05/04/learning-curves/" title="previous post">previous post</a> and/or the <a href="https://docs.scipy.org/doc/scipy-0.19.0/reference/generated/scipy.optimize.fmin_cg.html">official docs</a> before proceeding to the next section.</p>
+<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we need to do before training our model is to add an additional first column to $x$, in order to account for the intercept term $\theta_0$:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
+<p>Finally we can train our logistic regression model:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">initial_theta = np.zeros(X.shape[<span class="number">1</span>]) <span class="comment"># set initial model parameters to zero</span></span><br><span class="line">theta = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, y))</span><br></pre></td></tr></table></figure>
+<pre><code>Optimization terminated successfully.
+         Current function value: 0.203498
+         Iterations: 51
+         Function evaluations: 122
+         Gradient evaluations: 122</code></pre>
+<p>Now let’s plot the decision boundary of our optimized model:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_axis = np.array([<span class="built_in">min</span>(X[:, <span class="number">1</span>]) - <span class="number">2</span>, <span class="built_in">max</span>(X[:, <span class="number">1</span>]) + <span class="number">2</span>])</span><br><span class="line">y_axis = (-<span class="number">1</span> / theta[<span class="number">2</span>]) * (theta[<span class="number">1</span>] * x_axis + theta[<span class="number">0</span>])</span><br><span class="line">ax.plot(x_axis, y_axis, linewidth=<span class="number">2</span>)</span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/19/binary-logistic-regression/logistic-regression_13_0.png" class="">
+<br>
+Looks pretty good. Let's also measure the training accuracy:
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = np.zeros(<span class="built_in">len</span>(y))</span><br><span class="line">predictions[sigmoid(X @ theta) &gt;= <span class="number">0.5</span>] = <span class="number">1</span></span><br><span class="line">print(<span class="string">&quot;Training Accuracy =&quot;</span>, <span class="built_in">str</span>(np.mean(predictions == y) * <span class="number">100</span>) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Training Accuracy = 89.0%</code></pre>
+<p>Not bad at all. We would probably need something little more flexible than logistic regression if we wanted to come up with a more accurate classifier.</p>
+<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Finally, here’s how we can predict the probability of admission for a student with arbitrary exam scores:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">probability = sigmoid(np.array([<span class="number">1</span>, <span class="number">45</span>, <span class="number">85</span>]) @ theta)</span><br><span class="line">print(<span class="string">&quot;For a student with scores 45 and 85, we predict an admission probability of&quot;</span>, probability)</span><br></pre></td></tr></table></figure>
+<pre><code>For a student with scores 45 and 85, we predict an admission probability of 0.776195474168</code></pre>
+<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>numpy</tag>
+        <tag>matplotlib</tag>
+        <tag>scipy</tag>
       </tags>
   </entry>
   <entry>
@@ -420,6 +420,9 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
 <p>I don’t know about your experience, but the default font smoothing is too much for me. What’s worse is, macOS doesn’t let you change this setting easily from system preferences anymore. You have to actually open the terminal and run this command:</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 0, 1, 2, or 3</span></span><br><span class="line">defaults -currentHost write -globalDomain AppleFontSmoothing -int 1</span><br></pre></td></tr></table></figure>
 <p>Setting it to 1 works best for me. I suggest you to experiment with each option (0 is lowest, 3 is highest) and see whichever feels best. Keep in mind that in order to see the effects, you have to logout &amp; login back every time you change the setting.</p>
+<h3 id="Tips-From-Other-Articles"><a href="#Tips-From-Other-Articles" class="headerlink" title="Tips From Other Articles"></a>Tips From Other Articles</h3><ul>
+<li><a href="https://osxdaily.com/2019/03/27/disable-period-typing-shortcut-mac/">Stop Typing Periods Automatically with Double-Space</a></li>
+</ul>
 <hr>
 <p>Feel free to leave a comment on <a href="https://twitter.com/utkufu">Twitter</a> if you have some other tips &amp; tricks that haven’t been covered in this article. I’d love to hear them!</p>
 ]]></content>
