@@ -67,6 +67,40 @@
       </tags>
   </entry>
   <entry>
+    <title>I had to build a web scraper to buy groceries</title>
+    <url>/2020/03/28/grocery-scraping/</url>
+    <content><![CDATA[<p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+<a id="more"></a>
+
+<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
+<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
+<blockquote>
+<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
+</blockquote>
+<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
+<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
+<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
+<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+
+<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
+<p>I got this response:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
+<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
+<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
+<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
+<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
+<p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>mailgun</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>A CLI App to Insert Budget Transactions in Google Spreadsheets</title>
     <url>/2018/11/10/budget-cli/</url>
     <content><![CDATA[<p>If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a <a href="https://github.com/utkuufuk/budget-cli">CLI app</a> to insert transaction entries in monthly budget spreadsheets with simple commands from CLI. Today I’ll be walking you through the process of building this app.</p>
@@ -146,116 +180,6 @@
       <tags>
         <tag>python</tag>
         <tag>google sheets</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Training a Simple Binary Classifier Using Logistic Regression</title>
-    <url>/2018/05/19/binary-logistic-regression/</url>
-    <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
-<a id="more"></a>
-
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll be looking at another assignment from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem is to estimate an applicant’s probability of admission into a university based on his/her results on two exams. Our <a href="/2018/05/19/binary-logistic-regression/university_admission.txt" title="dataset">dataset</a> contains some historical data from previous applicants, which we’ll use as a training sample. Let’s read the dataset file and take a look at the first few examples:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;university_admission.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">y = data[:, <span class="number">2</span>]</span><br><span class="line">print(data[:<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>[[ 34.62365962  78.02469282   0.        ]
- [ 30.28671077  43.89499752   0.        ]
- [ 35.84740877  72.90219803   0.        ]
- [ 60.18259939  86.3085521    1.        ]
- [ 79.03273605  75.34437644   1.        ]]</code></pre>
-<p>The first two columns correspond to the exam scores and the third column indicates whether the applicant has been admitted to the university. We can visualize this data using a scatter plot:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">positives = np.where(y == <span class="number">1</span>)</span><br><span class="line">negatives = np.where(y == <span class="number">0</span>)</span><br><span class="line">ax.scatter(x[positives, <span class="number">0</span>], x[positives, <span class="number">1</span>], marker=<span class="string">&quot;+&quot;</span>, c=<span class="string">&#x27;green&#x27;</span>)</span><br><span class="line">ax.scatter(x[negatives, <span class="number">0</span>], x[negatives, <span class="number">1</span>], marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&#x27;red&#x27;</span>, linewidth=<span class="number">1</span>)</span><br><span class="line">plt.title(<span class="string">&quot;University Admission&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;exam 1 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;exam 2 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend([<span class="string">&quot;admitted&quot;</span>, <span class="string">&quot;not admitted&quot;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/05/19/binary-logistic-regression/logistic-regression_5_0.png" class="">
-
-<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Logistic regression is a linear model, which means that the <strong>decision boundary</strong> has to be a straight line. This can be achieved with a a simple hypothesis function in the following form:</p>
-<p>$h_\theta(x) = g(\theta^Tx)$</p>
-<p>where $g$ is the <strong>sigmoid function</strong> which is defined as:</p>
-<p>$g(z) = \dfrac{1}{1 + e^{-z}}$</p>
-<img src="/2018/05/19/binary-logistic-regression/sigmoid.png" class="" title="Sigmoid">
-<br>
-
-<p>Here’s the Python version of the sigmoid function:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br></pre></td></tr></table></figure>
-<p>The numeric output of the hypothesis function $h_\theta(x)$ corresponds to the model’s confidence in labeling the input:</p>
-<ul>
-<li>If the output is $0.5$, both classes are equally probable as far as the classifier is concerned.</li>
-<li>If the output is $1$, the classifier is 100% confident about class 1.</li>
-<li>If the output is $0$, the classifier is 100% confident about class 0.</li>
-</ul>
-<p>In other words, the classifier labels the input based on whether $\theta^Tx$ is positive or negative. Of course this is based on the assumption that the treshold is selected as $0.5$.</p>
-<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>In the training stage, we’ll try to minimize the cost function below:</p>
-<p>$J(\theta) = \dfrac{1}{m}\sum\limits_{i=1}^{m}[-y^{(i)}log(h_\theta(x^{(i)})) - (1 - y^{(i)})log(1 - h_\theta(x^{(i)}))]$</p>
-<p>Notice that this cost function penalizes the hypothesis according to its probability estimation error, as demonstrated below:</p>
-<img src="/2018/05/19/binary-logistic-regression/cost.svg" class="" title="Cost">
-<p>&lt;br &gt;</p>
-<p>We can use the following Python function to compute this cost in our script:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes division error during optimization</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br></pre></td></tr></table></figure>
-<h4 id="Optimization-Algorithm"><a href="#Optimization-Algorithm" class="headerlink" title="Optimization Algorithm"></a>Optimization Algorithm</h4><p>We’re going to use the <strong><code>fmin_cg</code></strong> function from <strong><code>scipy.optimize</code></strong> to minimize our cost. <strong><code>fmin_cg</code></strong> needs the gradient of the cost function as well as the cost function itself. Here’s the formula for the cost gradient:</p>
-<p>$\dfrac{\partial{J(\theta)}}{\partial{\theta_j}} = \dfrac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
-<p>where $m$ is the number of training examples.</p>
-<p>And the Python version is:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
-<p>If you’re not familiar with <strong><code>fmin_cg</code></strong>, it might be a good idea to check out my <a href="/2018/05/04/learning-curves/" title="previous post">previous post</a> and/or the <a href="https://docs.scipy.org/doc/scipy-0.19.0/reference/generated/scipy.optimize.fmin_cg.html">official docs</a> before proceeding to the next section.</p>
-<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we need to do before training our model is to add an additional first column to $x$, in order to account for the intercept term $\theta_0$:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
-<p>Finally we can train our logistic regression model:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">initial_theta = np.zeros(X.shape[<span class="number">1</span>]) <span class="comment"># set initial model parameters to zero</span></span><br><span class="line">theta = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, y))</span><br></pre></td></tr></table></figure>
-<pre><code>Optimization terminated successfully.
-         Current function value: 0.203498
-         Iterations: 51
-         Function evaluations: 122
-         Gradient evaluations: 122</code></pre>
-<p>Now let’s plot the decision boundary of our optimized model:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_axis = np.array([<span class="built_in">min</span>(X[:, <span class="number">1</span>]) - <span class="number">2</span>, <span class="built_in">max</span>(X[:, <span class="number">1</span>]) + <span class="number">2</span>])</span><br><span class="line">y_axis = (-<span class="number">1</span> / theta[<span class="number">2</span>]) * (theta[<span class="number">1</span>] * x_axis + theta[<span class="number">0</span>])</span><br><span class="line">ax.plot(x_axis, y_axis, linewidth=<span class="number">2</span>)</span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
-<img src="/2018/05/19/binary-logistic-regression/logistic-regression_13_0.png" class="">
-<br>
-Looks pretty good. Let's also measure the training accuracy:
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = np.zeros(<span class="built_in">len</span>(y))</span><br><span class="line">predictions[sigmoid(X @ theta) &gt;= <span class="number">0.5</span>] = <span class="number">1</span></span><br><span class="line">print(<span class="string">&quot;Training Accuracy =&quot;</span>, <span class="built_in">str</span>(np.mean(predictions == y) * <span class="number">100</span>) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>Training Accuracy = 89.0%</code></pre>
-<p>Not bad at all. We would probably need something little more flexible than logistic regression if we wanted to come up with a more accurate classifier.</p>
-<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Finally, here’s how we can predict the probability of admission for a student with arbitrary exam scores:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">probability = sigmoid(np.array([<span class="number">1</span>, <span class="number">45</span>, <span class="number">85</span>]) @ theta)</span><br><span class="line">print(<span class="string">&quot;For a student with scores 45 and 85, we predict an admission probability of&quot;</span>, probability)</span><br></pre></td></tr></table></figure>
-<pre><code>For a student with scores 45 and 85, we predict an admission probability of 0.776195474168</code></pre>
-<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>python</tag>
-        <tag>numpy</tag>
-        <tag>matplotlib</tag>
-        <tag>scipy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>I had to build a web scraper to buy groceries</title>
-    <url>/2020/03/28/grocery-scraping/</url>
-    <content><![CDATA[<p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
-<a id="more"></a>
-
-<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
-<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
-<blockquote>
-<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
-</blockquote>
-<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
-<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
-<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
-<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
-
-<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
-<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
-<p>I got this response:</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
-<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
-<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
-<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
-<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
-<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
-<p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>python</tag>
-        <tag>mailgun</tag>
       </tags>
   </entry>
   <entry>
@@ -345,6 +269,82 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
         <tag>python</tag>
         <tag>numpy</tag>
         <tag>matplotlib</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Training a Simple Binary Classifier Using Logistic Regression</title>
+    <url>/2018/05/19/binary-logistic-regression/</url>
+    <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
+<a id="more"></a>
+
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll be looking at another assignment from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem is to estimate an applicant’s probability of admission into a university based on his/her results on two exams. Our <a href="/2018/05/19/binary-logistic-regression/university_admission.txt" title="dataset">dataset</a> contains some historical data from previous applicants, which we’ll use as a training sample. Let’s read the dataset file and take a look at the first few examples:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;university_admission.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">y = data[:, <span class="number">2</span>]</span><br><span class="line">print(data[:<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[[ 34.62365962  78.02469282   0.        ]
+ [ 30.28671077  43.89499752   0.        ]
+ [ 35.84740877  72.90219803   0.        ]
+ [ 60.18259939  86.3085521    1.        ]
+ [ 79.03273605  75.34437644   1.        ]]</code></pre>
+<p>The first two columns correspond to the exam scores and the third column indicates whether the applicant has been admitted to the university. We can visualize this data using a scatter plot:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">positives = np.where(y == <span class="number">1</span>)</span><br><span class="line">negatives = np.where(y == <span class="number">0</span>)</span><br><span class="line">ax.scatter(x[positives, <span class="number">0</span>], x[positives, <span class="number">1</span>], marker=<span class="string">&quot;+&quot;</span>, c=<span class="string">&#x27;green&#x27;</span>)</span><br><span class="line">ax.scatter(x[negatives, <span class="number">0</span>], x[negatives, <span class="number">1</span>], marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&#x27;red&#x27;</span>, linewidth=<span class="number">1</span>)</span><br><span class="line">plt.title(<span class="string">&quot;University Admission&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;exam 1 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;exam 2 score&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend([<span class="string">&quot;admitted&quot;</span>, <span class="string">&quot;not admitted&quot;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/19/binary-logistic-regression/logistic-regression_5_0.png" class="">
+
+<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Logistic regression is a linear model, which means that the <strong>decision boundary</strong> has to be a straight line. This can be achieved with a a simple hypothesis function in the following form:</p>
+<p>$h_\theta(x) = g(\theta^Tx)$</p>
+<p>where $g$ is the <strong>sigmoid function</strong> which is defined as:</p>
+<p>$g(z) = \dfrac{1}{1 + e^{-z}}$</p>
+<img src="/2018/05/19/binary-logistic-regression/sigmoid.png" class="" title="Sigmoid">
+<br>
+
+<p>Here’s the Python version of the sigmoid function:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br></pre></td></tr></table></figure>
+<p>The numeric output of the hypothesis function $h_\theta(x)$ corresponds to the model’s confidence in labeling the input:</p>
+<ul>
+<li>If the output is $0.5$, both classes are equally probable as far as the classifier is concerned.</li>
+<li>If the output is $1$, the classifier is 100% confident about class 1.</li>
+<li>If the output is $0$, the classifier is 100% confident about class 0.</li>
+</ul>
+<p>In other words, the classifier labels the input based on whether $\theta^Tx$ is positive or negative. Of course this is based on the assumption that the treshold is selected as $0.5$.</p>
+<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>In the training stage, we’ll try to minimize the cost function below:</p>
+<p>$J(\theta) = \dfrac{1}{m}\sum\limits_{i=1}^{m}[-y^{(i)}log(h_\theta(x^{(i)})) - (1 - y^{(i)})log(1 - h_\theta(x^{(i)}))]$</p>
+<p>Notice that this cost function penalizes the hypothesis according to its probability estimation error, as demonstrated below:</p>
+<img src="/2018/05/19/binary-logistic-regression/cost.svg" class="" title="Cost">
+<p>&lt;br &gt;</p>
+<p>We can use the following Python function to compute this cost in our script:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes division error during optimization</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br></pre></td></tr></table></figure>
+<h4 id="Optimization-Algorithm"><a href="#Optimization-Algorithm" class="headerlink" title="Optimization Algorithm"></a>Optimization Algorithm</h4><p>We’re going to use the <strong><code>fmin_cg</code></strong> function from <strong><code>scipy.optimize</code></strong> to minimize our cost. <strong><code>fmin_cg</code></strong> needs the gradient of the cost function as well as the cost function itself. Here’s the formula for the cost gradient:</p>
+<p>$\dfrac{\partial{J(\theta)}}{\partial{\theta_j}} = \dfrac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
+<p>where $m$ is the number of training examples.</p>
+<p>And the Python version is:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
+<p>If you’re not familiar with <strong><code>fmin_cg</code></strong>, it might be a good idea to check out my <a href="/2018/05/04/learning-curves/" title="previous post">previous post</a> and/or the <a href="https://docs.scipy.org/doc/scipy-0.19.0/reference/generated/scipy.optimize.fmin_cg.html">official docs</a> before proceeding to the next section.</p>
+<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we need to do before training our model is to add an additional first column to $x$, in order to account for the intercept term $\theta_0$:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
+<p>Finally we can train our logistic regression model:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">initial_theta = np.zeros(X.shape[<span class="number">1</span>]) <span class="comment"># set initial model parameters to zero</span></span><br><span class="line">theta = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, y))</span><br></pre></td></tr></table></figure>
+<pre><code>Optimization terminated successfully.
+         Current function value: 0.203498
+         Iterations: 51
+         Function evaluations: 122
+         Gradient evaluations: 122</code></pre>
+<p>Now let’s plot the decision boundary of our optimized model:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x_axis = np.array([<span class="built_in">min</span>(X[:, <span class="number">1</span>]) - <span class="number">2</span>, <span class="built_in">max</span>(X[:, <span class="number">1</span>]) + <span class="number">2</span>])</span><br><span class="line">y_axis = (-<span class="number">1</span> / theta[<span class="number">2</span>]) * (theta[<span class="number">1</span>] * x_axis + theta[<span class="number">0</span>])</span><br><span class="line">ax.plot(x_axis, y_axis, linewidth=<span class="number">2</span>)</span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/19/binary-logistic-regression/logistic-regression_13_0.png" class="">
+<br>
+Looks pretty good. Let's also measure the training accuracy:
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = np.zeros(<span class="built_in">len</span>(y))</span><br><span class="line">predictions[sigmoid(X @ theta) &gt;= <span class="number">0.5</span>] = <span class="number">1</span></span><br><span class="line">print(<span class="string">&quot;Training Accuracy =&quot;</span>, <span class="built_in">str</span>(np.mean(predictions == y) * <span class="number">100</span>) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Training Accuracy = 89.0%</code></pre>
+<p>Not bad at all. We would probably need something little more flexible than logistic regression if we wanted to come up with a more accurate classifier.</p>
+<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Finally, here’s how we can predict the probability of admission for a student with arbitrary exam scores:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">probability = sigmoid(np.array([<span class="number">1</span>, <span class="number">45</span>, <span class="number">85</span>]) @ theta)</span><br><span class="line">print(<span class="string">&quot;For a student with scores 45 and 85, we predict an admission probability of&quot;</span>, probability)</span><br></pre></td></tr></table></figure>
+<pre><code>For a student with scores 45 and 85, we predict an admission probability of 0.776195474168</code></pre>
+<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>numpy</tag>
+        <tag>matplotlib</tag>
+        <tag>scipy</tag>
       </tags>
   </entry>
   <entry>

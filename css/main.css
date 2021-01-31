@@ -177,7 +177,7 @@ body {
 body {
   background: var(--body-bg-color);
   color: var(--text-color);
-  font-family: 'Exo 2', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Helvetica Neue', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 1em;
   line-height: 2;
 }
@@ -193,7 +193,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Russo One', 'Exo 2', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Helvetica Neue', 'Helvetica Neue', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-weight: bold;
   line-height: 1.5;
   margin: 20px 0 15px;
@@ -1010,7 +1010,7 @@ pre .javascript .function {
   color: var(--brand-hover-color);
 }
 .site-title {
-  font-family: 'Exo 2', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Helvetica Neue', 'Helvetica Neue', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 1.375em;
   font-weight: normal;
   margin: 0;
@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #25ff4e;
+  background: #8aff57;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1594,7 +1594,7 @@ pre .javascript .function {
   }
 }
 .post-body {
-  font-family: 'Exo 2', 'Exo 2', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Helvetica Neue', 'Helvetica Neue', "PingFang SC", "Microsoft YaHei", sans-serif;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -1884,7 +1884,7 @@ pre .javascript .function {
 }
 .posts-expand .post-meta {
   color: #999;
-  font-family: 'Exo 2', 'Exo 2', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Helvetica Neue', 'Helvetica Neue', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 0.75em;
   margin: 3px 0 60px 0;
   text-align: center;
@@ -2611,9 +2611,11 @@ code {
 }
 .post-header .post-title {
   font-size: 1.25rem;
+  font-weight: 600;
 }
 .post-title .post-title-link {
   font-size: 1.25rem;
+  font-weight: 600;
 }
 .brand .logo-line-before {
   display: none;
@@ -2622,7 +2624,7 @@ code {
   display: none;
 }
 .brand .site-title {
-  font-family: "Russo One";
+  color: #555;
 }
 .archive .posts-collapse .collection-title {
   display: none;
