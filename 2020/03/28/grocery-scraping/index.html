@@ -13,7 +13,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Helvetica Neue:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Franklin Gothic:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
@@ -259,6 +259,7 @@
       
         <p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
 <a id="more"></a>
+
 <p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a target="_blank" rel="noopener" href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
 <p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
 <blockquote>
@@ -268,6 +269,7 @@
 <p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
 <p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
 <img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+
 <p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
 <figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
 <p>I got this response:</p>
