@@ -32,9 +32,9 @@
 <meta property="article:published_time" content="2020-06-14T15:15:30.000Z">
 <meta property="article:modified_time" content="2022-04-25T22:27:28.301Z">
 <meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="go">
 <meta property="article:tag" content="google sheets">
 <meta property="article:tag" content="trello">
-<meta property="article:tag" content="go">
 <meta property="article:tag" content="firebase">
 <meta property="article:tag" content="github">
 <meta name="twitter:card" content="summary">
@@ -262,8 +262,8 @@
       
         <p>Do you ever feel that the numerous productivity tools you use every day actually cost you more time than they are supposed to save? It sure doesn’t feel right when managing your tasks becomes a non-trivial task on its own. On the other hand, there’s no one-size-fits-all solution when it comes to task managers, so it makes sense to use the right tool for the job. To address this dilemma, I recently came up with a simple hack that lets me use all my favorite tools while interacting with just one.</p>
 <a id="more"></a>
-
 <p>I’m notoriously bad at remembering things, and my life would be a total mess if I didn’t somehow keep track of my personal tasks. Here are some of my favorite tools I use to manage different kinds of tasks:</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -272,7 +272,8 @@
 <th>Example</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Trello</td>
 <td>simple todos</td>
 <td><em>write blog post</em></td>
@@ -297,12 +298,12 @@
 <td>meetings/appointments</td>
 <td><em>gRPC webinar</em></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>Even though I like the tools themselves individually, having to keep track of all of them at the same time is a pain in the ass, to be frank. On my computer, I literally have to keep 5 browser tabs open just so that I can see what’s on my to-do list at a given time and decide what to do next. It’s even worse when I’m on a mobile device because then I have to cycle through 5 different apps.</p>
 <p>I didn’t want to stop using any of those tools, because each one does a great job in certain situations where others can be insufficient. For instance, I like how Google Sheets allows me to visualize my daily habit progress in a grid. I would have to give up on that if I used Trello for my habits.</p>
-<p>This is just a subset of my daily habits :)</p>
-<img src="/2020/06/14/one-board/daily-habits.png" class="">
-
+<p>This is just a subset of my daily habits :)<br><img src="/2020/06/14/one-board/daily-habits.png" class=""></p>
 <p>Long story short, a few weeks ago I decided to build a tool for periodically grabbing tasks from different sources and putting them in one place. A Trello board seemed to be the perfect place for this because:</p>
 <ul>
 <li>UX-wise, it’s my favorite</li>
@@ -311,15 +312,13 @@
 </ul>
 <p>Here’s how it works:</p>
 <ol>
-<li>Query all sources every 5 minutes:</li>
-</ol>
-<ul>
+<li>Query all sources every 5 minutes:<ul>
 <li><strong>TodoDock:</strong> tasks due in the next 2 days &mdash; <em><small>TodoDock API</small></em></li>
 <li><strong>Github Issues:</strong> non-PR issues that are assigned to me &mdash; <em><small>GitHub API</small></em></li>
 <li><strong>Google Sheets:</strong> habits that I haven’t completed yet today &mdash; <em><small>Google Sheets API</small></em></li>
 <li><strong>Google Calendar:</strong> <em>not implemented yet</em></li>
 </ul>
-<ol start="2">
+</li>
 <li>Create a card in the Trello board for each task that doesn’t already exist.</li>
 <li>Check if there are any stale cards and remove them from the board. (e.g. if someone closed a Github issue in the past 5 minutes)</li>
 </ol>
@@ -327,12 +326,12 @@
 <p>But there’s more. The next thing I did was to create a <a target="_blank" rel="noopener" href="https://developer.atlassian.com/cloud/trello/guides/rest-api/webhooks/">Trello webhook</a> to be fired whenever something changes in the board. Then I set up a <a target="_blank" rel="noopener" href="https://firebase.google.com/docs/functions">Firebase Cloud Function</a> that listens to that webhook and takes a certain action if a card of interest has been archived. I haven’t open-sourced this yet, but here’s the idea:</p>
 <ul>
 <li>if a card with <code>tododock</code> label has been archived; reset the corresponding TodoDock task timer</li>
-<li>if a card with <code>habit</code> label has been archived, mark the corresponding habit for today as</li>
-</ul>
-<ul>
+<li>if a card with <code>habit</code> label has been archived, mark the corresponding habit for today as<ul>
 <li>✘ &nbsp;if it also has the <code>habit-fail</code> label</li>
 <li><strong>–</strong> &nbsp;&nbsp;if it also has the <code>habit-skip</code> label</li>
 <li>✔ &nbsp;if it doesn’t have any other labels</li>
+</ul>
+</li>
 </ul>
 <p>I don’t handle archived cards for Github issues, because the issue gets closed automatically anyway when you merge a pull request that references it.</p>
 <p>I can now enjoy the benefits of using all my favorite tools without even interacting with them manually. Sure I check out my personal habits from time to time to see how I’ve done so far, but I don’t need to open the spreadsheet to see my uncompleted habits for the day, or to manually update the sheet when I complete a habit. The same goes for my GitHub issues and TodoDock tasks.</p>
@@ -410,9 +409,9 @@
       <footer class="post-footer">
           
           <div class="post-tags">
+              <a href="/tags/go/" rel="tag"><i class="fa fa-tag"></i> go</a>
               <a href="/tags/google-sheets/" rel="tag"><i class="fa fa-tag"></i> google sheets</a>
               <a href="/tags/trello/" rel="tag"><i class="fa fa-tag"></i> trello</a>
-              <a href="/tags/go/" rel="tag"><i class="fa fa-tag"></i> go</a>
               <a href="/tags/firebase/" rel="tag"><i class="fa fa-tag"></i> firebase</a>
               <a href="/tags/github/" rel="tag"><i class="fa fa-tag"></i> github</a>
           </div>
@@ -503,14 +502,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -567,7 +566,7 @@
 <div class="copyright">
   
   &copy; 2017 – 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
