@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Software Engineer">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Utku&#39;s Blog">
+<meta property="og:url" content="https://utkuufuk.com/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="Software Engineer">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="Utku Ufuk">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://utkuufuk.com/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2024/09/20/error-handling-in-typescript/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/09/20/error-handling-in-typescript/" class="post-title-link" itemprop="url">Try, catch, but don't throw</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-09-20 23:22:22" itemprop="dateCreated datePublished" datetime="2024-09-20T23:22:22+03:00">2024-09-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>The standard <code>try-catch-throw</code> approach to error handling in TypeScript is not type-safe, making it difficult to explicitly handle different kinds of errors in business logic. This might be okay in small projects where it’s affordable to treat all errors similarly, but it’s not ideal for larger and more complex projects where it’s oftentimes desirable to differentiate between recoverable and unrecoverable errors.</p>
+<h2 id="Limitations-of-standard-error-handling"><a href="#Limitations-of-standard-error-handling" class="headerlink" title="Limitations of standard error handling"></a>Limitations of standard error handling</h2><p>Since the caught error is of type <code>unknown</code> in the <code>catch</code> block, we cannot rely on TypeScript in ensuring that all the possible error types are covered. Suppose that we have a function that can fail due to several reasons such as:</p>
+<ul>
+<li>Input decode (format) failure </li>
+<li>Input validation failure </li>
+<li>Unexpected database query result</li>
+<li>HTTP request timeout</li>
+<li>Other errors thrown by libraries</li>
+</ul>
+<p>Some of these errors might be recoverable. Such errors should not bubble up to higher abstraction layers lest they disrupt the entire operation. Instead, they should be gracefully handled by the business logic.</p>
+<p>For the sake of the argument, let’s assume that we want our system to recover from <code>DecodeError</code> and <code>ValidationError</code> in the example below:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DecodeError</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValidationError</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// may throw DecodeError or ValidationError</span></span><br><span class="line"><span class="comment">// (but that&#x27;s not visible in the signature)</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): <span class="function"><span class="params">ImportResult</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call site</span></span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">  importData(rawData)</span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123; <span class="comment">// err is of type `unknown`  </span></span><br><span class="line">  <span class="keyword">if</span> (err <span class="keyword">instanceof</span> DecodeError) &#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="string">&#x27;Decode error:&#x27;</span>, err)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// gracefully handle decode error</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// oops, forgot to handle ValidationError</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">throw</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If we wish to handle certain types of errors explicitly, we must make sure to cover all of them, and we get no help whatsoever from TypeScript. Moreover, if the above function evolves to produce additional types of (recoverable) errors, there’s a risk of forgetting to cover them in all the corresponding <code>catch</code> blocks.</p>
+<p>Before we start talking about a better approach, it’s important to note that<br>we cannot completely avoid dealing with thrown <code>Error</code>s. This is because external (third-party and system) function calls <strong>will</strong> throw <code>Error</code>s, even if our code doesn’t throw at all. Thus, we need to find a solution that can deal with unavoidable (foreign) <code>Error</code>s too.</p>
+<h2 id="A-simple-type-safe-alternative"><a href="#A-simple-type-safe-alternative" class="headerlink" title="A simple type-safe alternative"></a>A simple type-safe alternative</h2><p>Here’s all the boilerplate needed for this simple yet type-safe error-handling mechanism:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">get</span> <span class="title">name</span>(): <span class="title">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.constructor.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> isFailure =</span><br><span class="line">  &lt;F <span class="keyword">extends</span> Failure, T&gt;<span class="function">(<span class="params">f: <span class="keyword">new</span> (...args: <span class="built_in">Array</span>&lt;<span class="built_in">any</span>&gt;) =&gt; F</span>) =&gt;</span></span><br><span class="line">  (m: T | F): m is F =&gt;</span><br><span class="line">    m <span class="keyword">instanceof</span> f</span><br></pre></td></tr></table></figure>
+<p>After that, we only need to extend the <code>Failure</code> class for specific types of errors we wish to handle explicitly:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">ValidationFailure</span>&lt;<span class="title">T</span> </span>= unknown&gt; <span class="keyword">extends</span> Failure &#123;</span><br><span class="line">  rawObject: T</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">rawObject: T</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>()</span><br><span class="line">    <span class="built_in">this</span>.rawObject = rawObject</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DecodeFailure</span> <span class="keyword">extends</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>With this minimal toolkit, we can use <code>importData</code> from the earlier example as follows:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): ImportResult | DecodeFailure | <span class="function"><span class="params">ValidationFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> persistData = <span class="function">(<span class="params">importRes: ImportResult</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call site</span></span><br><span class="line"><span class="keyword">const</span> res = importData(rawData)</span><br><span class="line"><span class="keyword">if</span> (isFailure(DecodeFailure)(res)) &#123;</span><br><span class="line">  <span class="comment">// handle decode failure</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (isFailure(ValidationFailure)(res)) &#123;</span><br><span class="line">  <span class="comment">// handle validation failure</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">persistData(res) <span class="comment">// res must be of type `ImportResult`</span></span><br></pre></td></tr></table></figure>
+<p>Note that all the possible failure types are visible in the function signature. TypeScript will alert us if we fail to cover all the possible failure cases at the call site; we won’t be allowed to pass a variable of type <code>ImportResult | SomeFailure</code> to <code>persistData</code>, which expects an <code>ImportResult</code>.</p>
+<h2 id="Dealing-with-foreign-errors"><a href="#Dealing-with-foreign-errors" class="headerlink" title="Dealing with foreign errors"></a>Dealing with foreign errors</h2><p>As mentioned earlier, we cannot prevent our dependencies from throwing errors. Therefore, we still need to rely on <code>try / catch</code> blocks to handle those errors. Now comes the crucial principle:</p>
+<blockquote>
+<p>Try, catch, but do not throw.</p>
+</blockquote>
+<p>This means that <strong>in our own code</strong> we should never <code>throw</code> an <code>Error</code> of our own by extending the <code>Error</code> class. Instead, we should extend <code>Failure</code> and return it.</p>
+<p>In <code>try / catch</code> blocks at higher layers of abstraction, we may log errors, return HTTP responses, and so on. At lower layers (i.e. business logic), we may catch a foreign <code>Error</code> and return it as a <code>Failure</code>.</p>
+<p>An <code>Error</code> should be converted to a <code>Failure</code> <strong>if and only if</strong> it needs to be explicitly handled it in the business logic. Assuming that most errors don’t require special treatment, <code>Failure</code>s are supposed to be used for a very small subset of errors. In such cases, the conversion should be done at the earliest opportunity lest the <code>Error</code> bubbles up to higher layers.</p>
+<p>Here’s an example where a <code>SyntaxError</code> thrown by <code>JSON.parse</code> is converted to a <code>ParseFailure</code> and returned:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParseFailure</span> <span class="keyword">extends</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> safeParseJson = (serializedData: <span class="built_in">string</span>): <span class="built_in">object</span> | <span class="function"><span class="params">ParseFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(serializedData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">if</span> (err <span class="keyword">instanceof</span> <span class="built_in">SyntaxError</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> ParseFailure(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> err <span class="comment">// let all other kinds of errors bubble up</span></span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Since we wish to explicitly handle <code>SyntaxError</code>, we need to prevent it from bubbling up unchecked. By converting it to <code>ParseFailure</code>, we force ourselves to explicitly handle it in our business logic.</p>
+<p>Note that in the above example, the way we capture <code>SyntaxError</code> is not type-safe. That’s because catching and matching it (via <code>instanceof</code>) is the only option. On the bright side, anything that uses <code>safeParseJson</code> has a way handle <code>ParseFailure</code> in a type-safe manner.</p>
+<h2 id="Failure-not-based-on-an-Error"><a href="#Failure-not-based-on-an-Error" class="headerlink" title="Failure not based on an Error"></a><code>Failure</code> not based on an <code>Error</code></h2><p>A <code>Failure</code> doesn’t necessarily have to be created based on an <code>Error</code>. We can create and return custom <code>Failure</code>s in the business logic to represent an event/state/situation that isn’t a part of the happy path. For instance, if the business logic doesn’t allow a certain state, then we could return an <code>IllegalStateFailure</code> rather than throw an <code>IllegalStateError</code> and pray that it is handled properly (if at all) in all relevant <code>catch</code> blocks.</p>
+<h2 id="Code-style"><a href="#Code-style" class="headerlink" title="Code style"></a>Code style</h2><p>On top of the lack of type safety, this standard error-handling approach makes the code messier too. To throw different kinds of errors from a function, we have to declare some variables via <code>let</code> instead of <code>const</code> (yikes!), and have a lot of <code>try / catch</code> blocks that clutter the code.</p>
+<p>To demonstrate this, compare the following two implementations of <code>importData</code> from the earlier examples:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Standard error handling</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): <span class="function"><span class="params">ImportResult</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> decodedData</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    decodedData = decode(rawData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> DecodeError()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> validatedData</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    validatedData = validate(decodedData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ValidationError()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Type-safe error handling</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): ImportResult | DecodeFailure | <span class="function"><span class="params">ValidationFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> decodedData = decode(rawData)</span><br><span class="line">  <span class="keyword">if</span> (isFailure(DecodeFailure)(decodedData)) &#123;</span><br><span class="line">    <span class="keyword">return</span> decodedData <span class="comment">// return the failure (DecodeFailure) as-is</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> validatedData = validate(decodedData)</span><br><span class="line">  <span class="keyword">if</span> (isFailure(ValidationFailure)(validatedData)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> OtherFailure(validatedData) <span class="comment">// return a new failure            </span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Other-alternatives"><a href="#Other-alternatives" class="headerlink" title="Other alternatives"></a>Other alternatives</h2><p>There are some existing type-safe alternatives to the standard error-handling approach such as <a target="_blank" rel="noopener" href="https://gcanti.github.io/fp-ts/modules/Either.ts.html"><code>Either</code> (from <code>fp-ts</code>)</a> and <a target="_blank" rel="noopener" href="https://github.com/supermacro/neverthrow">neverthrow</a>.</p>
+<p>However, I prefer this solution because</p>
+<ul>
+<li>It’s much less intrusive than the aforementioned alternatives. For instance, using <code>Either</code> will likely expose you to more functional programming than you might be comfortable with.</li>
+<li>You won’t have to unwrap the return value in the happy path. With <code>Either</code>  and <code>neverthrow</code>, the return value is wrapped with <code>Right</code> and <code>Ok</code>, respectively.</li>
+<li>Only 10 lines of boilerplate code, no external library dependencies.</li>
+</ul>
+<h2 id="Key-takeaways"><a href="#Key-takeaways" class="headerlink" title="Key takeaways"></a>Key takeaways</h2><ul>
+<li>TypeScript has a severe blind spot in type safety when it comes to standard error handling.</li>
+<li>Outside of <code>catch</code> blocks, create custom <code>Failure</code>s and return them instead of throwing custom <code>Error</code>s.</li>
+<li>Catch and convert an <code>Error</code> to a <code>Failure</code> if it should be explicitly handled. If not (that is most of the time), let it bubble up.</li>
+<li>By declaring all the possible <code>Failure</code> types in the signature, you can know much more   about the behavior of a function at first glance.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/17/macos-keyboard-shortcuts/" class="post-title-link" itemprop="url">MacOS Keyboard Settings and Shortcuts for Coding</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-17 01:00:08" itemprop="dateCreated datePublished" datetime="2021-01-17T01:00:08+03:00">2021-01-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for general text editing, window management, iTerm2 and some other stuff. I’m going to go over everything I do step by step in this post. I’m sure you’ll find at least some of these tips &amp; tricks pretty useful.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/01/17/macos-keyboard-shortcuts/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2020/06/14/one-board/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/14/one-board/" class="post-title-link" itemprop="url">One Task Board to Rule Them All</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 18:15:30" itemprop="dateCreated datePublished" datetime="2020-06-14T18:15:30+03:00">2020-06-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Do you ever feel that the numerous productivity tools you use every day actually cost you more time than they are supposed to save? It sure doesn’t feel right when managing your tasks becomes a non-trivial task on its own. On the other hand, there’s no one-size-fits-all solution when it comes to task managers, so it makes sense to use the right tool for the job. To address this dilemma, I recently came up with a simple hack that lets me use all my favorite tools while interacting with just one.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/14/one-board/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2020/03/28/grocery-scraping/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/28/grocery-scraping/" class="post-title-link" itemprop="url">I had to build a web scraper to buy groceries</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-28 23:39:26" itemprop="dateCreated datePublished" datetime="2020-03-28T23:39:26+03:00">2020-03-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/28/grocery-scraping/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2020/03/20/trello-project-manage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/20/trello-project-manage/" class="post-title-link" itemprop="url">How I Manage My Side-Projects Using Trello</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-20 23:39:26" itemprop="dateCreated datePublished" datetime="2020-03-20T23:39:26+03:00">2020-03-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except for very small projects. Trello is one of my favorite software tools ever, and I’m going to talk about how I manage my current side-project using its free version in this article.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/20/trello-project-manage/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2019/05/12/fullstack-roadmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/05/12/fullstack-roadmap/" class="post-title-link" itemprop="url">A Beginner's Roadmap to Becoming a Full-Stack Web Developer</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-05-12 11:57:36" itemprop="dateCreated datePublished" datetime="2019-05-12T11:57:36+03:00">2019-05-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>I’ve been learning about web development for a while pretty much from scratch. I’ve gone over numerous guides, tutorials and documentation from various resources, among which I took note of the important and beneficial ones that I believe a beginner will benefit from the most. In this article, I’m going to share them with you as a roadmap that you can follow if you want to become a full-stack web developer in a fun and efficient way.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/05/12/fullstack-roadmap/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/12/20/trello-budget/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/12/20/trello-budget/" class="post-title-link" itemprop="url">Using Firebase to Insert Budget Transactions to Google Sheets from Trello</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-12-20 17:42:21" itemprop="dateCreated datePublished" datetime="2018-12-20T17:42:21+03:00">2018-12-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>I’ve put together a <a target="_blank" rel="noopener" href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a target="_blank" rel="noopener" href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a target="_blank" rel="noopener" href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a target="_blank" rel="noopener" href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a target="_blank" rel="noopener" href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a target="_blank" rel="noopener" href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/12/20/trello-budget/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/11/10/budget-cli/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/11/10/budget-cli/" class="post-title-link" itemprop="url">A CLI App to Insert Budget Transactions in Google Spreadsheets</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-11-10 12:40:27" itemprop="dateCreated datePublished" datetime="2018-11-10T12:40:27+03:00">2018-11-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a <a target="_blank" rel="noopener" href="https://github.com/utkuufuk/budget-cli">CLI app</a> to insert transaction entries in monthly budget spreadsheets with simple commands from CLI. Today I’ll be walking you through the process of building this app.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/11/10/budget-cli/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/07/29/reddit-scraping/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/07/29/reddit-scraping/" class="post-title-link" itemprop="url">Fast Reddit Scraping</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-29 22:26:01" itemprop="dateCreated datePublished" datetime="2018-07-29T22:26:01+03:00">2018-07-29</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Today I’m going to walk you through the process of scraping search results from <a target="_blank" rel="noopener" href="https://www.reddit.com/">Reddit</a> using Python. We’re going to write a simple program that performs a keyword search and extracts useful information from the search results. Then we’re going to improve our program’s performance by taking advantage of parallel processing.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/07/29/reddit-scraping/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/06/17/alpha-beta-chess/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/17/alpha-beta-chess/" class="post-title-link" itemprop="url">Tutorial on Building a Chess Game & AI Using Eclipse RCP</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-06-17 13:13:00" itemprop="dateCreated datePublished" datetime="2018-06-17T13:13:00+03:00">2018-06-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Hi all, I’ve put together a <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/17/alpha-beta-chess/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

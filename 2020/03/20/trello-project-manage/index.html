@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How I Manage My Side-Projects Using Trello">
+<meta property="og:url" content="https://utkuufuk.com/2020/03/20/trello-project-manage/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://utkuufuk.com/2020/03/20/trello-project-manage/tododock.png">
+<meta property="og:image" content="https://utkuufuk.com/2020/03/20/trello-project-manage/board-overview.png">
+<meta property="og:image" content="https://utkuufuk.com/2020/03/20/trello-project-manage/sample-task.png">
+<meta property="og:image" content="https://utkuufuk.com/2020/03/20/trello-project-manage/butler-sort-command.png">
+<meta property="article:published_time" content="2020-03-20T20:39:26.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:13:35.320Z">
+<meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="Trello">
+<meta property="article:tag" content="Project Management">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://utkuufuk.com/2020/03/20/trello-project-manage/tododock.png">
+
+<link rel="canonical" href="https://utkuufuk.com/2020/03/20/trello-project-manage/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>How I Manage My Side-Projects Using Trello | Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2020/03/20/trello-project-manage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          How I Manage My Side-Projects Using Trello
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-20 23:39:26" itemprop="dateCreated datePublished" datetime="2020-03-20T23:39:26+03:00">2020-03-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except for very small projects. Trello is one of my favorite software tools ever, and I’m going to talk about how I manage my current side-project using its free version in this article.</p>
+<a id="more"></a>
+
+<h4 id="Why-Tho"><a href="#Why-Tho" class="headerlink" title="Why Tho?"></a>Why Tho?</h4><p>I’m sure some people see this whole side-project management thing as an unnecessary overhead that’s just going to slow them down. But here’s the thing:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Heading towards the finish line on a side project <a target="_blank" rel="noopener" href="https://t.co/wHVJJBMDbx">pic.twitter.com/wHVJJBMDbx</a></p>&mdash; I Am Devloper (@iamdevloper) <a target="_blank" rel="noopener" href="https://twitter.com/iamdevloper/status/1240029324423704576?ref_src=twsrc%5Etfw">March 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>At the end of the day, you want to turn a cool idea into reality, on your own. That’s pretty much the meaning of a side-project. However, ideas lead to more ideas, as well as new problems to be solved. Sooner or later your head will explode because of every little thing you have to keep in mind (issues, ideas, problems, suggestions) about your project. If you use something like Trello, you can forget about all that until you have to actually deal with them.</p>
+<h4 id="Demo-Project-TodoDock"><a href="#Demo-Project-TodoDock" class="headerlink" title="Demo Project: TodoDock"></a>Demo Project: TodoDock</h4><p>Before talking about how I manage it, let me briefly tell you about <a target="_blank" rel="noopener" href="https://tododock.com/">TodoDock</a>, the side-project that I’ve been working on for the last few months. In a nutshell, TodoDock lets you keep track of your periodic tasks and sends you a reminder whenever one of your tasks is due soon. The task timers don’t get automatically reset unlike repeating calendar events; you have to reset the timer manually. Therefore you won’t receive another reminder until you’ve actually waited for another full period since the last time you’ve completed the task. Here’s what it looks like:</p>
+<img src="/2020/03/20/trello-project-manage/tododock.png" class="">
+
+<p>The current state (March 2020) of the app can be categorized as an MVP at best, as there’s still a lot of work to be done. And that’s where Trello comes into play:</p>
+<img src="/2020/03/20/trello-project-manage/board-overview.png" class="">
+
+<h4 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h4><p>As you can see, I have three lists on the board: <em>Icebox</em>, <em>Backlog</em> and <em>Active</em>. Each task that I’m planning to work on soon is inside one of these. Obviously, the number of lists and the list names can be adjusted according to personal preference, as well as the size &amp; nature of the project at hand. I have this particular setup because</p>
+<ul>
+<li>I like to separate high-priority tasks (<em>Backlog</em>) from low-priority ones (<em>Icebox</em>)</li>
+<li>I like to see the things I’m currently working on in a separate list (<em>Active</em>)</li>
+</ul>
+<h4 id="Cards-Tasks-and-Labels"><a href="#Cards-Tasks-and-Labels" class="headerlink" title="Cards, Tasks and Labels"></a>Cards, Tasks and Labels</h4><p>Each card is a task. Simple as that. Here’s how I label my tasks:</p>
+<ul>
+<li><strong><em>Backend:</em></strong> server-side coding</li>
+<li><strong><em>Frontend:</em></strong> client-side coding</li>
+<li><strong><em>Test:</em></strong> requires creating new tests</li>
+<li><strong><em>DevOps:</em></strong> server administration/configuration, deployment, CI/CD and so on</li>
+<li><strong><em>User Request:</em></strong> a feature request from one of the existing users</li>
+<li><strong><em>Bug:</em></strong> pest control</li>
+<li><strong><em>Other:</em></strong> none of the above</li>
+</ul>
+<p>I assign labels to tasks primarily because then I can estimate their difficulties and priorities more accurately. The difficulty usually ends up higher if it has more than one of the first 4 labels. Similarly, the priority tends to increase if it has a <em>User Request</em> or a <em>Bug</em> label. More on priority and difficulty later…</p>
+<p>I just archive a task after completing it. I can always view an archived task if I need to. Here’s a task that I’ve archived recently:</p>
+<img src="/2020/03/20/trello-project-manage/sample-task.png" class="">
+
+<p>I’m a big fan of using checklists to break tasks into even smaller steps. That way I can get a feeling of the progress I’ve made, which helps a lot especially for difficult tasks. Also, I link the Github PR in the description so that it’s easy to see the corresponding changes if I ever want to. </p>
+<h4 id="Butler-and-Custom-Fields"><a href="#Butler-and-Custom-Fields" class="headerlink" title="Butler and Custom Fields"></a>Butler and Custom Fields</h4><p>There are a bunch of <a target="_blank" rel="noopener" href="https://trello.com/power-ups">power-ups</a> you can use on your board. You get only 1 power-up per board with the free version. You also get a default power-up called <a target="_blank" rel="noopener" href="https://help.trello.com/article/1198-an-intro-to-butler">Butler</a> which you can use to bring some automation to your board:</p>
+<blockquote><p>“Free Trello accounts also include a small taste of Butler with limited functionality.”</p>
+<footer><strong>Trello Help</strong><cite><a target="_blank" rel="noopener" href="https://help.trello.com/article/1181-butler-features-and-quotas">help.trello.com/article/1181-butler-features-and-quotas</a></cite></footer></blockquote>
+
+<p>Even that small taste of Butler can actually prove very useful. I used it to define a <em>board button</em> for sorting the tasks by priority and difficulty. You can actually see that button in the board overview screenshot above. It’s called <em>Sort by Priority</em> and it appears next to the <em>Show Menu</em> button.</p>
+<p>The problem is, you can’t assign a priority or a difficulty attribute to Trello cards by default. That’s why I spent my power-up slot on <a target="_blank" rel="noopener" href="https://trello.com/power-ups/56d5e249a98895a9797bebb9/custom-fields">Custom Fields</a>, which lets you define … wait for it … custom fields! Combined with Butler, it lets me sort all the cards within each list automatically. Here’s my <em>Sort by Priority</em> command:</p>
+<img src="/2020/03/20/trello-project-manage/butler-sort-command.png" class="">
+
+<p>You can see that the button triggers a command that runs a sequence of actions, top to bottom. That allows me to sort the equal-priority tasks additionally by their difficulty attributes. If you look at the screenshot of the board again, you’ll see that the tasks in each list are indeed sorted by those rules.</p>
+<h4 id="Other-Cool-Power-Ups"><a href="#Other-Cool-Power-Ups" class="headerlink" title="Other Cool Power-Ups"></a>Other Cool Power-Ups</h4><p>There are a few other power-ups that I would use if I didn’t have to upgrade to a paid account. I’ll just talk about a couple of those, in case some of you prefer them over <em>Custom Fields</em>.</p>
+<ul>
+<li><p><strong><em><a target="_blank" rel="noopener" href="https://screenful.com/card-dependencies-for-trello">Card Dependencies</a>:</em></strong> It would be great to see if a task blocks (or is blocked by) other tasks. For instance, in my <em>Archive</em> list, there’s a task for automatically sending reminder emails to users. That task is in fact blocked by the two tasks above it, but it’s not obvious that there’s a dependency relationship between them.</p>
+</li>
+<li><p><strong><em><a target="_blank" rel="noopener" href="https://trello.com/power-ups/55a5d916446f517774210004/github">Github</a>:</em></strong> This lets you attach pull requests, issues and branches to your cards. You can see visual badges directly from the board view indicating whether a PR has been merged, the status checks and so on.</p>
+</li>
+</ul>
+<h4 id="Bonus-Tips-amp-Tricks"><a href="#Bonus-Tips-amp-Tricks" class="headerlink" title="Bonus Tips &amp; Tricks"></a>Bonus Tips &amp; Tricks</h4><blockquote><p>Here’s my ten cents, my two cents is free.</p>
+<footer><strong>Marshall Bruce Mathers III</strong><cite>Philosopher</cite></footer></blockquote>
+
+<h5 id="When-to-create-new-tasks"><a href="#When-to-create-new-tasks" class="headerlink" title="When to create new tasks"></a>When to create new tasks</h5><p>My board isn’t a complete collection of everything that needs to be done. I create new tasks only when they become obvious to me while I work on the existing ones. Why, you ask?</p>
+<ul>
+<li>It’s impossible to think of every little thing in advance, and certainly not fun.</li>
+<li>There’s no benefit in creating a task which I’m not going to start working on soon.</li>
+<li>I rarely have to delete/update a task if I’ve created it soon before I start working on it.</li>
+</ul>
+<h5 id="Deciding-what-to-work-on-next"><a href="#Deciding-what-to-work-on-next" class="headerlink" title="Deciding what to work on next"></a>Deciding what to work on next</h5><p>I always assign an approximate priority &amp; difficulty to new tasks, because I strongly believe that it’s important to work on what matters the most right now. For example, spending my time on making task groups collapsable (2nd task in <em>Icebox</em>, a nice-to-have visual feature) wouldn’t be a great idea when I haven’t even set up automated reminder emails yet, which is a core feature of TodoDock. So I put the low-priority (&lt;=2) tasks into <em>Icebox</em> and high-priority ones into <em>Backlog</em>. After all the tasks are sorted, I just start working on the topmost task in <em>Backlog</em>, the lowest hanging fruit.</p>
+<h5 id="Limiting-the-task-scope"><a href="#Limiting-the-task-scope" class="headerlink" title="Limiting the task scope"></a>Limiting the task scope</h5><p>I try to make my tasks as small as possible. I can mention quite a few reasons for that:</p>
+<ul>
+<li>Big tasks look scary to get started.</li>
+<li>It’s easier to focus on smaller tasks.</li>
+<li>It’s easier to write tests for smaller features.</li>
+<li>It’s easier to revert a change (using Git) if it has a clear scope.</li>
+<li>It’s hard to break big tasks into a few checklist items for progress tracking.</li>
+<li>A big task might contain sub-tasks with different priority levels, which can be scheduled independently.</li>
+</ul>
+<p>That’s it, I hope you found this useful. Feel free to <a href="/about">reach out</a> if you have any comments or questions. Also, don’t forget to <a href="/subscribe">subscribe</a> if you want to get notified when I post new stuff.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Follow me on</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://github.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+
+            <span class="label">GitHub</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/utkufu">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://youtube.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-youtube"></i>
+            </span>
+
+            <span class="label">YouTube</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/subscribe">
+            <span class="icon">
+              <i class="fas fa-bell"></i>
+            </span>
+
+            <span class="label">Subscribe</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Trello/" rel="tag"><i class="fa fa-tag"></i> Trello</a>
+              <a href="/tags/Project-Management/" rel="tag"><i class="fa fa-tag"></i> Project Management</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/05/12/fullstack-roadmap/" rel="prev" title="A Beginner's Roadmap to Becoming a Full-Stack Web Developer">
+      <i class="fa fa-chevron-left"></i> A Beginner's Roadmap to Becoming a Full-Stack Web Developer
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/28/grocery-scraping/" rel="next" title="I had to build a web scraper to buy groceries">
+      I had to build a web scraper to buy groceries <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Why-Tho"><span class="nav-number">1.</span> <span class="nav-text">Why Tho?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo-Project-TodoDock"><span class="nav-number">2.</span> <span class="nav-text">Demo Project: TodoDock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lists"><span class="nav-number">3.</span> <span class="nav-text">Lists</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cards-Tasks-and-Labels"><span class="nav-number">4.</span> <span class="nav-text">Cards, Tasks and Labels</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Butler-and-Custom-Fields"><span class="nav-number">5.</span> <span class="nav-text">Butler and Custom Fields</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Other-Cool-Power-Ups"><span class="nav-number">6.</span> <span class="nav-text">Other Cool Power-Ups</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bonus-Tips-amp-Tricks"><span class="nav-number">7.</span> <span class="nav-text">Bonus Tips &amp; Tricks</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#When-to-create-new-tasks"><span class="nav-number">7.1.</span> <span class="nav-text">When to create new tasks</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Deciding-what-to-work-on-next"><span class="nav-number">7.2.</span> <span class="nav-text">Deciding what to work on next</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Limiting-the-task-scope"><span class="nav-number">7.3.</span> <span class="nav-text">Limiting the task scope</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

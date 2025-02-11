@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Today I’m going to walk you through the process of scraping search results from Reddit using Python. We’re going to write a simple program that performs a keyword search and extracts useful informatio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fast Reddit Scraping">
+<meta property="og:url" content="https://utkuufuk.com/2018/07/29/reddit-scraping/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="Today I’m going to walk you through the process of scraping search results from Reddit using Python. We’re going to write a simple program that performs a keyword search and extracts useful informatio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://utkuufuk.com/2018/07/29/reddit-scraping/reddit-scrolling.gif">
+<meta property="og:image" content="https://utkuufuk.com/2018/07/29/reddit-scraping/old-navigation.png">
+<meta property="article:published_time" content="2018-07-29T19:26:01.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:13:35.308Z">
+<meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Web Scraping">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://utkuufuk.com/2018/07/29/reddit-scraping/reddit-scrolling.gif">
+
+<link rel="canonical" href="https://utkuufuk.com/2018/07/29/reddit-scraping/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Fast Reddit Scraping | Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/07/29/reddit-scraping/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Fast Reddit Scraping
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-29 22:26:01" itemprop="dateCreated datePublished" datetime="2018-07-29T22:26:01+03:00">2018-07-29</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Today I’m going to walk you through the process of scraping search results from <a target="_blank" rel="noopener" href="https://www.reddit.com/">Reddit</a> using Python. We’re going to write a simple program that performs a keyword search and extracts useful information from the search results. Then we’re going to improve our program’s performance by taking advantage of parallel processing.</p>
+<a id="more"></a>
+
+<h4 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h4><p>We’ll be using the following Python 3 libraries to make our job easier:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup 4</a>,</li>
+<li><a target="_blank" rel="noopener" href="http://docs.python-requests.org/en/master/">Requests</a> to access the HTML content,</li>
+<li><a target="_blank" rel="noopener" href="https://lxml.de/">LXML</a> as the HTML parser,</li>
+<li>and <a target="_blank" rel="noopener" href="https://docs.python.org/3.4/library/multiprocessing.html?highlight=process">Multiprocessing</a> to speed things up.</li>
+</ul>
+<p><code>multiprocessing</code> comes with Python 3 by default as far as I know, but you may need to install the others manually using a package manager such as PIP:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip3 install beautifulsoup4</span><br><span class="line">pip3 install requests</span><br><span class="line">pip3 install lxml</span><br></pre></td></tr></table></figure>
+<h4 id="Old-Reddit"><a href="#Old-Reddit" class="headerlink" title="Old Reddit"></a>Old Reddit</h4><p>Before we begin, I want to point out that we’ll be scraping the <a target="_blank" rel="noopener" href="https://old.reddit.com/">old Reddit</a>, not the <a target="_blank" rel="noopener" href="https://www.reddit.com/">new one</a>. That’s because the new site loads more posts automatically when you scroll down:</p>
+<img src="/2018/07/29/reddit-scraping/reddit-scrolling.gif" class="">
+<br>
+
+<p>The problem is that it’s not possible to simulate this scroll-down action using a simple tool like <a target="_blank" rel="noopener" href="http://docs.python-requests.org/en/master/">Requests</a>. We’d need to use something like <a target="_blank" rel="noopener" href="https://github.com/SeleniumHQ/selenium">Selenium</a> for that kind of thing. As a workaround, we’re going to use the <a target="_blank" rel="noopener" href="https://old.reddit.com/">old site</a> which is easier to crawl using the links located on the navigation panel:</p>
+<img src="/2018/07/29/reddit-scraping/old-navigation.png" class="">
+
+<h4 id="Scraper-v1-Program-Arguments"><a href="#Scraper-v1-Program-Arguments" class="headerlink" title="Scraper v1 - Program Arguments"></a>Scraper v1 - Program Arguments</h4><p>Let’s start by making our program accept some arguments that will allow us to customize our search. Here are some useful parameters:</p>
+<ul>
+<li>keyword to search</li>
+<li>subreddit restriction (optional)</li>
+<li>date restriction (optional)</li>
+</ul>
+<p>Let’s say we want to search for the keyword “web scraping”. In this case, the URL we want to go is:<br><code>https://old.reddit.com/search?q=%22web+scraping%22</code></p>
+<p>If we want to limit our search with a particular subreddit such as “r/Python”, then our URL will become:<br><code>https://old.reddit.com/r/Python/search?q=%22web+scraping%22&amp;restrict_sr=on</code></p>
+<p>Finally, the URL is going to look like one of the following if we want to search for the posts submitted in the last year:<br><code>https://old.reddit.com/search?q=%22web+scraping%22&amp;t=year</code><br><code>https://old.reddit.com/r/Python/search?q=%22web+scraping%22&amp;restrict_sr=on&amp;t=year</code></p>
+<p>The following is the initial version of our program that builds and prints the appropriate URL according to the program arguments:</p>
+<figure class="highlight python"><figcaption><span>scraper.py (v1)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">SITE_URL = <span class="string">&#x27;https://old.reddit.com/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--keyword&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;keyword to search&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--subreddit&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional subreddit restriction&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--date&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional date restriction (day, week, month or year)&#x27;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.subreddit == <span class="literal">None</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&#x27;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;r/&#x27;</span> + args.subreddit + <span class="string">&#x27;/search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&amp;restrict_sr=on&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> args.date == <span class="string">&#x27;day&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;week&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;month&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;year&#x27;</span>:</span><br><span class="line">        searchUrl += <span class="string">&#x27;&amp;t=&#x27;</span> + args.date</span><br><span class="line">    print(<span class="string">&#x27;Search URL:&#x27;</span>, searchUrl)</span><br></pre></td></tr></table></figure>
+<p>Now we can run our program as follows:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 scraper.py --keyword=<span class="string">&quot;dave weckl&quot;</span> --subreddit=<span class="string">&quot;drums&quot;</span> --date=<span class="string">&quot;month&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="Scraper-v2-Collecting-Search-Results"><a href="#Scraper-v2-Collecting-Search-Results" class="headerlink" title="Scraper v2 - Collecting Search Results"></a>Scraper v2 - Collecting Search Results</h4><p>If you take a look at the page source, you’ll notice that all the post results are stored in <code>&lt;div&gt;</code>s with a <code>search-result-link</code> class. Also note that unless it’s the last page, there will be an <code>&lt;a&gt;</code> tag with a <code>&lt;rel&gt;</code> attribute equal to <code>nofollow next</code>. That’s how we’ll know when to stop advancing to the next page.</p>
+<p>Therefore using the URL we built from the program arguments, we can collect the post sections from all pages with a simple function that we’ll call <code>getSearchResults</code>. Here’s the second version of our program:</p>
+<figure class="highlight python"><figcaption><span>scraper.py (v2)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">SITE_URL = <span class="string">&#x27;https://old.reddit.com/&#x27;</span></span><br><span class="line">REQUEST_AGENT = <span class="string">&#x27;Mozilla/5.0 Chrome/47.0.2526.106 Safari/537.36&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createSoup</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="keyword">return</span> BeautifulSoup(requests.get(url, headers=&#123;<span class="string">&#x27;User-Agent&#x27;</span>:REQUEST_AGENT&#125;).text, <span class="string">&#x27;lxml&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSearchResults</span>(<span class="params">searchUrl</span>):</span></span><br><span class="line">    posts = []</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        resultPage = createSoup(searchUrl)</span><br><span class="line">        posts += resultPage.findAll(<span class="string">&#x27;div&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-result-link&#x27;</span>&#125;)</span><br><span class="line">        footer = resultPage.findAll(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;rel&#x27;</span>:<span class="string">&#x27;nofollow next&#x27;</span>&#125;)</span><br><span class="line">        <span class="keyword">if</span> footer:</span><br><span class="line">            searchUrl = footer[-<span class="number">1</span>][<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> posts</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--keyword&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;keyword to search&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--subreddit&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional subreddit restriction&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--date&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional date restriction (day, week, month or year)&#x27;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.subreddit == <span class="literal">None</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&#x27;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;r/&#x27;</span> + args.subreddit + <span class="string">&#x27;/search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&amp;restrict_sr=on&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> args.date == <span class="string">&#x27;day&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;week&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;month&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;year&#x27;</span>:</span><br><span class="line">        searchUrl += <span class="string">&#x27;&amp;t=&#x27;</span> + args.date</span><br><span class="line">    posts = getSearchResults(searchUrl)</span><br><span class="line">    print(<span class="string">&#x27;Search URL:&#x27;</span>, searchUrl, <span class="string">&#x27;\nFound&#x27;</span>, <span class="built_in">len</span>(posts), <span class="string">&#x27;posts.&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Scraper-v3-Parsing-Post-Data"><a href="#Scraper-v3-Parsing-Post-Data" class="headerlink" title="Scraper v3 - Parsing Post Data"></a>Scraper v3 - Parsing Post Data</h4><p>Now that we have a bunch of posts in the form of a <code>bs4.element.Tag</code> array, we can extract useful information by parsing each element of this array further. We can extract information such as:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Information</th>
+<th align="left">Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">date</td>
+<td align="left"><code>datetime</code> attribute of the <code>&lt;time&gt;</code> tag</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="left"><code>&lt;a&gt;</code> tag with <code>search-title</code> class</td>
+</tr>
+<tr>
+<td align="left">score</td>
+<td align="left"><code>&lt;span&gt;</code> tag with <code>search-score</code> class</td>
+</tr>
+<tr>
+<td align="left">author</td>
+<td align="left"><code>&lt;a&gt;</code> tag with <code>author</code> class</td>
+</tr>
+<tr>
+<td align="left">subreddit</td>
+<td align="left"><code>&lt;a&gt;</code> tag with <code>search-subreddit-link</code> class</td>
+</tr>
+<tr>
+<td align="left">URL</td>
+<td align="left"><code>href</code> attribute of the <code>&lt;a&gt;</code> tag with <code>search-comments</code> class</td>
+</tr>
+<tr>
+<td align="left"># of comments</td>
+<td align="left">text field of the <code>&lt;a&gt;</code> tag with <code>search-comments</code> class</td>
+</tr>
+</tbody></table>
+<p>We’re also going to create a container object to store the extracted data and save it as a JSON file (<code>product.json</code>). We’ll load this file in the beginning of our program which may contain data from other keyword searches. When we’re done scraping the current keyword, we’ll append the new content to the existing data. Here’s the third version of our program:</p>
+<figure class="highlight python"><figcaption><span>scraper.py (v3)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">SITE_URL = <span class="string">&#x27;https://old.reddit.com/&#x27;</span></span><br><span class="line">REQUEST_AGENT = <span class="string">&#x27;Mozilla/5.0 Chrome/47.0.2526.106 Safari/537.36&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createSoup</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="keyword">return</span> BeautifulSoup(requests.get(url, headers=&#123;<span class="string">&#x27;User-Agent&#x27;</span>:REQUEST_AGENT&#125;).text, <span class="string">&#x27;lxml&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSearchResults</span>(<span class="params">searchUrl</span>):</span></span><br><span class="line">    posts = []</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        resultPage = createSoup(searchUrl)</span><br><span class="line">        posts += resultPage.findAll(<span class="string">&#x27;div&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-result-link&#x27;</span>&#125;)</span><br><span class="line">        footer = resultPage.findAll(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;rel&#x27;</span>:<span class="string">&#x27;nofollow next&#x27;</span>&#125;)</span><br><span class="line">        <span class="keyword">if</span> footer:</span><br><span class="line">            searchUrl = footer[-<span class="number">1</span>][<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> posts</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parsePosts</span>(<span class="params">posts, product, keyword</span>):</span></span><br><span class="line">    <span class="keyword">for</span> post <span class="keyword">in</span> posts:</span><br><span class="line">        time = post.find(<span class="string">&#x27;time&#x27;</span>)[<span class="string">&#x27;datetime&#x27;</span>]</span><br><span class="line">        date = datetime.strptime(time[:<span class="number">19</span>], <span class="string">&#x27;%Y-%m-%dT%H:%M:%S&#x27;</span>)</span><br><span class="line">        title = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-title&#x27;</span>&#125;).text</span><br><span class="line">        score = post.find(<span class="string">&#x27;span&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-score&#x27;</span>&#125;).text</span><br><span class="line">        score = <span class="built_in">int</span>(re.match(<span class="string">r&#x27;[+-]?\d+&#x27;</span>, score).group(<span class="number">0</span>))</span><br><span class="line">        author = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;author&#x27;</span>&#125;).text</span><br><span class="line">        subreddit = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-subreddit-link&#x27;</span>&#125;).text</span><br><span class="line">        commentsTag = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-comments&#x27;</span>&#125;)</span><br><span class="line">        url = commentsTag[<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">        numComments = <span class="built_in">int</span>(re.match(<span class="string">r&#x27;\d+&#x27;</span>, commentsTag.text).group(<span class="number">0</span>))</span><br><span class="line">        product[keyword].append(&#123;<span class="string">&#x27;title&#x27;</span>:title, <span class="string">&#x27;url&#x27;</span>:url, <span class="string">&#x27;date&#x27;</span>:<span class="built_in">str</span>(date),</span><br><span class="line">                                 <span class="string">&#x27;score&#x27;</span>:score, <span class="string">&#x27;author&#x27;</span>:author, <span class="string">&#x27;subreddit&#x27;</span>:subreddit&#125;)</span><br><span class="line">    <span class="keyword">return</span> product</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--keyword&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;keyword to search&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--subreddit&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional subreddit restriction&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--date&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional date restriction (day, week, month or year)&#x27;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.subreddit == <span class="literal">None</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&#x27;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;r/&#x27;</span> + args.subreddit + <span class="string">&#x27;/search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&amp;restrict_sr=on&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> args.date == <span class="string">&#x27;day&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;week&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;month&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;year&#x27;</span>:</span><br><span class="line">        searchUrl += <span class="string">&#x27;&amp;t=&#x27;</span> + args.date</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        product = json.load(<span class="built_in">open</span>(<span class="string">&#x27;product.json&#x27;</span>))</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        print(<span class="string">&#x27;WARNING: Database file not found. Creating a new one...&#x27;</span>)</span><br><span class="line">        product = &#123;&#125;</span><br><span class="line">    print(<span class="string">&#x27;Search URL:&#x27;</span>, searchUrl)</span><br><span class="line">    posts = getSearchResults(searchUrl)</span><br><span class="line">    print(<span class="string">&#x27;Started scraping&#x27;</span>, <span class="built_in">len</span>(posts), <span class="string">&#x27;posts.&#x27;</span>)</span><br><span class="line">    keyword = args.keyword.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">    product[keyword] = []</span><br><span class="line">    product = parsePosts(posts, product, keyword)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;product.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        json.dump(product, f, indent=<span class="number">4</span>, ensure_ascii=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>Now we can search for different keywords by running our program multiple times. The extracted data will be appended to the <code>product.json</code> file after each execution.</p>
+<h4 id="Scraper-v4-Scraping-Comments"><a href="#Scraper-v4-Scraping-Comments" class="headerlink" title="Scraper v4 - Scraping Comments"></a>Scraper v4 - Scraping Comments</h4><p>So far we’ve been able to scrape information from the post results easily, since this information is available in a given results page. But we might also want to scrape comment information which cannot be accessed from the results page. We must instead parse the comment page of each indiviadual post using the URL that we previously extract in our <code>parsePosts</code> funciton. </p>
+<p>If you take a close look at the HTML source of a comment page such as <a target="_blank" rel="noopener" href="https://old.reddit.com/r/ProgrammerHumor/comments/7htzqt/junior_devs_vs_senior_devs/">this one</a>, you’ll see that the comments are located inside a <code>&lt;div&gt;</code> with a <code>sitetable nestedlisting</code> class. Each comment inside this <code>&lt;div&gt;</code> is stored in another <code>&lt;div&gt;</code> with a <code>data-type</code> attribute equal to <code>comment</code>. From there, we can obtain some useful information such as:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Information</th>
+<th align="left">Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"># of replies</td>
+<td align="left"><code>data-replies</code> attribute</td>
+</tr>
+<tr>
+<td align="left">author</td>
+<td align="left"><code>&lt;a&gt;</code> tag with <code>author</code> class inside the <code>&lt;p&gt;</code> tag with <code>tagline</code> class</td>
+</tr>
+<tr>
+<td align="left">date</td>
+<td align="left"><code>datetime</code> attribute in the <code>&lt;time&gt;</code> tag inside the <code>&lt;p&gt;</code> tag with <code>tagline</code> class</td>
+</tr>
+<tr>
+<td align="left">comment ID</td>
+<td align="left"><code>name</code> attribute in the <code>&lt;a&gt;</code> tag inside the <code>&lt;p&gt;</code> tag with <code>parent</code> class</td>
+</tr>
+<tr>
+<td align="left">parent ID</td>
+<td align="left"><code>&lt;a&gt;</code> tag with the <code>data-event-action</code> attribute equal to <code>parent</code></td>
+</tr>
+<tr>
+<td align="left">text</td>
+<td align="left">text field of the <code>&lt;div&gt;</code> tag with <code>md</code> class</td>
+</tr>
+<tr>
+<td align="left">score</td>
+<td align="left">text field of the <code>&lt;span&gt;</code> tag with <code>score unvoted</code> class</td>
+</tr>
+</tbody></table>
+<p>Let’s create a new function called <code>parseComments</code> and call it from our <code>parsePosts</code> function so that we can get the comment data along with the post data:</p>
+<figure class="highlight python"><figcaption><span>scraper.py (v4 - partial)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parseComments</span>(<span class="params">commentsUrl</span>):</span></span><br><span class="line">    commentTree = &#123;&#125;</span><br><span class="line">    commentsPage = createSoup(commentsUrl)</span><br><span class="line">    commentsDiv = commentsPage.find(<span class="string">&#x27;div&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;sitetable nestedlisting&#x27;</span>&#125;)</span><br><span class="line">    comments = commentsDiv.findAll(<span class="string">&#x27;div&#x27;</span>, &#123;<span class="string">&#x27;data-type&#x27;</span>:<span class="string">&#x27;comment&#x27;</span>&#125;)</span><br><span class="line">    <span class="keyword">for</span> comment <span class="keyword">in</span> comments:</span><br><span class="line">        numReplies = <span class="built_in">int</span>(comment[<span class="string">&#x27;data-replies&#x27;</span>])</span><br><span class="line">        tagline = comment.find(<span class="string">&#x27;p&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;tagline&#x27;</span>&#125;)</span><br><span class="line">        author = tagline.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;author&#x27;</span>&#125;)</span><br><span class="line">        author = <span class="string">&quot;[deleted]&quot;</span> <span class="keyword">if</span> author == <span class="literal">None</span> <span class="keyword">else</span> author.text</span><br><span class="line">        date = tagline.find(<span class="string">&#x27;time&#x27;</span>)[<span class="string">&#x27;datetime&#x27;</span>]</span><br><span class="line">        date = datetime.strptime(date[:<span class="number">19</span>], <span class="string">&#x27;%Y-%m-%dT%H:%M:%S&#x27;</span>)</span><br><span class="line">        commentId = comment.find(<span class="string">&#x27;p&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;parent&#x27;</span>&#125;).find(<span class="string">&#x27;a&#x27;</span>)[<span class="string">&#x27;name&#x27;</span>]</span><br><span class="line">        content = comment.find(<span class="string">&#x27;div&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;md&#x27;</span>&#125;).text.replace(<span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        score = comment.find(<span class="string">&#x27;span&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;score unvoted&#x27;</span>&#125;)</span><br><span class="line">        score = <span class="number">0</span> <span class="keyword">if</span> score == <span class="literal">None</span> <span class="keyword">else</span> <span class="built_in">int</span>(re.match(<span class="string">r&#x27;[+-]?\d+&#x27;</span>, score.text).group(<span class="number">0</span>))</span><br><span class="line">        parent = comment.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;data-event-action&#x27;</span>:<span class="string">&#x27;parent&#x27;</span>&#125;)</span><br><span class="line">        parentId = parent[<span class="string">&#x27;href&#x27;</span>][<span class="number">1</span>:] <span class="keyword">if</span> parent != <span class="literal">None</span> <span class="keyword">else</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">        parentId = <span class="string">&#x27;&#x27;</span> <span class="keyword">if</span> parentId == commentId <span class="keyword">else</span> parentId</span><br><span class="line">        commentTree[commentId] = &#123;<span class="string">&#x27;author&#x27;</span>:author, <span class="string">&#x27;reply-to&#x27;</span>:parentId, <span class="string">&#x27;text&#x27;</span>:content,</span><br><span class="line">                                  <span class="string">&#x27;score&#x27;</span>:score, <span class="string">&#x27;num-replies&#x27;</span>:numReplies, <span class="string">&#x27;date&#x27;</span>:<span class="built_in">str</span>(date)&#125;</span><br><span class="line">    <span class="keyword">return</span> commentTree</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parsePosts</span>(<span class="params">posts, product, keyword</span>):</span></span><br><span class="line">    <span class="keyword">for</span> post <span class="keyword">in</span> posts:</span><br><span class="line">        time = post.find(<span class="string">&#x27;time&#x27;</span>)[<span class="string">&#x27;datetime&#x27;</span>]</span><br><span class="line">        date = datetime.strptime(time[:<span class="number">19</span>], <span class="string">&#x27;%Y-%m-%dT%H:%M:%S&#x27;</span>)</span><br><span class="line">        title = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-title&#x27;</span>&#125;).text</span><br><span class="line">        score = post.find(<span class="string">&#x27;span&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-score&#x27;</span>&#125;).text</span><br><span class="line">        score = <span class="built_in">int</span>(re.match(<span class="string">r&#x27;[+-]?\d+&#x27;</span>, score).group(<span class="number">0</span>))</span><br><span class="line">        author = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;author&#x27;</span>&#125;).text</span><br><span class="line">        subreddit = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-subreddit-link&#x27;</span>&#125;).text</span><br><span class="line">        commentsTag = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-comments&#x27;</span>&#125;)</span><br><span class="line">        url = commentsTag[<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">        numComments = <span class="built_in">int</span>(re.match(<span class="string">r&#x27;\d+&#x27;</span>, commentsTag.text).group(<span class="number">0</span>))</span><br><span class="line">        commentTree = &#123;&#125; <span class="keyword">if</span> numComments == <span class="number">0</span> <span class="keyword">else</span> parseComments(url)</span><br><span class="line">        product[keyword].append(&#123;<span class="string">&#x27;title&#x27;</span>:title, <span class="string">&#x27;url&#x27;</span>:url, <span class="string">&#x27;date&#x27;</span>:<span class="built_in">str</span>(date), <span class="string">&#x27;score&#x27;</span>:score,</span><br><span class="line">                                 <span class="string">&#x27;author&#x27;</span>:author, <span class="string">&#x27;subreddit&#x27;</span>:subreddit, <span class="string">&#x27;comments&#x27;</span>:commentTree&#125;)</span><br><span class="line">    <span class="keyword">return</span> product</span><br></pre></td></tr></table></figure>
+<h4 id="Scraper-v5-Multiprocessing"><a href="#Scraper-v5-Multiprocessing" class="headerlink" title="Scraper v5 - Multiprocessing"></a>Scraper v5 - Multiprocessing</h4><p>Our program is functionally complete at this point. However, it runs a bit slowly because all the work is done serially by a single process. We can improve the performance by handling the posts by multiple processes using the <code>Process</code> and <code>Manager</code> objects from the <code>multiprocessing</code> library.</p>
+<p>The first thing we need to do is to rename the <code>parsePosts</code> function and make it handle only a single post. To do that, we’re simply going to remove the <code>for</code> statement. We also need to change the function parameters a little bit. Instead of passing our original product object, we’ll pass a list object to append the results obtained by the current process.</p>
+<figure class="highlight python"><figcaption><span>scraper.py (v5 - partial)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parsePost</span>(<span class="params">post, results</span>):</span></span><br><span class="line">    time = post.find(<span class="string">&#x27;time&#x27;</span>)[<span class="string">&#x27;datetime&#x27;</span>]</span><br><span class="line">    date = datetime.strptime(time[:<span class="number">19</span>], <span class="string">&#x27;%Y-%m-%dT%H:%M:%S&#x27;</span>)</span><br><span class="line">    title = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-title&#x27;</span>&#125;).text</span><br><span class="line">    score = post.find(<span class="string">&#x27;span&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-score&#x27;</span>&#125;).text</span><br><span class="line">    score = <span class="built_in">int</span>(re.match(<span class="string">r&#x27;[+-]?\d+&#x27;</span>, score).group(<span class="number">0</span>))</span><br><span class="line">    author = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;author&#x27;</span>&#125;).text</span><br><span class="line">    subreddit = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-subreddit-link&#x27;</span>&#125;).text</span><br><span class="line">    commentsTag = post.find(<span class="string">&#x27;a&#x27;</span>, &#123;<span class="string">&#x27;class&#x27;</span>:<span class="string">&#x27;search-comments&#x27;</span>&#125;)</span><br><span class="line">    url = commentsTag[<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">    numComments = <span class="built_in">int</span>(re.match(<span class="string">r&#x27;\d+&#x27;</span>, commentsTag.text).group(<span class="number">0</span>))</span><br><span class="line">    commentTree = &#123;&#125; <span class="keyword">if</span> numComments == <span class="number">0</span> <span class="keyword">else</span> parseComments(url)</span><br><span class="line">    results.append(&#123;<span class="string">&#x27;title&#x27;</span>:title, <span class="string">&#x27;url&#x27;</span>:url, <span class="string">&#x27;date&#x27;</span>:<span class="built_in">str</span>(date), <span class="string">&#x27;score&#x27;</span>:score,</span><br><span class="line">                    <span class="string">&#x27;author&#x27;</span>:author, <span class="string">&#x27;subreddit&#x27;</span>:subreddit, <span class="string">&#x27;comments&#x27;</span>:commentTree&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>results</code> is actually a <code>multiprocessing.managers.ListProxy</code> object that we can use to accumulate the output generated by all processes. We’ll later convert it to a regular list and save it in our product. Our main script will now look like as follows:</p>
+<figure class="highlight python"><figcaption><span>scraper.py (v5 - partial)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--keyword&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;keyword to search&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--subreddit&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional subreddit restriction&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--date&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;optional date restriction (day, week, month or year)&#x27;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.subreddit == <span class="literal">None</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&#x27;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        searchUrl = SITE_URL + <span class="string">&#x27;r/&#x27;</span> + args.subreddit + <span class="string">&#x27;/search?q=&quot;&#x27;</span> + args.keyword + <span class="string">&#x27;&quot;&amp;restrict_sr=on&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> args.date == <span class="string">&#x27;day&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;week&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;month&#x27;</span> <span class="keyword">or</span> args.date == <span class="string">&#x27;year&#x27;</span>:</span><br><span class="line">        searchUrl += <span class="string">&#x27;&amp;t=&#x27;</span> + args.date</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        product = json.load(<span class="built_in">open</span>(<span class="string">&#x27;product.json&#x27;</span>))</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        print(<span class="string">&#x27;WARNING: Database file not found. Creating a new one...&#x27;</span>)</span><br><span class="line">        product = &#123;&#125;</span><br><span class="line">    print(<span class="string">&#x27;Search URL:&#x27;</span>, searchUrl)</span><br><span class="line">    posts = getSearchResults(searchUrl)</span><br><span class="line">    print(<span class="string">&#x27;Started scraping&#x27;</span>, <span class="built_in">len</span>(posts), <span class="string">&#x27;posts.&#x27;</span>)</span><br><span class="line">    keyword = args.keyword.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">    results = Manager().<span class="built_in">list</span>()</span><br><span class="line">    jobs = []</span><br><span class="line">    <span class="keyword">for</span> post <span class="keyword">in</span> posts:</span><br><span class="line">        job = Process(target=parsePost, args=(post, results))</span><br><span class="line">        jobs.append(job)</span><br><span class="line">        job.start()</span><br><span class="line">    <span class="keyword">for</span> job <span class="keyword">in</span> jobs:</span><br><span class="line">        job.join()</span><br><span class="line">    product[keyword] = <span class="built_in">list</span>(results)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;product.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        json.dump(product, f, indent=<span class="number">4</span>, ensure_ascii=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>This simple technique alone will greatly speed-up the performance. For instance when I perform a search involving 163 posts in my machine, the serial version of the program takes 150 seconds to execute, corresponding to approximately 1 post per second. On the other hand, the parallel version only takes 15 seconds to execute (~10 posts per second) which is 10x faster.</p>
+<p>You can check out the complete <a target="_blank" rel="noopener" href="https://github.com/utkuufuk/reddit-scraper">source code on Github</a>. Also, make sure to <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Follow me on</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://github.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+
+            <span class="label">GitHub</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/utkufu">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://youtube.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-youtube"></i>
+            </span>
+
+            <span class="label">YouTube</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/subscribe">
+            <span class="icon">
+              <i class="fas fa-bell"></i>
+            </span>
+
+            <span class="label">Subscribe</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/Web-Scraping/" rel="tag"><i class="fa fa-tag"></i> Web Scraping</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/17/alpha-beta-chess/" rel="prev" title="Tutorial on Building a Chess Game & AI Using Eclipse RCP">
+      <i class="fa fa-chevron-left"></i> Tutorial on Building a Chess Game & AI Using Eclipse RCP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/11/10/budget-cli/" rel="next" title="A CLI App to Insert Budget Transactions in Google Spreadsheets">
+      A CLI App to Insert Budget Transactions in Google Spreadsheets <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Tools"><span class="nav-number">1.</span> <span class="nav-text">Tools</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Old-Reddit"><span class="nav-number">2.</span> <span class="nav-text">Old Reddit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scraper-v1-Program-Arguments"><span class="nav-number">3.</span> <span class="nav-text">Scraper v1 - Program Arguments</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scraper-v2-Collecting-Search-Results"><span class="nav-number">4.</span> <span class="nav-text">Scraper v2 - Collecting Search Results</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scraper-v3-Parsing-Post-Data"><span class="nav-number">5.</span> <span class="nav-text">Scraper v3 - Parsing Post Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scraper-v4-Scraping-Comments"><span class="nav-number">6.</span> <span class="nav-text">Scraper v4 - Scraping Comments</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scraper-v5-Multiprocessing"><span class="nav-number">7.</span> <span class="nav-text">Scraper v5 - Multiprocessing</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

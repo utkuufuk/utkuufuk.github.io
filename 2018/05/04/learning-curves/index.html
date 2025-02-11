@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Learning curves are very useful for analyzing the bias-variance characteristics of a machine learning model. In this post, I’m going to talk about how to make use of them in a case study of a regressi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning Curves in Linear &amp; Polynomial Regression">
+<meta property="og:url" content="https://utkuufuk.com/2018/05/04/learning-curves/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="Learning curves are very useful for analyzing the bias-variance characteristics of a machine learning model. In this post, I’m going to talk about how to make use of them in a case study of a regressi">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/bias-variance.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_3_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_7_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_11_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_23_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_25_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_31_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_33_0.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/05/04/learning-curves/learning-curves_35_0.png">
+<meta property="article:published_time" content="2018-05-03T22:55:01.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:13:35.293Z">
+<meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://utkuufuk.com/2018/05/04/learning-curves/bias-variance.png">
+
+<link rel="canonical" href="https://utkuufuk.com/2018/05/04/learning-curves/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Learning Curves in Linear & Polynomial Regression | Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/05/04/learning-curves/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Learning Curves in Linear & Polynomial Regression
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-05-04 01:55:01" itemprop="dateCreated datePublished" datetime="2018-05-04T01:55:01+03:00">2018-05-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Learning curves are very useful for analyzing the bias-variance characteristics of a machine learning model. In this post, I’m going to talk about how to make use of them in a case study of a regression problem. We’re going to start with a simple linear regression model and improve it as much as we can by taking advantage of learning curves.</p>
+<a id="more"></a>
+
+<h4 id="Introduction-to-Learning-Curves"><a href="#Introduction-to-Learning-Curves" class="headerlink" title="Introduction to Learning Curves"></a>Introduction to Learning Curves</h4><p>In a nutshell, learning curves show how the training and validation errors change with respect to the number of training examples used while training a machine learning model.</p>
+<ul>
+<li><p>If a model is balanced, both errors converge to small values as the training sample size increases.</p>
+</li>
+<li><p>If a model has <strong>high bias</strong>, it ends up <strong>underfitting</strong> the data. As a result, both errors fail to decrease no matter how many examples there are in the training set.</p>
+</li>
+<li><p>If a model has <strong>high variance</strong>, it ends up  <strong>overfitting</strong> the training data. In that case, increasing the training sample size decreases the training error but it fails to decrease the validation error.</p>
+</li>
+</ul>
+<p>The figure below demonstrates each of those cases:</p>
+<img src="/2018/05/04/learning-curves/bias-variance.png" class="">
+
+<h4 id="Problem-Definition-and-Dataset"><a href="#Problem-Definition-and-Dataset" class="headerlink" title="Problem Definition and Dataset"></a>Problem Definition and Dataset</h4><p>After this incredibly brief introduction, let me introduce you to today’s problem where we’ll get to see learning curves in action. It’s another problem from <a target="_blank" rel="noopener" href="http://www.andrewng.org/">Andrew Ng’s</a> <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/machine-learning">machine learning course</a>, in which the objective is to predict the amount of water flowing out of a dam, given the change of water level in a reservoir. </p>
+<p>The <a href="/2018/05/04/learning-curves/water.mat" title="dataset file">dataset file</a> we’re about to read contains historical records on the change in water level and the amount of water flowing out of the dam. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a MATLAB assignment. Fortunately, it’s pretty easy to load <strong><code>.mat</code></strong> files in Python using the <strong><code>loadmat</code></strong> function from <a target="_blank" rel="noopener" href="https://www.scipy.org/">SciPy</a>. We’ll also need <a target="_blank" rel="noopener" href="http://www.numpy.org/">NumPy</a> and <a target="_blank" rel="noopener" href="https://matplotlib.org/">Matplotlib</a> for matrix operations and data visualization:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt <span class="comment"># we&#x27;ll need this later</span></span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"></span><br><span class="line">dataset = sio.loadmat(<span class="string">&quot;water.mat&quot;</span>)</span><br><span class="line">x_train = dataset[<span class="string">&quot;X&quot;</span>]</span><br><span class="line">x_val = dataset[<span class="string">&quot;Xval&quot;</span>]</span><br><span class="line">x_test = dataset[<span class="string">&quot;Xtest&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># squeeze the target variables into one-dimensional arrays</span></span><br><span class="line">y_train = dataset[<span class="string">&quot;y&quot;</span>].squeeze()</span><br><span class="line">y_val = dataset[<span class="string">&quot;yval&quot;</span>].squeeze()</span><br><span class="line">y_test = dataset[<span class="string">&quot;ytest&quot;</span>].squeeze()</span><br></pre></td></tr></table></figure>
+<p>The dataset is divided into three samples:</p>
+<ul>
+<li>The <strong>training sample</strong> consists of <strong><code>x_train</code></strong> and <strong><code>y_train</code>.</strong></li>
+<li>The <strong>validation sample</strong> consists of <strong><code>x_val</code></strong> and <strong><code>y_val</code>.</strong></li>
+<li>The <strong>test sample</strong> consists of <strong><code>x_test</code></strong> and <strong><code>y_test</code>.</strong></li>
+</ul>
+<p>Notice that we have to explicitly convert the target variables (<strong><code>y_train</code></strong>, <strong><code>y_val</code></strong> and <strong><code>y_test</code></strong>) to one dimensional vectors, because they are stored as matrices inside the <strong><code>.mat</code></strong> file.</p>
+<p>Let’s plot the training sample to see what it looks like:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(x_train, y_train, marker=<span class="string">&quot;x&quot;</span>, s=<span class="number">40</span>, c=<span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;change in water level&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;water flowing out of the dam&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Training sample&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_3_0.png" class="">
+
+<h4 id="The-Game-Plan"><a href="#The-Game-Plan" class="headerlink" title="The Game Plan"></a>The Game Plan</h4><p>Alright, it’s time to come up with a strategy. First of all, it’s clear that there’s a nonlinear relationship between $x$ and $y$. Normally we would rule out any linear model because of that. However, we are going to begin by training a linear regression model so that we can see how the learning curves of a model with high bias look like. </p>
+<p>Then we’ll train a polynomial regression model which is going to be much more flexible than linear regression. This will let us see the learning curves of a model with high variance.</p>
+<p>Finally, we’ll add <strong>regularization</strong> to the existing polynomial regression model and see how a balanced model’s learning curves look like.</p>
+<h4 id="Linear-Regression"><a href="#Linear-Regression" class="headerlink" title="Linear Regression"></a>Linear Regression</h4><p>I’ve already shown you in the <a href="/2018/04/21/linear-regression/" title="previous post">previous post</a> how to train a linear regression model using gradient descent. Before proceeding any further, I strongly encourage you to take a look at it if you don’t have at least a basic understanding of linear regression.</p>
+<p>Here I’ll show you an easier way to train a linear regression model using an optimization function called <strong><code>fmin_cg</code></strong> from <strong><code>scipy.optimize</code>.</strong> You can check out the detailed documentation <a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy-0.19.0/reference/generated/scipy.optimize.fmin_cg.html">here</a>. The cool thing about this function is that it’s faster than gradient descent and also you don’t have to select a learning rate by trial and error.</p>
+<p><strong><code>fmin_cg</code></strong> needs a function that returns the cost and another one that returns the gradient of the cost for a given hypothesis. We have to pass those to <strong><code>fmin_cg</code></strong> as function arguments. Fortunately, we can reuse some code from the <a href="/2018/04/21/linear-regression/" title="previous post">previous post</a>:</p>
+<ul>
+<li>We can completely reuse the <strong><code>cost</code></strong> function because it’s independent of the optimization method that we use.</li>
+<li>From the <strong><code>gradient_descent</code></strong> function, we can borrow the part where the gradient of the cost function is evaluated.</li>
+</ul>
+<p>So here’s (almost) all we need in order to train a linear regression model:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(np.square(predictions - y)) / (<span class="number">2</span> * <span class="built_in">len</span>(y))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_linear_regression</span>(<span class="params">X, y</span>):</span></span><br><span class="line">    theta = np.zeros(X.shape[<span class="number">1</span>]) <span class="comment"># initialize model parameters with zeros</span></span><br><span class="line">    <span class="keyword">return</span> opt.fmin_cg(cost, theta, cost_gradient, (X, y), disp=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>If you look at our <strong><code>cost</code></strong> function, there we evaluate the cross product of the feature matrix $X$ and the vector of model parameters $\theta$. Remember, this is only possible if the matrix dimensions match. Therefore we also need a tiny utility function to insert an additional first column of all ones to a raw feature matrix such as <strong><code>x_train</code></strong>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insert_ones</span>(<span class="params">x</span>):</span></span><br><span class="line">    X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">    X[:, <span class="number">1</span>:] = x</span><br><span class="line">    <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+<p>Now let’s train a linear regression model and plot the linear fit on top of the training sample:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X_train = insert_ones(x_train)</span><br><span class="line">theta = train_linear_regression(X_train, y_train)</span><br><span class="line">hypothesis = X_train @ theta</span><br><span class="line">ax.plot(X_train[:, <span class="number">1</span>], hypothesis, linewidth=<span class="number">2</span>)</span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_7_0.png" class="">
+
+<h4 id="Learning-Curves-for-Linear-Regression"><a href="#Learning-Curves-for-Linear-Regression" class="headerlink" title="Learning Curves for Linear Regression"></a>Learning Curves for Linear Regression</h4><p>The above plot clearly shows that linear regression is not suitable for this task. Let’s also look at its learning curves and see if we can draw the same conclusion. </p>
+<p>While plotting learning curves, we’re going to start with $2$ training examples and increase them one by one. In each iteration, we’ll train a model and evaluate the training error on the existing training sample, and the validation error on the whole validation sample:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">learning_curves</span>(<span class="params">X_train, y_train, X_val, y_val</span>):</span></span><br><span class="line">    train_err = np.zeros(<span class="built_in">len</span>(y_train))</span><br><span class="line">    val_err = np.zeros(<span class="built_in">len</span>(y_train))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(y_train)):</span><br><span class="line">        theta = train_linear_regression(X_train[<span class="number">0</span>:i + <span class="number">1</span>, :], y_train[<span class="number">0</span>:i + <span class="number">1</span>])</span><br><span class="line">        train_err[i] = cost(theta, X_train[<span class="number">0</span>:i + <span class="number">1</span>, :], y_train[<span class="number">0</span>:i + <span class="number">1</span>])</span><br><span class="line">        val_err[i] = cost(theta, X_val, y_val)</span><br><span class="line">    plt.plot(<span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">len</span>(y_train) + <span class="number">1</span>), train_err[<span class="number">1</span>:], c=<span class="string">&quot;r&quot;</span>, linewidth=<span class="number">2</span>)</span><br><span class="line">    plt.plot(<span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">len</span>(y_train) + <span class="number">1</span>), val_err[<span class="number">1</span>:], c=<span class="string">&quot;b&quot;</span>, linewidth=<span class="number">2</span>)</span><br><span class="line">    plt.xlabel(<span class="string">&quot;number of training examples&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&quot;error&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">    plt.legend([<span class="string">&quot;training&quot;</span>, <span class="string">&quot;validation&quot;</span>], loc=<span class="string">&quot;best&quot;</span>)</span><br><span class="line">    plt.axis([<span class="number">2</span>, <span class="built_in">len</span>(y_train), <span class="number">0</span>, <span class="number">100</span>])</span><br><span class="line">    plt.grid()</span><br></pre></td></tr></table></figure>
+<p>In order to use this function, we have to resize <strong><code>x_val</code></strong> just like we did <strong><code>x_train</code></strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X_val = insert_ones(x_val)</span><br><span class="line">plt.title(<span class="string">&quot;Learning Curves for Linear Regression&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">learning_curves(X_train, y_train, X_val, y_val)</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_11_0.png" class="">
+<br>
+
+<p>As expected, we were unable to sufficiently decrease either the training or the validation error.</p>
+<h4 id="Polynomial-Regression"><a href="#Polynomial-Regression" class="headerlink" title="Polynomial Regression"></a>Polynomial Regression</h4><p>Now it’s time to introduce some nonlinearity with polynomial regression.</p>
+<h5 id="Feature-Mapping"><a href="#Feature-Mapping" class="headerlink" title="Feature Mapping"></a>Feature Mapping</h5><p>In order to train a polynomial regression model, the existing feature(s) have to be mapped to artificially generated polynomial features. Then the rest is pretty much the same drill.</p>
+<p>In our case we only have a single feature $x_1$, the change in water level. Therefore we can simply compute the first several powers of $x_1$ to artificially obtain new polynomial features. Let’s create a simple function for this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">poly_features</span>(<span class="params">x, degree</span>):</span></span><br><span class="line">    X_poly = np.zeros(shape=(<span class="built_in">len</span>(x), degree))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, degree):</span><br><span class="line">        X_poly[:, i] = x.squeeze() ** (i + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> X_poly</span><br></pre></td></tr></table></figure>
+<p>Now let’s generate new feature matrices for training, validation and test samples with 8 polynomial features in each:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x_train_poly = poly_features(x_train, <span class="number">8</span>)</span><br><span class="line">x_val_poly = poly_features(x_val, <span class="number">8</span>)</span><br><span class="line">x_test_poly = poly_features(x_test, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="Feature-Normalization"><a href="#Feature-Normalization" class="headerlink" title="Feature Normalization"></a>Feature Normalization</h5><p>Ok, we have our polynomial features but we also have a tiny little problem. If you take a closer look at one of the new matrices, you’ll see that the polynomial features are very imbalanced at the moment. For instance, let’s look at the first few rows of the <strong><code>x_train_poly</code></strong> matrix:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(x_train_poly[:<span class="number">4</span>, :])</span><br></pre></td></tr></table></figure>
+<pre><code>[[ -1.59367581e+01   2.53980260e+02  -4.04762197e+03   6.45059724e+04
+   -1.02801608e+06   1.63832436e+07  -2.61095791e+08   4.16102047e+09]
+ [ -2.91529792e+01   8.49896197e+02  -2.47770062e+04   7.22323546e+05
+   -2.10578833e+07   6.13900035e+08  -1.78970150e+10   5.21751305e+11]
+ [  3.61895486e+01   1.30968343e+03   4.73968522e+04   1.71527069e+06
+    6.20748719e+07   2.24646160e+09   8.12984311e+10   2.94215353e+12]
+ [  3.74921873e+01   1.40566411e+03   5.27014222e+04   1.97589159e+06
+    7.40804977e+07   2.77743990e+09   1.04132297e+11   3.90414759e+12]]</code></pre>
+<p>As the polynomial degree increases, the values in the corresponding columns exponentially grow to the point where they differ by orders of magnitude. </p>
+<p>The thing is, the cost function will generally converge much more slowly when the features are imbalanced like this. So we need to make sure that our features are on a similar scale before we begin to train our model. We’re going to do this in two steps:</p>
+<ol>
+<li>Subtract the mean value of each column from itself and make the new mean $0$.</li>
+<li>Divide the values in each column by their standard deviation and make the new standard deviation $1$.</li>
+</ol>
+<p>It’s important that we use the mean and standard deviation values from the training sample while normalizing the validation and test samples.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">train_means = x_train_poly.mean(axis=<span class="number">0</span>)</span><br><span class="line">train_stdevs = np.std(x_train_poly, axis=<span class="number">0</span>, ddof=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">x_train_poly = (x_train_poly - train_means) / train_stdevs</span><br><span class="line">x_val_poly = (x_val_poly - train_means) / train_stdevs</span><br><span class="line">x_test_poly = (x_test_poly - train_means) / train_stdevs</span><br><span class="line"></span><br><span class="line">X_train_poly = insert_ones(x_train_poly)</span><br><span class="line">X_val_poly = insert_ones(x_val_poly)</span><br><span class="line">X_test_poly = insert_ones(x_test_poly)</span><br></pre></td></tr></table></figure>
+<p>Finally we can train our polynomial regression model by using our <strong><code>train_linear_regression</code></strong> function and plot the polynomial fit. Note that when the polynomial features are simply treated as independent features, training a polynomial regression model is no different than training a multivariate linear regression model:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_fit</span>(<span class="params">min_x, max_x, means, stdevs, theta, degree</span>):</span></span><br><span class="line">    x = np.linspace(min_x - <span class="number">5</span>, max_x + <span class="number">5</span>, <span class="number">1000</span>)</span><br><span class="line">    x_poly = poly_features(x, degree)</span><br><span class="line">    x_poly = (x_poly - means) / stdevs</span><br><span class="line">    x_poly = insert_ones(x_poly)</span><br><span class="line">    plt.plot(x, x_poly @ theta, linewidth=<span class="number">2</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">theta = train_linear_regression(X_train_poly, y_train)</span><br><span class="line">plt.scatter(x_train, y_train, marker=<span class="string">&quot;x&quot;</span>, s=<span class="number">40</span>, c=<span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;change in water level&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;water flowing out of the dam&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Polynomial Fit&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plot_fit(<span class="built_in">min</span>(x_train), <span class="built_in">max</span>(x_train), train_means, train_stdevs, theta, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_23_0.png" class="">
+<br>
+
+<p>What do you think, seems pretty accurate right? Let’s take a look at the learning curves.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.title(<span class="string">&quot;Learning Curves for Polynomial Regression&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">learning_curves(X_train_poly, y_train, X_val_poly, y_val)</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_25_0.png" class="">
+<br>
+
+<p>Now that’s overfitting written all over it. Even though the training error is very low, the validation error miserably fails to converge.</p>
+<p>It appears that we need something in between in terms of flexibility. Although we can’t make linear regression more flexible, we can decrease the flexibility of polynomial regression using <a target="_blank" rel="noopener" href="https://www.quora.com/What-is-regularization-in-machine-learning">regularization</a>.</p>
+<h4 id="Regularized-Polynomial-Regression"><a href="#Regularized-Polynomial-Regression" class="headerlink" title="Regularized Polynomial Regression"></a>Regularized Polynomial Regression</h4><p>Regularization lets us come up with simpler hypothesis functions that are less prone to overfitting. This is achieved by penalizing large $\theta$ values during the training stage.</p>
+<p>Here’s the regularized cost function:</p>
+<p>$J(\theta) = \dfrac{1}{2m}\Big(\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})^2\Big) +<br>             \dfrac{\lambda}{2m}\Big(\sum\limits_{j=1}^{n}\theta_j^2\Big)$</p>
+<p>And its gradient becomes:</p>
+<p>$\dfrac{\partial J(\theta)}{\partial \theta_0} =<br> \dfrac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)}<br> \quad \qquad \qquad \qquad for ,, j = 0$</p>
+<p>$\dfrac{\partial J(\theta)}{\partial \theta_j} =<br> \Big(\dfrac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)}\Big) + \dfrac{\lambda}{m}\theta_j<br> ,,\quad \qquad for ,, j \geq 0$</p>
+<p>Notice that we are not penalizing the intercept term $\theta_0.$ That’s because it doesn’t have anything to do with the model’s flexibility.</p>
+<p>Of course we’ll need to reflect these changes to the corresponding Python implementations by introducing a regularization parameter <strong><code>lamb</code></strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y, lamb=<span class="number">0</span></span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    squared_errors = np.<span class="built_in">sum</span>(np.square(predictions - y))</span><br><span class="line">    regularization = np.<span class="built_in">sum</span>(lamb * np.square(theta[<span class="number">1</span>:]))</span><br><span class="line">    <span class="keyword">return</span> (squared_errors + regularization) / (<span class="number">2</span> * <span class="built_in">len</span>(y))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y, lamb=<span class="number">0</span></span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    gradient = X.transpose() @ (predictions - y)</span><br><span class="line">    regularization = lamb * theta</span><br><span class="line">    regularization[<span class="number">0</span>] = <span class="number">0</span> <span class="comment"># don&#x27;t penalize the intercept term</span></span><br><span class="line">    <span class="keyword">return</span> (gradient + regularization) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
+<p>We also have to slightly modify <strong><code>train_linear_regression</code></strong> and <strong><code>learning_curves</code></strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_linear_regression</span>(<span class="params">X, y, lamb=<span class="number">0</span></span>):</span></span><br><span class="line">    theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> opt.fmin_cg(cost, theta, cost_gradient, (X, y, lamb), disp=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">learning_curves</span>(<span class="params">X_train, y_train, X_val, y_val, lamb=<span class="number">0</span></span>):</span></span><br><span class="line">    train_err = np.zeros(<span class="built_in">len</span>(y_train))</span><br><span class="line">    val_err = np.zeros(<span class="built_in">len</span>(y_train))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(y_train)):</span><br><span class="line">        theta = train_linear_regression(X_train[<span class="number">0</span>:i + <span class="number">1</span>, :], y_train[<span class="number">0</span>:i + <span class="number">1</span>], lamb)</span><br><span class="line">        train_err[i] = cost(theta, X_train[<span class="number">0</span>:i + <span class="number">1</span>, :], y_train[<span class="number">0</span>:i + <span class="number">1</span>])</span><br><span class="line">        val_err[i] = cost(theta, X_val, y_val)</span><br><span class="line">    plt.plot(<span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">len</span>(y_train) + <span class="number">1</span>), train_err[<span class="number">1</span>:], c=<span class="string">&quot;r&quot;</span>, linewidth=<span class="number">2</span>)</span><br><span class="line">    plt.plot(<span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">len</span>(y_train) + <span class="number">1</span>), val_err[<span class="number">1</span>:], c=<span class="string">&quot;b&quot;</span>, linewidth=<span class="number">2</span>)</span><br><span class="line">    plt.xlabel(<span class="string">&quot;number of training examples&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&quot;error&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">    plt.legend([<span class="string">&quot;Training&quot;</span>, <span class="string">&quot;Validation&quot;</span>], loc=<span class="string">&quot;best&quot;</span>)</span><br><span class="line">    plt.axis([<span class="number">2</span>, <span class="built_in">len</span>(y_train), <span class="number">0</span>, <span class="number">100</span>])</span><br><span class="line">    plt.grid()</span><br></pre></td></tr></table></figure>
+<p>Alright we’re now ready to train a regularized polynomial regression model. Let’s set $\lambda = 1$ and plot our polynomial hypothesis on top of the training sample:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">theta = train_linear_regression(X_train_poly, y_train, <span class="number">1</span>)</span><br><span class="line">plt.scatter(x_train, y_train, marker=<span class="string">&quot;x&quot;</span>, s=<span class="number">40</span>, c=<span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;change in water level&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;water flowing out of the dam&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Regularized Polynomial Fit&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plot_fit(<span class="built_in">min</span>(x_train), <span class="built_in">max</span>(x_train), train_means, train_stdevs, theta, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_31_0.png" class="">
+<br>
+
+<p>It is clear that this hypothesis is much less flexible than the unregularized one. Let’s plot the learning curves and observe its bias-variance tradeoff: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.title(<span class="string">&quot;Learning Curves for Regularized Polynomial Regression&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">learning_curves(X_train_poly, y_train, X_val_poly, y_val, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_33_0.png" class="">
+<br>
+
+<p>This is apparently the best model we’ve come up so far.</p>
+<h5 id="Choosing-the-Optimal-Regularization-Parameter"><a href="#Choosing-the-Optimal-Regularization-Parameter" class="headerlink" title="Choosing the Optimal Regularization Parameter"></a>Choosing the Optimal Regularization Parameter</h5><p>Although setting $\lambda = 1$ has significantly improved the unregularized model, we can do even better by optimizing $\lambda$ as well. Here’s how we’re going to do it:</p>
+<ol>
+<li>Select a set of $\lambda$ values to try out.</li>
+<li>Train a model for each $\lambda$ in the set.</li>
+<li>Find the $\lambda$ value that yields the minimum validation error.</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lambda_values = [<span class="number">0</span>, <span class="number">0.001</span>, <span class="number">0.003</span>, <span class="number">0.01</span>, <span class="number">0.03</span>, <span class="number">0.1</span>, <span class="number">0.3</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">10</span>];</span><br><span class="line">val_err = []</span><br><span class="line"><span class="keyword">for</span> lamb <span class="keyword">in</span> lambda_values:</span><br><span class="line">    theta = train_linear_regression(X_train_poly, y_train, lamb)</span><br><span class="line">    val_err.append(cost(theta, X_val_poly, y_val))</span><br><span class="line">plt.plot(lambda_values, val_err, c=<span class="string">&quot;b&quot;</span>, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, <span class="built_in">len</span>(lambda_values), <span class="number">0</span>, val_err[-<span class="number">1</span>] + <span class="number">1</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.xlabel(<span class="string">&quot;lambda&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;error&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Validation Curve&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/05/04/learning-curves/learning-curves_35_0.png" class="">
+<br>
+
+<p>Looks like we’ve achieved the lowest validation error where $\lambda = 3$.</p>
+<h4 id="Evaluating-Test-Errors"><a href="#Evaluating-Test-Errors" class="headerlink" title="Evaluating Test Errors"></a>Evaluating Test Errors</h4><p>It’s good practice to evaluate an optimized model’s accuracy on a separate test sample other than the training and validation samples. So let’s train our models once again and compare test errors:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">X_test = insert_ones(x_test)</span><br><span class="line">theta = train_linear_regression(X_train, y_train)</span><br><span class="line">test_error = cost(theta, X_test, y_test)</span><br><span class="line">print(<span class="string">&quot;Test Error =&quot;</span>, test_error, <span class="string">&quot;| Linear Regression&quot;</span>)</span><br><span class="line"></span><br><span class="line">theta = train_linear_regression(X_train_poly, y_train)</span><br><span class="line">test_error = cost(theta, X_test_poly, y_test)</span><br><span class="line">print(<span class="string">&quot;Test Error =&quot;</span>, test_error, <span class="string">&quot;| Polynomial Regression&quot;</span>)</span><br><span class="line"></span><br><span class="line">theta = train_linear_regression(X_train_poly, y_train, <span class="number">3</span>)</span><br><span class="line">test_error = cost(theta, X_test_poly, y_test)</span><br><span class="line">print(<span class="string">&quot;Test Error =&quot;</span>, test_error, <span class="string">&quot;| Regularized Polynomial Regression (at lambda = 3)&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Test Error = 32.5057492449 | Linear Regression
+Test Error = 17.2624144407 | Polynomial Regression
+Test Error = 3.85988782246 | Regularized Polynomial Regression (at lambda = 3)</code></pre>
+<p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Follow me on</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://github.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+
+            <span class="label">GitHub</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/utkufu">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://youtube.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-youtube"></i>
+            </span>
+
+            <span class="label">YouTube</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/subscribe">
+            <span class="icon">
+              <i class="fas fa-bell"></i>
+            </span>
+
+            <span class="label">Subscribe</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/Machine-Learning/" rel="tag"><i class="fa fa-tag"></i> Machine Learning</a>
+              <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/21/linear-regression/" rel="prev" title="Training a Simple Linear Regression Model From Scratch">
+      <i class="fa fa-chevron-left"></i> Training a Simple Linear Regression Model From Scratch
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/05/19/binary-logistic-regression/" rel="next" title="Training a Simple Binary Classifier Using Logistic Regression">
+      Training a Simple Binary Classifier Using Logistic Regression <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Introduction-to-Learning-Curves"><span class="nav-number">1.</span> <span class="nav-text">Introduction to Learning Curves</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Problem-Definition-and-Dataset"><span class="nav-number">2.</span> <span class="nav-text">Problem Definition and Dataset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#The-Game-Plan"><span class="nav-number">3.</span> <span class="nav-text">The Game Plan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-Regression"><span class="nav-number">4.</span> <span class="nav-text">Linear Regression</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Learning-Curves-for-Linear-Regression"><span class="nav-number">5.</span> <span class="nav-text">Learning Curves for Linear Regression</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Polynomial-Regression"><span class="nav-number">6.</span> <span class="nav-text">Polynomial Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Feature-Mapping"><span class="nav-number">6.1.</span> <span class="nav-text">Feature Mapping</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Feature-Normalization"><span class="nav-number">6.2.</span> <span class="nav-text">Feature Normalization</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Regularized-Polynomial-Regression"><span class="nav-number">7.</span> <span class="nav-text">Regularized Polynomial Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Choosing-the-Optimal-Regularization-Parameter"><span class="nav-number">7.1.</span> <span class="nav-text">Choosing the Optimal Regularization Parameter</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Evaluating-Test-Errors"><span class="nav-number">8.</span> <span class="nav-text">Evaluating Test Errors</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

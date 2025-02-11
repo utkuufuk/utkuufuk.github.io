@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MacOS Keyboard Settings and Shortcuts for Coding">
+<meta property="og:url" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/keyboard-layout.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/keyboard-type.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/iterm-natural-text-editing.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/iterm-multi-tabs.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/iterm-multi-panes.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/iterm-tabs-and-panes.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/move-focus-to-next-window.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/spectacle-shortcuts.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/key-repeat-and-delay.png">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions-accept.gif">
+<meta property="og:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions.png">
+<meta property="article:published_time" content="2021-01-16T22:00:08.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:13:35.296Z">
+<meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="MacOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/keyboard-layout.png">
+
+<link rel="canonical" href="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>MacOS Keyboard Settings and Shortcuts for Coding | Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2021/01/17/macos-keyboard-shortcuts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MacOS Keyboard Settings and Shortcuts for Coding
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-17 01:00:08" itemprop="dateCreated datePublished" datetime="2021-01-17T01:00:08+03:00">2021-01-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for general text editing, window management, iTerm2 and some other stuff. I’m going to go over everything I do step by step in this post. I’m sure you’ll find at least some of these tips &amp; tricks pretty useful.</p>
+<a id="more"></a>
+
+
+<h3 id="Keyboard-Type"><a href="#Keyboard-Type" class="headerlink" title="Keyboard Type"></a>Keyboard Type</h3><p>First of all, if you’re using an external keyboard, you should make sure that your keyboard is identified correctly. Usually you don’t have to worry about this, but recently my keyboard was identified incorrectly for some reason while I was setting up macOS for the first time on my new Mac Mini.</p>
+<p>You can check the identified keyboard type from <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Input Sources</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-layout.png" class="">
+
+<p>If you find out that it’s incorrect, go to <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong> and select <strong>Change Keyboard Type</strong></p>
+<p>For me, it turns out my keyboard was identified as <strong>ANSI</strong> while it’s actually <strong>ISO</strong>, so I had to change it:</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-type.png" class="">
+
+
+<h3 id="iTerm2-Natural-Text-Editing"><a href="#iTerm2-Natural-Text-Editing" class="headerlink" title="iTerm2 Natural Text Editing"></a>iTerm2 Natural Text Editing</h3><p>Natural text editing shortcuts such as the ones below do not work by default on iTerm2:</p>
+<ul>
+<li><code>⌥→</code> (next word)</li>
+<li><code>⌥←</code> (previous word)</li>
+<li><code>⌃→</code> (end of line)</li>
+<li><code>⌃←</code> (start of line)</li>
+</ul>
+<p>You have to set the preset as “<em>Natural Text Editing</em>“ in order to fix this:</p>
+<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Profiles</strong> &gt; <strong>[Profile Name]</strong> &gt; <strong>Keys</strong> &gt; <strong>Presets</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-natural-text-editing.png" class="">
+
+
+<h3 id="iTerm2-Tab-Pane-Switching"><a href="#iTerm2-Tab-Pane-Switching" class="headerlink" title="iTerm2 Tab/Pane Switching"></a>iTerm2 Tab/Pane Switching</h3><p>iTerm2 lets you create multiple tabs, and you can even split a tab into multiple panes.</p>
+<ul>
+<li><code>⌘T</code> creates a new tab</li>
+<li><code>⌘D</code> creates a new pane by splitting the existing tab horizontally</li>
+<li><code>⇧⌘D</code> creates a new pane by splitting the existing tab vertically</li>
+</ul>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-tabs.png" class="">
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-panes.png" class="">
+
+<p>These default shortcuts for creating tabs &amp; panes are pretty nice. However, I don’t like the default shortcuts for switching between tabs/panes. That’s why I override them like this:</p>
+<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Keys</strong> &gt; <strong>Key Bindings</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-tabs-and-panes.png" class="">
+
+
+<h3 id="Switching-Between-Windows-of-the-Same-App"><a href="#Switching-Between-Windows-of-the-Same-App" class="headerlink" title="Switching Between Windows of the Same App"></a>Switching Between Windows of the Same App</h3><p><code>⌘Tab</code> is pretty useful for switching between different apps. What if you need to switch between windows of the same app? Sometimes, I have multiple iTerm2 windows or multiple VSCode windows open at the same time and I want to be able to quickly switch between those. Here’s how you can (re)assign a shortcut for that:</p>
+<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Shortcuts</strong> &gt; <strong>Keyboard</strong> &gt; <em>Move focus to next window</em></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/move-focus-to-next-window.png" class="">
+
+
+<h3 id="Window-Organizer-Spectacle"><a href="#Window-Organizer-Spectacle" class="headerlink" title="Window Organizer: Spectacle"></a>Window Organizer: Spectacle</h3><p><a target="_blank" rel="noopener" href="https://www.spectacleapp.com/">Spectacle</a> is a free app that lets you organize and resize your windows using keyboard shortcuts:</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/spectacle-shortcuts.png" class="">
+
+<p>It’s no longer actively maintained, but I’ve been using it for a couple of years and I’ve had zero issues so far. It’s quite simple, and the default shortcuts are pretty good.</p>
+<h3 id="Key-Repeat-and-Delay"><a href="#Key-Repeat-and-Delay" class="headerlink" title="Key Repeat and Delay"></a>Key Repeat and Delay</h3><p>I use Vim for text editing, which means I don’t use my mouse to navigate in the text editor. That’s why I frequently need to press and hold some keys for scrolling up/down/left/right in the editor.</p>
+<p>By default, key repeat is too slow and the delay until repeat is too long to do that fluidly. I adjust the settings like this, but you should experiment with each option on your favorite text editor and see what works for you the best:</p>
+<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/key-repeat-and-delay.png" class="">
+
+
+<h3 id="VSCodeVim-Extension"><a href="#VSCodeVim-Extension" class="headerlink" title="VSCodeVim Extension"></a>VSCodeVim Extension</h3><p><em>You should only read this section if you use both <a target="_blank" rel="noopener" href="https://code.visualstudio.com/">VSCode</a> and the <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=vscodevim.vim">VSCodeVim</a> extension.</em></p>
+<p>Pressing and holding the arrow keys (<code>←</code>, <code>→</code>, <code>↑</code>, <code>↓</code>) lets you fluidly navigate between rows (lines) and columns (characters) in the editor by default.</p>
+<p>Unfortunately, that’s not the case for Vim equivalents (<code>h</code>, <code>l</code>, <code>k</code>, <code>j</code>). For instance, even if you press and hold the <code>j</code> key, it only advances to the next line and it gets stuck there by default. You have to run one of the following commands after installing the VSCodeVim extension to have the same fluid behavior, <a target="_blank" rel="noopener" href="https://github.com/VSCodeVim/Vim#mac">as pointed out</a> in the GitHub page of the extension:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># For VS Code</span><br><span class="line">defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Code Insider</span><br><span class="line">defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Codium</span><br><span class="line">defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># If necessary, reset global default</span><br><span class="line">defaults delete -g ApplePressAndHoldEnabled</span><br></pre></td></tr></table></figure>
+
+<h3 id="A-Handy-Shortcut-Control-Space"><a href="#A-Handy-Shortcut-Control-Space" class="headerlink" title="A Handy Shortcut: Control + Space"></a>A Handy Shortcut: <code>Control + Space</code></h3><p>I think <code>⌃Space</code> is a very handy key combination and should be assigned to a frequently used shortcut. However, it’s assigned to another shortcut by default, so it needs to be unassigned first.</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions-accept.gif" class="">
+
+<p>My command-line shell preference is <a target="_blank" rel="noopener" href="https://www.zsh.org/">zsh</a> and one of my favorite zsh plugins is <a target="_blank" rel="noopener" href="https://github.com/zsh-users/zsh-autosuggestions">zsh-autosuggestions</a>. It allows you to define a custom hotkey to accept the current suggestion. For me, <code>⌃Space</code> fits perfectly into this use case.</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions.png" class="">
+
+
+<h3 id="Bonus-Font-Smoothing"><a href="#Bonus-Font-Smoothing" class="headerlink" title="Bonus: Font Smoothing"></a>Bonus: Font Smoothing</h3><p>I know that this isn’t related to keyboard settings or shortcuts, but I still want to mention it because I think it’s important.</p>
+<p>I don’t know about your experience, but the default font smoothing is too much for me. What’s worse is, macOS doesn’t let you change this setting easily from system preferences anymore. You have to actually open the terminal and run this command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 0, 1, 2, or 3</span></span><br><span class="line">defaults -currentHost write -globalDomain AppleFontSmoothing -int 1</span><br></pre></td></tr></table></figure>
+<p>Setting it to 1 works best for me. I suggest you to experiment with each option (0 is lowest, 3 is highest) and see whichever feels best. Keep in mind that in order to see the effects, you have to logout &amp; login back every time you change the setting.</p>
+<h3 id="Tips-From-Other-Articles"><a href="#Tips-From-Other-Articles" class="headerlink" title="Tips From Other Articles"></a>Tips From Other Articles</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://osxdaily.com/2019/03/27/disable-period-typing-shortcut-mac/">Stop Typing Periods Automatically with Double-Space</a></li>
+</ul>
+<hr>
+<p>Feel free to leave a comment on <a target="_blank" rel="noopener" href="https://twitter.com/utkufu">Twitter</a> if you have some other tips &amp; tricks that haven’t been covered in this article. I’d love to hear them!</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Follow me on</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://github.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+
+            <span class="label">GitHub</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/utkufu">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://youtube.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-youtube"></i>
+            </span>
+
+            <span class="label">YouTube</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/subscribe">
+            <span class="icon">
+              <i class="fas fa-bell"></i>
+            </span>
+
+            <span class="label">Subscribe</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/MacOS/" rel="tag"><i class="fa fa-tag"></i> MacOS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/one-board/" rel="prev" title="One Task Board to Rule Them All">
+      <i class="fa fa-chevron-left"></i> One Task Board to Rule Them All
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/09/20/error-handling-in-typescript/" rel="next" title="Try, catch, but don't throw">
+      Try, catch, but don't throw <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Keyboard-Type"><span class="nav-number">1.</span> <span class="nav-text">Keyboard Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iTerm2-Natural-Text-Editing"><span class="nav-number">2.</span> <span class="nav-text">iTerm2 Natural Text Editing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iTerm2-Tab-Pane-Switching"><span class="nav-number">3.</span> <span class="nav-text">iTerm2 Tab&#x2F;Pane Switching</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Switching-Between-Windows-of-the-Same-App"><span class="nav-number">4.</span> <span class="nav-text">Switching Between Windows of the Same App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Window-Organizer-Spectacle"><span class="nav-number">5.</span> <span class="nav-text">Window Organizer: Spectacle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Repeat-and-Delay"><span class="nav-number">6.</span> <span class="nav-text">Key Repeat and Delay</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VSCodeVim-Extension"><span class="nav-number">7.</span> <span class="nav-text">VSCodeVim Extension</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Handy-Shortcut-Control-Space"><span class="nav-number">8.</span> <span class="nav-text">A Handy Shortcut: Control + Space</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bonus-Font-Smoothing"><span class="nav-number">9.</span> <span class="nav-text">Bonus: Font Smoothing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tips-From-Other-Articles"><span class="nav-number">10.</span> <span class="nav-text">Tips From Other Articles</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

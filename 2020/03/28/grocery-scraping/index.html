@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I had to build a web scraper to buy groceries">
+<meta property="og:url" content="https://utkuufuk.com/2020/03/28/grocery-scraping/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://utkuufuk.com/2020/03/28/grocery-scraping/request-cookies.png">
+<meta property="article:published_time" content="2020-03-28T20:39:26.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:13:35.293Z">
+<meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Web Scraping">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://utkuufuk.com/2020/03/28/grocery-scraping/request-cookies.png">
+
+<link rel="canonical" href="https://utkuufuk.com/2020/03/28/grocery-scraping/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>I had to build a web scraper to buy groceries | Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2020/03/28/grocery-scraping/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          I had to build a web scraper to buy groceries
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-28 23:39:26" itemprop="dateCreated datePublished" datetime="2020-03-28T23:39:26+03:00">2020-03-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+<a id="more"></a>
+
+<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a target="_blank" rel="noopener" href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
+<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
+<blockquote>
+<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
+</blockquote>
+<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
+<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
+<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
+<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+
+<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
+<p>I got this response:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
+<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
+<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
+<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
+<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
+<p>That’s all there is to my mini-adventure for this weekend. <a target="_blank" rel="noopener" href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Follow me on</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://github.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+
+            <span class="label">GitHub</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/utkufu">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://youtube.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-youtube"></i>
+            </span>
+
+            <span class="label">YouTube</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/subscribe">
+            <span class="icon">
+              <i class="fas fa-bell"></i>
+            </span>
+
+            <span class="label">Subscribe</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/Web-Scraping/" rel="tag"><i class="fa fa-tag"></i> Web Scraping</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/20/trello-project-manage/" rel="prev" title="How I Manage My Side-Projects Using Trello">
+      <i class="fa fa-chevron-left"></i> How I Manage My Side-Projects Using Trello
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/14/one-board/" rel="next" title="One Task Board to Rule Them All">
+      One Task Board to Rule Them All <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

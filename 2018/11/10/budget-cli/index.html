@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fav.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="5vPHUo26Cu0m53rV_72s-HEXqUFOM-Wcc-eI-CrKntk">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"utkuufuk.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":false,"async":true,"transition":{"post_header":"slideDownIn","post_body":"slideDownIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a CLI app to insert">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A CLI App to Insert Budget Transactions in Google Spreadsheets">
+<meta property="og:url" content="https://utkuufuk.com/2018/11/10/budget-cli/">
+<meta property="og:site_name" content="Utku&#39;s Blog">
+<meta property="og:description" content="If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a CLI app to insert">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://utkuufuk.com/2018/11/10/budget-cli/demo.gif">
+<meta property="og:image" content="https://utkuufuk.com/2018/11/10/budget-cli/create-project.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/11/10/budget-cli/download-credentials.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/11/10/budget-cli/transactions-sheet.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/11/10/budget-cli/min-max-rows.png">
+<meta property="og:image" content="https://utkuufuk.com/2018/11/10/budget-cli/log.gif">
+<meta property="article:published_time" content="2018-11-10T09:40:27.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:13:35.282Z">
+<meta property="article:author" content="Utku Ufuk">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="CLI">
+<meta property="article:tag" content="Google Sheets">
+<meta property="article:tag" content="Budget Tracking">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://utkuufuk.com/2018/11/10/budget-cli/demo.gif">
+
+<link rel="canonical" href="https://utkuufuk.com/2018/11/10/budget-cli/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>A CLI App to Insert Budget Transactions in Google Spreadsheets | Utku's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'UA-117512202-1',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Utku's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Utku's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-subscribe">
+
+    <a href="/subscribe" rel="section"><i class="fas fa-bell fa-fw"></i>Subscribe</a>
+
+  </li>
+        <li class="menu-item menu-item-rss">
+
+    <a href="/atom.xml" rel="section"><i class="fas fa-rss fa-fw"></i>RSS</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://utkuufuk.com/2018/11/10/budget-cli/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Utku Ufuk">
+      <meta itemprop="description" content="Software Engineer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Utku's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          A CLI App to Insert Budget Transactions in Google Spreadsheets
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-11-10 12:40:27" itemprop="dateCreated datePublished" datetime="2018-11-10T12:40:27+03:00">2018-11-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a <a target="_blank" rel="noopener" href="https://github.com/utkuufuk/budget-cli">CLI app</a> to insert transaction entries in monthly budget spreadsheets with simple commands from CLI. Today I’ll be walking you through the process of building this app.</p>
+<a id="more"></a>
+
+<h4 id="Monthly-Budget-Spreadsheet"><a href="#Monthly-Budget-Spreadsheet" class="headerlink" title="Monthly Budget Spreadsheet"></a>Monthly Budget Spreadsheet</h4><p>If you don’t have one already, you can go ahead and create a <em>monthly budget</em> template from the <a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. You can also check out the <a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample budget sheet</a> that I’ve created to see what it looks like. It’s made up of two pages (sheets):</p>
+<ul>
+<li><strong>Transactions</strong> page lets you insert expense &amp; income entries.</li>
+<li><strong>Summary</strong> page lets you keep track of your budget.</li>
+</ul>
+<p>The main purpose of this tool is to let you insert entries in Transactions page from CLI, saving you the trouble of opening the actual spreadsheet in a browser.</p>
+<img src="/2018/11/10/budget-cli/demo.gif" class="">
+
+<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>A spreadsheet URL looks like this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://docs.google.com/spreadsheets/d/<span class="tag">&lt;<span class="name">SPREADSHEET_ID</span>&gt;</span>/edit#gid=<span class="tag">&lt;<span class="name">SHEET_ID</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Take note of this URL or just the <code>SPREADSHEET_ID</code> after you’ve created a spreadsheet because you’re going to need it later. For example, the ID of my <a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=0">sample budget spreadsheet</a> is <code>186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI</code>.</p>
+<p>Then you have to simply follow the first 2 steps of <a target="_blank" rel="noopener" href="https://developers.google.com/sheets/api/quickstart/python">this guide</a> which involve</p>
+<ol>
+<li>creating a console project to enable the Google Sheets API:<img src="/2018/11/10/budget-cli/create-project.png" class="">
+<br></li>
+<li>downloading a <code>credentials.json</code> file for authorization:<img src="/2018/11/10/budget-cli/download-credentials.png" class="">
+<br></li>
+<li>installing the Google Client Library:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install --upgrade google-api-python-client oauth2client</span><br></pre></td></tr></table></figure>
+<h4 id="Authorization"><a href="#Authorization" class="headerlink" title="Authorization"></a>Authorization</h4><p>The next step is to generate an authorization token to access your spreadsheets. The script below will open up a browser and request permission from your Google account to generate a <code>token.json</code> file from <code>credentials.json</code>:</p>
+<figure class="highlight python"><figcaption><span>createtoken.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> oauth2client <span class="keyword">import</span> file, client, tools</span><br><span class="line"><span class="keyword">from</span> httplib2 <span class="keyword">import</span> Http</span><br><span class="line"><span class="keyword">from</span> googleapiclient.discovery <span class="keyword">import</span> build</span><br><span class="line"></span><br><span class="line">SCOPES = <span class="string">&#x27;https://www.googleapis.com/auth/spreadsheets&#x27;</span></span><br><span class="line"></span><br><span class="line">store = file.Storage(<span class="string">&#x27;token.json&#x27;</span>)</span><br><span class="line">creds = store.get()</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> creds <span class="keyword">or</span> creds.invalid:</span><br><span class="line">    flow = client.flow_from_clientsecrets(<span class="string">&#x27;credentials.json&#x27;</span>, SCOPES)</span><br><span class="line">    tools.run_flow(flow, store)</span><br></pre></td></tr></table></figure>
+<p>This token needs to be created only once, so it’s a good idea to do it as part of the installation procedure of the app. Let’s create an installation script and run <code>createtoken.py</code> as the first step:</p>
+<figure class="highlight sh"><figcaption><span>install.sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 createtoken.py</span><br></pre></td></tr></table></figure>
+<p>Before inserting a transaction entry, our app needs to read <code>token.json</code> and authorize. So let’s create the main script and add this authorization step:</p>
+<figure class="highlight python"><figcaption><span>budget.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">from</span> googleapiclient.discovery <span class="keyword">import</span> build</span><br><span class="line"><span class="keyword">from</span> httplib2 <span class="keyword">import</span> Http</span><br><span class="line"><span class="keyword">from</span> oauth2client <span class="keyword">import</span> file, client, tools</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    store = file.Storage(<span class="string">&#x27;token.json&#x27;</span>)</span><br><span class="line">    creds = store.get()</span><br><span class="line">    service = build(<span class="string">&#x27;sheets&#x27;</span>, <span class="string">&#x27;v4&#x27;</span>, http=creds.authorize(Http()))</span><br></pre></td></tr></table></figure>
+<h4 id="Commands-amp-Parameters"><a href="#Commands-amp-Parameters" class="headerlink" title="Commands &amp; Parameters"></a>Commands &amp; Parameters</h4><p>Our app will have 4 commands:</p>
+<ol>
+<li>Select Spreadsheet by ID</li>
+<li>Select Spreadsheet by URL</li>
+<li>Append Expense</li>
+<li>Append Income</li>
+</ol>
+<p>And here’s how each command is going to be executed by the user:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># select spreadsheet by ID</span></span><br><span class="line">budget id &lt;SPREADSHEET_ID&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># select spreadsheet by URL</span></span><br><span class="line">budget url &lt;SPREADSHEET_URL&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># append expense</span></span><br><span class="line">budget expense <span class="string">&quot;&lt;Date&gt;,&lt;Amount&gt;,&lt;Description&gt;,&lt;Category&gt;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># append income</span></span><br><span class="line">budget income <span class="string">&quot;&lt;Date&gt;,&lt;Amount&gt;,&lt;Description&gt;,&lt;Category&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>Date</code>, <code>Amount</code>, <code>Description</code> and <code>Category</code> parameters are the values to be inserted in Transactions page at</p>
+<ul>
+<li>columns <code>B</code> to <code>E</code> for expense entry, and</li>
+<li>columns <code>G</code> to <code>J</code> for income entry.</li>
+</ul>
+<img src="/2018/11/10/budget-cli/transactions-sheet.png" class="">
+<br>
+
+<p>In order to recognize these commands and parameters, some argument parsing has to be done in <code>budget.py</code>:</p>
+<figure class="highlight python"><figcaption><span>budget.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">from</span> googleapiclient.discovery <span class="keyword">import</span> build</span><br><span class="line"><span class="keyword">from</span> httplib2 <span class="keyword">import</span> Http</span><br><span class="line"><span class="keyword">from</span> oauth2client <span class="keyword">import</span> file, client, tools</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    command = sys.argv[<span class="number">1</span>]</span><br><span class="line">    arg = sys.argv[<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> command == <span class="string">&#x27;url&#x27;</span>: </span><br><span class="line">        start = arg.find(<span class="string">&quot;spreadsheets/d/&quot;</span>)</span><br><span class="line">        end = arg.find(<span class="string">&quot;/edit#&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># write spreadsheet ID &amp; exit if command is &#x27;id&#x27; or &#x27;url&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> command == <span class="string">&#x27;id&#x27;</span> <span class="keyword">or</span> command == <span class="string">&#x27;url&#x27;</span>:</span><br><span class="line">        ssheetId = arg <span class="keyword">if</span> command == <span class="string">&#x27;id&#x27;</span> <span class="keyword">else</span> arg[(start + <span class="number">15</span>):end]</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;spreadsheet.id&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(ssheetId)</span><br><span class="line">        sys.exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># parse transaction parameters (date, amount, description, category)</span></span><br><span class="line">    entry = arg.split(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># read spreadsheet ID from file if command is &#x27;expense&#x27; or &#x27;income&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;spreadsheet.id&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        ssheetId = f.read()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># authorize</span></span><br><span class="line">    store = file.Storage(<span class="string">&#x27;token.json&#x27;</span>)</span><br><span class="line">    creds = store.get()</span><br><span class="line">    service = build(<span class="string">&#x27;sheets&#x27;</span>, <span class="string">&#x27;v4&#x27;</span>, http=creds.authorize(Http()))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> insert transaction</span></span><br></pre></td></tr></table></figure>
+<p>Notice that <code>SPREADSHEET_ID</code> is written to a file named <code>spreadsheet.id</code> whenever one of the <code>id</code> or <code>url</code> commands is executed. And this file is read while processing the <code>expense</code> and <code>income</code> commands in order to access the selected spreadsheet.</p>
+<h4 id="Transaction-Entry"><a href="#Transaction-Entry" class="headerlink" title="Transaction Entry"></a>Transaction Entry</h4><p>First of all, row and column indices of the last entry has to be determined in order to append a new one. To do that, we read rows 5 to 40 from column <code>C</code> or <code>H</code> (depending on the command) and check the number of existing entries. Here 5 is the minimum row index that a transaction can be inserted, and 40 is the index of the last row in the Transactions page. (You should set this to the total number of rows in your sheet.) Then we store the row index to insert a new entry for the current transaction type in a variable called <code>rowIdx</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rangeName = <span class="string">&#x27;Transactions!C5:C40&#x27;</span> <span class="keyword">if</span> command == <span class="string">&#x27;expense&#x27;</span> <span class="keyword">else</span> <span class="string">&#x27;Transactions!H5:H40&#x27;</span></span><br><span class="line">result = service.spreadsheets().values().get(spreadsheetId=ssheetId, <span class="built_in">range</span>=rangeName).execute()</span><br><span class="line">values = result.get(<span class="string">&#x27;values&#x27;</span>, [])</span><br><span class="line">rowIdx = <span class="number">5</span> <span class="keyword">if</span> <span class="keyword">not</span> values <span class="keyword">else</span> <span class="number">5</span> + <span class="built_in">len</span>(values)</span><br></pre></td></tr></table></figure>
+<img src="/2018/11/10/budget-cli/min-max-rows.png" class="">
+<br>
+
+<p>Finally we update the corresponding cells with date, amount, description &amp; category parameters stored in the <code>entry</code> variable:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">startCol = <span class="string">&quot;B&quot;</span> <span class="keyword">if</span> command == <span class="string">&#x27;expense&#x27;</span> <span class="keyword">else</span> <span class="string">&quot;G&quot;</span></span><br><span class="line">endCol = <span class="string">&quot;E&quot;</span> <span class="keyword">if</span> command == <span class="string">&#x27;expense&#x27;</span> <span class="keyword">else</span> <span class="string">&quot;J&quot;</span></span><br><span class="line">rangeName = <span class="string">&quot;Transactions!&quot;</span> + startCol + <span class="built_in">str</span>(rowIdx) + <span class="string">&quot;:&quot;</span> + endCol + <span class="built_in">str</span>(rowIdx)</span><br><span class="line">body = &#123;<span class="string">&#x27;values&#x27;</span>: [entry]&#125;</span><br><span class="line">result = service.spreadsheets().values().update(spreadsheetId=ssheetId, <span class="built_in">range</span>=rangeName,</span><br><span class="line">                                                valueInputOption=<span class="string">&quot;USER_ENTERED&quot;</span>, body=body).execute()</span><br></pre></td></tr></table></figure>
+<h4 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h4><p>Now we have <code>budget.py</code> ready in our project folder. However, it has to be executable from any directory via CLI. Therefore we need to make sure that it’s in a directory referenced by the <code>PATH</code> environment variable, such as <code>/usr/bin/</code>.</p>
+<p>On the other hand, <code>token.json</code> and <code>spreadsheet.id</code> files do not have to be in <code>PATH</code>. They should be located somewhere owned by the user such as <code>~/.config/budget-cli/</code> so that they can be accessed without <code>sudo</code> permission.</p>
+<p>We’re going to copy <code>budget.py</code> and <code>token.json</code> in <code>install.sh</code>, and <code>spreadsheet.id</code> will be created inside <code>~/.config/budget-cli/</code> automatically when the <code>budget id</code> or <code>budget url</code> command is executed for the first time:</p>
+<figure class="highlight python"><figcaption><span>install.sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># create token from credentials</span></span><br><span class="line">python3 createtoken.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># move script to a location in PATH and make it executable</span></span><br><span class="line">sudo cp budget.py /usr/<span class="built_in">bin</span>/budget</span><br><span class="line">sudo chmod +x /usr/<span class="built_in">bin</span>/budget</span><br><span class="line"></span><br><span class="line"><span class="comment"># move token.json to a globally accessible location with read access</span></span><br><span class="line">mkdir -p ~/.config/budget-cli</span><br><span class="line">cp token.json ~/.config/budget-cli/token.json</span><br><span class="line">chmod +r ~/.config/budget-cli/token.json</span><br></pre></td></tr></table></figure>
+<p>Notice that I’m renaming <code>budget.py</code> as <code>budget</code> while copying it because I want to use the app like</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">budget &lt;command&gt; &lt;params&gt;</span><br></pre></td></tr></table></figure>
+<p>as opposed to </p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">budget.py &lt;command&gt; &lt;params&gt;</span><br></pre></td></tr></table></figure>
+<p>Note that this wouldn’t be possible without the first line in <code>budget.py</code>, which is:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python3</span><br></pre></td></tr></table></figure>
+<p>By the way, let’s not forget to create an uninstallation script to clean up:</p>
+<figure class="highlight txt"><figcaption><span>uninstall.sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -f /usr/bin/budget</span><br><span class="line">rm -rf ~/.config/budget-cli</span><br></pre></td></tr></table></figure>
+<p>Last but not least, we have to slightly modify the file I/O lines in <code>budget.py</code> taking into account the global file locations. You can find the polished and up-to-date version of it in the <a target="_blank" rel="noopener" href="https://github.com/utkuufuk/budget-cli">Github repository</a>. The latest version also has new cool features like logging the transaction history:</p>
+<img src="/2018/11/10/budget-cli/log.gif" class="">
+<br>
+
+<p>That’s it! Just run <code>./install.sh</code> from the project folder and you should be able to use the app. I hope you enjoyed this little walkthrough. If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Follow me on</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://github.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+
+            <span class="label">GitHub</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/utkufu">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">Twitter</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://youtube.com/utkuufuk">
+            <span class="icon">
+              <i class="fab fa-youtube"></i>
+            </span>
+
+            <span class="label">YouTube</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/subscribe">
+            <span class="icon">
+              <i class="fas fa-bell"></i>
+            </span>
+
+            <span class="label">Subscribe</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/CLI/" rel="tag"><i class="fa fa-tag"></i> CLI</a>
+              <a href="/tags/Google-Sheets/" rel="tag"><i class="fa fa-tag"></i> Google Sheets</a>
+              <a href="/tags/Budget-Tracking/" rel="tag"><i class="fa fa-tag"></i> Budget Tracking</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/07/29/reddit-scraping/" rel="prev" title="Fast Reddit Scraping">
+      <i class="fa fa-chevron-left"></i> Fast Reddit Scraping
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/12/20/trello-budget/" rel="next" title="Using Firebase to Insert Budget Transactions to Google Sheets from Trello">
+      Using Firebase to Insert Budget Transactions to Google Sheets from Trello <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Monthly-Budget-Spreadsheet"><span class="nav-number">1.</span> <span class="nav-text">Monthly Budget Spreadsheet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Preliminaries"><span class="nav-number">2.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Authorization"><span class="nav-number">3.</span> <span class="nav-text">Authorization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Commands-amp-Parameters"><span class="nav-number">4.</span> <span class="nav-text">Commands &amp; Parameters</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Transaction-Entry"><span class="nav-number">5.</span> <span class="nav-text">Transaction Entry</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Installation"><span class="nav-number">6.</span> <span class="nav-text">Installation</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Utku Ufuk"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Utku Ufuk</p>
+  <div class="site-description" itemprop="description">Software Engineer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/utkuufuk" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/utkufu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;utkufu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/utkuufuk" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;utkuufuk" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linkedin.com/in/utku-ufuk" title="LinkedIn → https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;utku-ufuk" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:utkuufuk@gmail.com" title="E-Mail → mailto:utkuufuk@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/atom.xml" title="&#x2F;atom.xml">RSS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/subscribe" title="&#x2F;subscribe">Subscribe</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Utku Ufuk</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
