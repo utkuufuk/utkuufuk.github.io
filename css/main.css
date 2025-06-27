@@ -1189,7 +1189,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #bddfdf;
+  background: #ffc63c;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2610,14 +2610,6 @@ hr {
 code {
   font-size: 0.875em;
 }
-.post-header .post-title {
-  font-size: 1em;
-  font-weight: 600;
-}
-.post-title .post-title-link {
-  font-size: 1em;
-  font-weight: 600;
-}
 .brand .logo-line-before {
   display: none;
 }
@@ -2633,4 +2625,10 @@ code {
 h1 {
   font-size: 1.5em !important;
   font-weight: 700 !important;
+}
+.post-header .post-title {
+  font-weight: 600;
+}
+.post-title .post-title-link {
+  font-weight: 600;
 }
