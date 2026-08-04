@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Tutorial on Building a Chess Game &amp; AI Using Eclipse RCP</title>
+    <url>/2018/06/17/alpha-beta-chess/</url>
+    <content><![CDATA[<p>Hi all, I’ve put together a <a href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
+<a id="more"></a>
+
+<h4 id="TLDR-Here’s-the-YouTube-Playlist"><a href="#TLDR-Here’s-the-YouTube-Playlist" class="headerlink" title="TLDR: Here’s the YouTube Playlist"></a>TLDR: Here’s the YouTube Playlist</h4><iframe
+    src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL"
+    width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+</iframe>
+
+<h4 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It?"></a>What Is It?</h4><p>I started developing the first version of this application a few years ago while learning Java. After a while, I started to learn Eclipse RCP and thought it would be a good idea to build a GUI for my chess game on this platform. Then recently I took an AI course and learned about minimax and alpha-beta pruning algorithms. So I decided to rewrite the application and plug these algorithms in so that I could improve the AI, while recording the whole development process. It took a few months and most of my spare time, and finally it’s complete. I hope you like it!</p>
+<h4 id="Who-Is-It-For"><a href="#Who-Is-It-For" class="headerlink" title="Who Is It For?"></a>Who Is It For?</h4><p>You might like this tutorial if you</p>
+<ul>
+<li>are a beginner in Java and want to learn more about the language (or object-oriented programming in general)</li>
+<li>want to learn how to build a simple Eclipse RCP application</li>
+<li>are interested in watching the whole process of building a chess game from scratch</li>
+<li>want to see the minimax &amp; alpha-beta pruning algorithms in action</li>
+<li>are <strong>NOT</strong> looking for a detailed tutorial and discussion focused solely on AI or the alpha-beta pruning algorithm</li>
+</ul>
+<h4 id="Playlist-Overview"><a href="#Playlist-Overview" class="headerlink" title="Playlist Overview"></a>Playlist Overview</h4><p>There are a total of 30 videos in the playlist, which is organized as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Video #</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td>Introduction</td>
+</tr>
+<tr>
+<td align="center">2 to 11</td>
+<td>Coding the building blocks (board, square, piece etc.)</td>
+</tr>
+<tr>
+<td align="center">12 to 16</td>
+<td>Evaluating the legal moves for different chess pieces</td>
+</tr>
+<tr>
+<td align="center">17 to 23</td>
+<td>Building the GUI, UX and game mechanics</td>
+</tr>
+<tr>
+<td align="center">27 to 30</td>
+<td>Implementing the AI (minimax, alpha-beta-pruning &amp; iterative deepening)</td>
+</tr>
+</tbody></table>
+<h4 id="Sound-Issues"><a href="#Sound-Issues" class="headerlink" title="Sound Issues"></a>Sound Issues</h4><p>I apologize for the poor sound quality in the first several videos, especially the one after the intro. Unfortunately, I had to use my laptop’s built-in microphone because I didn’t have one. Thankfully the sound gets better <a href="https://www.youtube.com/watch?v=PWZ_6B7pKYc">after a while</a> because I managed to get my hands on a decent microphone later on.</p>
+<h4 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h4><p>Feel free to check out the <a href="https://github.com/utkuufuk/alpha-beta-chess">github repo</a> if you are interested in contributing. I’m aware that there are lots of missing features such as:</p>
+<ul>
+<li>En passant </li>
+<li>Pawn promotion</li>
+<li>Castling</li>
+<li>Check &amp; checkmate (I know…)</li>
+<li>Potential optimizations regarding the AI</li>
+<li>UX improvements</li>
+</ul>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>Java</tag>
+        <tag>AI</tag>
+        <tag>Game Development</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Training a Simple Binary Classifier Using Logistic Regression</title>
     <url>/2018/05/19/binary-logistic-regression/</url>
     <content><![CDATA[<p>Logistic regression is a simple classification method which is widely used in the field of machine learning. Today we’re going to talk about how to train our own logistic regression model in Python to build a a binary classifier. We’ll use <a href="http://www.numpy.org/">NumPy</a> for matrix operations, <a href="https://www.scipy.org/">SciPy</a> for cost minimization, <a href="https://matplotlib.org/">Matplotlib</a> for data visualization and no machine learning tools or libraries whatsoever.</p>
@@ -70,76 +137,9 @@ Looks pretty good. Let's also measure the training accuracy:
 <p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
       <tags>
+        <tag>AI</tag>
         <tag>Python</tag>
         <tag>Machine Learning</tag>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Tutorial on Building a Chess Game &amp; AI Using Eclipse RCP</title>
-    <url>/2018/06/17/alpha-beta-chess/</url>
-    <content><![CDATA[<p>Hi all, I’ve put together a <a href="https://www.youtube.com/watch?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL&v=zacLahqmlf0">YouTube video series</a> on developing an Eclipse RCP application in Java to build a chess game with a cool AI algorithm called alpha-beta pruning. You need no prior knowledge on Eclipse RCP to follow along, but a basic understanding of the Java programming language would definitely help.</p>
-<a id="more"></a>
-
-<h4 id="TLDR-Here’s-the-YouTube-Playlist"><a href="#TLDR-Here’s-the-YouTube-Playlist" class="headerlink" title="TLDR: Here’s the YouTube Playlist"></a>TLDR: Here’s the YouTube Playlist</h4><iframe
-    src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmhgHkziX-2C91SOTQl1rEL"
-    width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-</iframe>
-
-<h4 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It?"></a>What Is It?</h4><p>I started developing the first version of this application a few years ago while learning Java. After a while, I started to learn Eclipse RCP and thought it would be a good idea to build a GUI for my chess game on this platform. Then recently I took an AI course and learned about minimax and alpha-beta pruning algorithms. So I decided to rewrite the application and plug these algorithms in so that I could improve the AI, while recording the whole development process. It took a few months and most of my spare time, and finally it’s complete. I hope you like it!</p>
-<h4 id="Who-Is-It-For"><a href="#Who-Is-It-For" class="headerlink" title="Who Is It For?"></a>Who Is It For?</h4><p>You might like this tutorial if you</p>
-<ul>
-<li>are a beginner in Java and want to learn more about the language (or object-oriented programming in general)</li>
-<li>want to learn how to build a simple Eclipse RCP application</li>
-<li>are interested in watching the whole process of building a chess game from scratch</li>
-<li>want to see the minimax &amp; alpha-beta pruning algorithms in action</li>
-<li>are <strong>NOT</strong> looking for a detailed tutorial and discussion focused solely on AI or the alpha-beta pruning algorithm</li>
-</ul>
-<h4 id="Playlist-Overview"><a href="#Playlist-Overview" class="headerlink" title="Playlist Overview"></a>Playlist Overview</h4><p>There are a total of 30 videos in the playlist, which is organized as follows:</p>
-<table>
-<thead>
-<tr>
-<th align="center">Video #</th>
-<th>Topic</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td>Introduction</td>
-</tr>
-<tr>
-<td align="center">2 to 11</td>
-<td>Coding the building blocks (board, square, piece etc.)</td>
-</tr>
-<tr>
-<td align="center">12 to 16</td>
-<td>Evaluating the legal moves for different chess pieces</td>
-</tr>
-<tr>
-<td align="center">17 to 23</td>
-<td>Building the GUI, UX and game mechanics</td>
-</tr>
-<tr>
-<td align="center">27 to 30</td>
-<td>Implementing the AI (minimax, alpha-beta-pruning &amp; iterative deepening)</td>
-</tr>
-</tbody></table>
-<h4 id="Sound-Issues"><a href="#Sound-Issues" class="headerlink" title="Sound Issues"></a>Sound Issues</h4><p>I apologize for the poor sound quality in the first several videos, especially the one after the intro. Unfortunately, I had to use my laptop’s built-in microphone because I didn’t have one. Thankfully the sound gets better <a href="https://www.youtube.com/watch?v=PWZ_6B7pKYc">after a while</a> because I managed to get my hands on a decent microphone later on.</p>
-<h4 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h4><p>Feel free to check out the <a href="https://github.com/utkuufuk/alpha-beta-chess">github repo</a> if you are interested in contributing. I’m aware that there are lots of missing features such as:</p>
-<ul>
-<li>En passant </li>
-<li>Pawn promotion</li>
-<li>Castling</li>
-<li>Check &amp; checkmate (I know…)</li>
-<li>Potential optimizations regarding the AI</li>
-<li>UX improvements</li>
-</ul>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>AI</tag>
-        <tag>Java</tag>
-        <tag>Game Development</tag>
       </tags>
   </entry>
   <entry>
@@ -432,6 +432,40 @@ Congratulations! You're now officially a full-stack developer. Go ahead and pat 
       </tags>
   </entry>
   <entry>
+    <title>I had to build a web scraper to buy groceries</title>
+    <url>/2020/03/28/grocery-scraping/</url>
+    <content><![CDATA[<p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+<a id="more"></a>
+
+<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
+<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
+<blockquote>
+<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
+</blockquote>
+<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
+<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
+<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
+<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+
+<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
+<p>I got this response:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
+<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
+<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
+<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
+<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
+<p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Web Scraping</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Learning Curves in Linear &amp; Polynomial Regression</title>
     <url>/2018/05/04/learning-curves/</url>
     <content><![CDATA[<p>Learning curves are very useful for analyzing the bias-variance characteristics of a machine learning model. In this post, I’m going to talk about how to make use of them in a case study of a regression problem. We’re going to start with a simple linear regression model and improve it as much as we can by taking advantage of learning curves.</p>
@@ -567,98 +601,9 @@ Test Error = 3.85988782246 | Regularized Polynomial Regression (at lambda = 3)</
 <p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
       <tags>
+        <tag>AI</tag>
         <tag>Python</tag>
         <tag>Machine Learning</tag>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Training a Simple Linear Regression Model From Scratch</title>
-    <url>/2018/04/21/linear-regression/</url>
-    <content><![CDATA[<p>Hey everyone, welcome to my first blog post! This is going to be a walkthrough on training a simple linear regression model in Python. I’ll show you how to do it from scratch, without using any machine learning tools or libraries. We’ll only use <a href="http://www.numpy.org/">NumPy</a> and <a href="https://matplotlib.org/">Matplotlib</a> for matrix operations and data visualization.</p>
-<a id="more"></a>
-
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll look at a regression problem from a very popular <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem will be to train a model that accurately predicts the profits of a food truck.</p>
-<p>The first column in our <a href="/2018/04/21/linear-regression/food_truck_data.txt" title="dataset file">dataset file</a> contains city populations and the second column contains food truck profits in each city, both in $10,000$s. Here are the first few training examples:</p>
-<figure class="highlight sh"><figcaption><span>food_truck_data.txt</span></figcaption><table><tr><td class="code"><pre><span class="line">6.1101,17.592</span><br><span class="line">5.5277,9.1302</span><br><span class="line">8.5186,13.662</span><br><span class="line">7.0032,11.854</span><br><span class="line">5.8598,6.8233</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>We’re going to use this dataset as a training sample to build our model. Let’s begin by loading it:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;food_truck_data.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>] <span class="comment"># city populations</span></span><br><span class="line">y = data[:, <span class="number">1</span>] <span class="comment"># food truck profits</span></span><br></pre></td></tr></table></figure>
-<p>Both $x$ and $y$ are one dimensional arrays, because we have one <strong>feature</strong> (population) and one <strong>target variable</strong> (profit) in this problem. Therefore we can conveniently visualize our dataset using a scatter plot:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(x, y, marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&quot;red&quot;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Food Truck Dataset&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;City Population in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Food Truck Profit in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">4</span>, <span class="number">25</span>, -<span class="number">5</span>, <span class="number">25</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_3_0.png" class="">
-
-
-<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Now we need to come up with a <strong>straight line</strong> which accurately represents the relationship between population and profit. This is called the <strong>hypothesis function</strong> and it’s formulated as:</p>
-<p>$h_\theta(x) = \theta^Tx = \theta_0 + \theta_1x_1 + \theta_2x_2 + … + \theta_nx_n$</p>
-<p>where $x$ corresponds to the feature matrix and $\theta$ corresponds to the vector of <strong>model parameters.</strong></p>
-<p>Since we have a single feature $x_1,$ we’ll only have two model parameters $\theta_0$ and $\theta_1$ in our hypothesis function:</p>
-<p>$h_\theta(x) = \theta_0 + \theta_1x_1$</p>
-<p>As you may have noticed, the number of model parameters is equal to the number of features plus $1$. That’s because each feature is weighted by a parameter to control its impact on the hypothesis $h_\theta(x)$. There is also an independent parameter $\theta_0$ called the <strong>intercept term,</strong> which defines the point where the hypothesis function intercepts the $y$-axis as demonstrated below:</p>
-<img src="/2018/04/21/linear-regression/intercept_term.png" class="">
-<br>
-The predictions of a hypothesis function can easily be evaluated in Python by computing the cross product of $x$ and $\theta^T.$ At the moment we have our $x$ and $y$ vectors but we don't have our model parameters yet. So let's create those as well and initialize them with zeros:
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = np.zeros(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>Also, we have to make sure that the matrix dimensions of $x$ and $\theta^T$ are compatible with each other for cross product. Currently $x$ has $1$ column but $\theta^T$ has $2$ rows. The dimensions don’t match because of the additional intercept term $\theta_0.$</p>
-<p>We can solve this issue by prepending a column to $x$ and set it to all ones. This is essentially equivalent to creating a new feature $x_0 = 1.$ This extra column won’t affect the hypothesis whatsoever because $\theta_0$ is going to be multiplied by $1$ in the cross product.</p>
-<p>Let’s create a new variable $X$ to store the extended $x$ matrix:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(<span class="built_in">len</span>(x), <span class="number">2</span>))</span><br><span class="line">X[:, <span class="number">1</span>] = x</span><br></pre></td></tr></table></figure>
-<p>Finally, we can compute the predictions of our hypothesis as follows:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = X @ theta</span><br></pre></td></tr></table></figure>
-<p>Of course, the predictions are currently all zeros because we haven’t trained our model yet.</p>
-<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>The objective in training a linear regression model is to minimize a <strong>cost function</strong>, which measures the difference between actual $y$ values in the training sample and predictions made by the hypothesis function $h_\theta(x)$.</p>
-<p>Such a cost function can be formulated as;</p>
-<p>$J(\theta) = \dfrac{1}{2m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})^2$</p>
-<p>where $m$ is the number of training examples.</p>
-<p>Here’s its Python version:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    squared_errors = np.square(predictions - y)</span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(squared_errors) / (<span class="number">2</span> * <span class="built_in">len</span>(y))</span><br></pre></td></tr></table></figure>
-<p>Now let’s take a look at the cost of our initial untrained model:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&#x27;The initial cost is:&#x27;</span>, cost(theta, X, y))</span><br></pre></td></tr></table></figure>
-<pre><code>The initial cost is: 32.0727338775</code></pre>
-<h4 id="Gradient-Descent-Algorithm"><a href="#Gradient-Descent-Algorithm" class="headerlink" title="Gradient Descent Algorithm"></a>Gradient Descent Algorithm</h4><p>Since our hypothesis is based on the model parameters $\theta$, we must somehow adjust them to minimize our cost function $J(\theta)$. This is where the <strong>gradient descent</strong> algorithm comes into play. It’s an optimization algorithm which can be used in minimizing <a href="https://en.wikipedia.org/wiki/Differentiable_function">differentiable</a> functions. Luckily our cost function $J(\theta)$ happens to be a differentiable one.</p>
-<p>So here’s how the gradient descent algorithm works in a nutshell: </p>
-<p>In each iteration, it takes a small step in the opposite gradient direction of $J(\theta)$. This makes the model parameters $\theta$ gradually come closer to the optimal values. This process is repeated until eventually the minimum cost is achieved.</p>
-<p>More formally, gradient descent performs the following update in each iteration: </p>
-<p>$\theta_j := \theta_j - \alpha\frac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
-<p>The $\alpha$ term here is called the <strong>learning rate</strong>. It allows us to control the step size to update $\theta$ in each iteration. Choosing a too large learning rate may prevent us from converging to a minimum cost, whereas choosing a too small learning rate may significantly slow down the algorithm.</p>
-<p>Here’s a generic implementation of the gradient descent algorithm:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)          <span class="comment"># initialize model parameters</span></span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta             <span class="comment"># compute predictions based on the current hypothesis</span></span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)  <span class="comment"># update model parameters</span></span><br><span class="line">    <span class="keyword">return</span> theta                            <span class="comment"># return optimized parameters</span></span><br></pre></td></tr></table></figure>
-<p>Now let’s use this function to train our model and plot the hypothesis function:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)   <span class="comment"># run GD for 600 iterations with learning rate = 0.02</span></span><br><span class="line">predictions = X @ theta                     <span class="comment"># predictions made by the optimized model</span></span><br><span class="line">ax.plot(X[:, <span class="number">1</span>], predictions, linewidth=<span class="number">2</span>)  <span class="comment"># plot the hypothesis on top of the training data</span></span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_15_0.png" class="">
-
-<h4 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h4><p>Our linear fit looks pretty good, right? The algorithm must have successfully optimized our model.</p>
-<p>Well, to be honest, it’s been fairly easy to visualize the hypothesis because there’s only one feature in this problem. </p>
-<p>But what if we had multiple features? Then it wouldn’t be possible to simply plot the hypothesis to see whether the algorithm has worked as intended or not.</p>
-<p>Fortunately, there’s a simple way to debug the gradient descent algorithm irrespective of the number of features:</p>
-<ol>
-<li>Modify the gradient descent function to make it record the cost at the end of each iteration. </li>
-<li>Plot the cost history after the gradient descent has finished.</li>
-<li>Pat yourself on the back if you see that the cost has monotonically decreased over time.</li>
-</ol>
-<p>Here’s the modified version of our gradient descent function:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    cost_history = np.zeros(num_iters)          <span class="comment"># create a vector to store the cost history</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta</span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)</span><br><span class="line">        cost_history[n] = cost(theta, X, y)     <span class="comment"># compute and record the cost</span></span><br><span class="line">    <span class="keyword">return</span> theta, cost_history                  <span class="comment"># return optimized parameters and cost history</span></span><br></pre></td></tr></table></figure>
-<p>Now let’s try learning rates $0.01$, $0.015$, $0.02$ and plot the cost history for each one:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line">num_iters = <span class="number">1200</span></span><br><span class="line">learning_rates = [<span class="number">0.01</span>, <span class="number">0.015</span>, <span class="number">0.02</span>]</span><br><span class="line"><span class="keyword">for</span> lr <span class="keyword">in</span> learning_rates:</span><br><span class="line">    _, cost_history = gradient_descent(X, y, lr, num_iters)</span><br><span class="line">    plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with different learning rates&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">str</span>, learning_rates)))</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">4</span>, <span class="number">6</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_19_0.png" class="" title="image_description">
-
-<p>It appears that the gradient descent algorithm worked correctly for these particular learning rates. Notice that it takes more iterations to minimize the cost as the learning rate decreases.</p>
-<p>Now let’s try a larger learning rate and see what happens:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">learning_rate = <span class="number">0.025</span></span><br><span class="line">num_iters = <span class="number">50</span></span><br><span class="line">_, cost_history = gradient_descent(X, y, learning_rate, num_iters)</span><br><span class="line">plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with learning rate = &quot;</span> + <span class="built_in">str</span>(learning_rate), fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">0</span>, <span class="number">6000</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_21_0.png" class="" title="image_description">
-<br>
-Doesn't look good... That's what happens when the learning rate is too large. Even though the gradient descent algorithm takes steps in the correct direction, these steps are so huge that it's going to overshoot the target and the cost diverges from the minimum value instead of converging to it.
-
-<p>Right now we can safely set the learning rate to $0.02$, because it allows us to minimize the cost and it requires relatively fewer iterations to converge.</p>
-<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Now that we’ve learned how to train our model, we can finally predict the food truck profit for a particular city:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta, _ = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)    <span class="comment"># train the model</span></span><br><span class="line">test_example = np.array([<span class="number">1</span>, <span class="number">7</span>])                 <span class="comment"># pick a city with 70,000 population as a test example</span></span><br><span class="line">prediction = test_example @ theta               <span class="comment"># use the trained model to make a prediction</span></span><br><span class="line">print(<span class="string">&#x27;For population = 70,000, we predict a profit of $&#x27;</span>, prediction * <span class="number">10000</span>);</span><br></pre></td></tr></table></figure>
-<pre><code>For population = 70,000, we predict a profit of $ 45905.6621788</code></pre>
-<p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>Python</tag>
-        <tag>Machine Learning</tag>
-        <tag>AI</tag>
       </tags>
   </entry>
   <entry>
@@ -745,37 +690,92 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
       </tags>
   </entry>
   <entry>
-    <title>I had to build a web scraper to buy groceries</title>
-    <url>/2020/03/28/grocery-scraping/</url>
-    <content><![CDATA[<p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+    <title>Training a Simple Linear Regression Model From Scratch</title>
+    <url>/2018/04/21/linear-regression/</url>
+    <content><![CDATA[<p>Hey everyone, welcome to my first blog post! This is going to be a walkthrough on training a simple linear regression model in Python. I’ll show you how to do it from scratch, without using any machine learning tools or libraries. We’ll only use <a href="http://www.numpy.org/">NumPy</a> and <a href="https://matplotlib.org/">Matplotlib</a> for matrix operations and data visualization.</p>
 <a id="more"></a>
 
-<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
-<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
-<blockquote>
-<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
-</blockquote>
-<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
-<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
-<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
-<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll look at a regression problem from a very popular <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem will be to train a model that accurately predicts the profits of a food truck.</p>
+<p>The first column in our <a href="/2018/04/21/linear-regression/food_truck_data.txt" title="dataset file">dataset file</a> contains city populations and the second column contains food truck profits in each city, both in $10,000$s. Here are the first few training examples:</p>
+<figure class="highlight sh"><figcaption><span>food_truck_data.txt</span></figcaption><table><tr><td class="code"><pre><span class="line">6.1101,17.592</span><br><span class="line">5.5277,9.1302</span><br><span class="line">8.5186,13.662</span><br><span class="line">7.0032,11.854</span><br><span class="line">5.8598,6.8233</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>We’re going to use this dataset as a training sample to build our model. Let’s begin by loading it:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;food_truck_data.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>] <span class="comment"># city populations</span></span><br><span class="line">y = data[:, <span class="number">1</span>] <span class="comment"># food truck profits</span></span><br></pre></td></tr></table></figure>
+<p>Both $x$ and $y$ are one dimensional arrays, because we have one <strong>feature</strong> (population) and one <strong>target variable</strong> (profit) in this problem. Therefore we can conveniently visualize our dataset using a scatter plot:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(x, y, marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&quot;red&quot;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Food Truck Dataset&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;City Population in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Food Truck Profit in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">4</span>, <span class="number">25</span>, -<span class="number">5</span>, <span class="number">25</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_3_0.png" class="">
 
-<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
-<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
-<p>I got this response:</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
-<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
-<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
-<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
-<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
-<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
-<p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
+
+<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Now we need to come up with a <strong>straight line</strong> which accurately represents the relationship between population and profit. This is called the <strong>hypothesis function</strong> and it’s formulated as:</p>
+<p>$h_\theta(x) = \theta^Tx = \theta_0 + \theta_1x_1 + \theta_2x_2 + … + \theta_nx_n$</p>
+<p>where $x$ corresponds to the feature matrix and $\theta$ corresponds to the vector of <strong>model parameters.</strong></p>
+<p>Since we have a single feature $x_1,$ we’ll only have two model parameters $\theta_0$ and $\theta_1$ in our hypothesis function:</p>
+<p>$h_\theta(x) = \theta_0 + \theta_1x_1$</p>
+<p>As you may have noticed, the number of model parameters is equal to the number of features plus $1$. That’s because each feature is weighted by a parameter to control its impact on the hypothesis $h_\theta(x)$. There is also an independent parameter $\theta_0$ called the <strong>intercept term,</strong> which defines the point where the hypothesis function intercepts the $y$-axis as demonstrated below:</p>
+<img src="/2018/04/21/linear-regression/intercept_term.png" class="">
+<br>
+The predictions of a hypothesis function can easily be evaluated in Python by computing the cross product of $x$ and $\theta^T.$ At the moment we have our $x$ and $y$ vectors but we don't have our model parameters yet. So let's create those as well and initialize them with zeros:
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = np.zeros(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>Also, we have to make sure that the matrix dimensions of $x$ and $\theta^T$ are compatible with each other for cross product. Currently $x$ has $1$ column but $\theta^T$ has $2$ rows. The dimensions don’t match because of the additional intercept term $\theta_0.$</p>
+<p>We can solve this issue by prepending a column to $x$ and set it to all ones. This is essentially equivalent to creating a new feature $x_0 = 1.$ This extra column won’t affect the hypothesis whatsoever because $\theta_0$ is going to be multiplied by $1$ in the cross product.</p>
+<p>Let’s create a new variable $X$ to store the extended $x$ matrix:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(<span class="built_in">len</span>(x), <span class="number">2</span>))</span><br><span class="line">X[:, <span class="number">1</span>] = x</span><br></pre></td></tr></table></figure>
+<p>Finally, we can compute the predictions of our hypothesis as follows:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = X @ theta</span><br></pre></td></tr></table></figure>
+<p>Of course, the predictions are currently all zeros because we haven’t trained our model yet.</p>
+<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>The objective in training a linear regression model is to minimize a <strong>cost function</strong>, which measures the difference between actual $y$ values in the training sample and predictions made by the hypothesis function $h_\theta(x)$.</p>
+<p>Such a cost function can be formulated as;</p>
+<p>$J(\theta) = \dfrac{1}{2m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})^2$</p>
+<p>where $m$ is the number of training examples.</p>
+<p>Here’s its Python version:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    squared_errors = np.square(predictions - y)</span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(squared_errors) / (<span class="number">2</span> * <span class="built_in">len</span>(y))</span><br></pre></td></tr></table></figure>
+<p>Now let’s take a look at the cost of our initial untrained model:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&#x27;The initial cost is:&#x27;</span>, cost(theta, X, y))</span><br></pre></td></tr></table></figure>
+<pre><code>The initial cost is: 32.0727338775</code></pre>
+<h4 id="Gradient-Descent-Algorithm"><a href="#Gradient-Descent-Algorithm" class="headerlink" title="Gradient Descent Algorithm"></a>Gradient Descent Algorithm</h4><p>Since our hypothesis is based on the model parameters $\theta$, we must somehow adjust them to minimize our cost function $J(\theta)$. This is where the <strong>gradient descent</strong> algorithm comes into play. It’s an optimization algorithm which can be used in minimizing <a href="https://en.wikipedia.org/wiki/Differentiable_function">differentiable</a> functions. Luckily our cost function $J(\theta)$ happens to be a differentiable one.</p>
+<p>So here’s how the gradient descent algorithm works in a nutshell: </p>
+<p>In each iteration, it takes a small step in the opposite gradient direction of $J(\theta)$. This makes the model parameters $\theta$ gradually come closer to the optimal values. This process is repeated until eventually the minimum cost is achieved.</p>
+<p>More formally, gradient descent performs the following update in each iteration: </p>
+<p>$\theta_j := \theta_j - \alpha\frac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
+<p>The $\alpha$ term here is called the <strong>learning rate</strong>. It allows us to control the step size to update $\theta$ in each iteration. Choosing a too large learning rate may prevent us from converging to a minimum cost, whereas choosing a too small learning rate may significantly slow down the algorithm.</p>
+<p>Here’s a generic implementation of the gradient descent algorithm:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)          <span class="comment"># initialize model parameters</span></span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta             <span class="comment"># compute predictions based on the current hypothesis</span></span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)  <span class="comment"># update model parameters</span></span><br><span class="line">    <span class="keyword">return</span> theta                            <span class="comment"># return optimized parameters</span></span><br></pre></td></tr></table></figure>
+<p>Now let’s use this function to train our model and plot the hypothesis function:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)   <span class="comment"># run GD for 600 iterations with learning rate = 0.02</span></span><br><span class="line">predictions = X @ theta                     <span class="comment"># predictions made by the optimized model</span></span><br><span class="line">ax.plot(X[:, <span class="number">1</span>], predictions, linewidth=<span class="number">2</span>)  <span class="comment"># plot the hypothesis on top of the training data</span></span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_15_0.png" class="">
+
+<h4 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h4><p>Our linear fit looks pretty good, right? The algorithm must have successfully optimized our model.</p>
+<p>Well, to be honest, it’s been fairly easy to visualize the hypothesis because there’s only one feature in this problem. </p>
+<p>But what if we had multiple features? Then it wouldn’t be possible to simply plot the hypothesis to see whether the algorithm has worked as intended or not.</p>
+<p>Fortunately, there’s a simple way to debug the gradient descent algorithm irrespective of the number of features:</p>
+<ol>
+<li>Modify the gradient descent function to make it record the cost at the end of each iteration. </li>
+<li>Plot the cost history after the gradient descent has finished.</li>
+<li>Pat yourself on the back if you see that the cost has monotonically decreased over time.</li>
+</ol>
+<p>Here’s the modified version of our gradient descent function:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    cost_history = np.zeros(num_iters)          <span class="comment"># create a vector to store the cost history</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta</span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)</span><br><span class="line">        cost_history[n] = cost(theta, X, y)     <span class="comment"># compute and record the cost</span></span><br><span class="line">    <span class="keyword">return</span> theta, cost_history                  <span class="comment"># return optimized parameters and cost history</span></span><br></pre></td></tr></table></figure>
+<p>Now let’s try learning rates $0.01$, $0.015$, $0.02$ and plot the cost history for each one:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line">num_iters = <span class="number">1200</span></span><br><span class="line">learning_rates = [<span class="number">0.01</span>, <span class="number">0.015</span>, <span class="number">0.02</span>]</span><br><span class="line"><span class="keyword">for</span> lr <span class="keyword">in</span> learning_rates:</span><br><span class="line">    _, cost_history = gradient_descent(X, y, lr, num_iters)</span><br><span class="line">    plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with different learning rates&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">str</span>, learning_rates)))</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">4</span>, <span class="number">6</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_19_0.png" class="" title="image_description">
+
+<p>It appears that the gradient descent algorithm worked correctly for these particular learning rates. Notice that it takes more iterations to minimize the cost as the learning rate decreases.</p>
+<p>Now let’s try a larger learning rate and see what happens:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">learning_rate = <span class="number">0.025</span></span><br><span class="line">num_iters = <span class="number">50</span></span><br><span class="line">_, cost_history = gradient_descent(X, y, learning_rate, num_iters)</span><br><span class="line">plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with learning rate = &quot;</span> + <span class="built_in">str</span>(learning_rate), fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">0</span>, <span class="number">6000</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_21_0.png" class="" title="image_description">
+<br>
+Doesn't look good... That's what happens when the learning rate is too large. Even though the gradient descent algorithm takes steps in the correct direction, these steps are so huge that it's going to overshoot the target and the cost diverges from the minimum value instead of converging to it.
+
+<p>Right now we can safely set the learning rate to $0.02$, because it allows us to minimize the cost and it requires relatively fewer iterations to converge.</p>
+<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Now that we’ve learned how to train our model, we can finally predict the food truck profit for a particular city:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta, _ = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)    <span class="comment"># train the model</span></span><br><span class="line">test_example = np.array([<span class="number">1</span>, <span class="number">7</span>])                 <span class="comment"># pick a city with 70,000 population as a test example</span></span><br><span class="line">prediction = test_example @ theta               <span class="comment"># use the trained model to make a prediction</span></span><br><span class="line">print(<span class="string">&#x27;For population = 70,000, we predict a profit of $&#x27;</span>, prediction * <span class="number">10000</span>);</span><br></pre></td></tr></table></figure>
+<pre><code>For population = 70,000, we predict a profit of $ 45905.6621788</code></pre>
+<p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
       <tags>
+        <tag>AI</tag>
         <tag>Python</tag>
-        <tag>Web Scraping</tag>
+        <tag>Machine Learning</tag>
       </tags>
   </entry>
   <entry>
@@ -870,6 +870,63 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
         <tag>Firebase</tag>
         <tag>GitHub</tag>
         <tag>Task Management</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>One-vs-All Classification Using Logistic Regression</title>
+    <url>/2018/06/03/one-vs-all-classification/</url>
+    <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
+
+<a id="more"></a>
+
+<h4 id="One-vs-All-Classification"><a href="#One-vs-All-Classification" class="headerlink" title="One-vs-All Classification"></a>One-vs-All Classification</h4><p>First of all, let me briefly explain the idea behind one-vs-all classification. Say we have a classification problem and there are $N$ distinct classes. In this case, we’ll have to train a multi-class classifier instead of a binary one.</p>
+<p>One-vs-all classification is a method which involves training $N$ distinct binary classifiers, each designed for recognizing a particular class. Then those $N$ classifiers are collectively used for multi-class classification as demonstrated below:</p>
+<img src="/2018/06/03/one-vs-all-classification/one-vs-all.png" class="">
+<br>
+
+<p>We already know from the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a> how to train a binary classifier using logistic regression. So the only thing we have to do now really is to train $N$ binary classifiers instead of just one. And that’s pretty much it.</p>
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’re going to use this one-vs-all approach to solve a multi-class classification problem from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> thought by Andrew Ng. The goal in this problem is to identify digits from 0 to 9 by looking at 20x20 pixel drawings.</p>
+<p>Here the number of classes $N$ is equal to 10, which is the number of different digits. We’re going to treat each pixel as an individual feature, which adds up to 400 features per image. Here are some examples from our training sample of 5000 images:</p>
+<img src="/2018/06/03/one-vs-all-classification/examples-from-dataset.png" class="">
+<br>
+
+<p>The training data is stored in a file called <a href="/2018/06/03/one-vs-all-classification/digits.mat" title="digits.mat">digits.mat</a>. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a Matlab assignment. No big deal, since it’s pretty easy to import a <strong><code>.mat</code></strong> file in Python using the <strong><code>loadmat</code></strong> function from the <strong><code>scipy.io</code></strong> module. Here’s how to do it:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = sio.loadmat(<span class="string">&quot;digits.mat&quot;</span>)</span><br><span class="line">x = data[<span class="string">&#x27;X&#x27;</span>] <span class="comment"># the feature matrix is labeled with &#x27;X&#x27; inside the file</span></span><br><span class="line">y = np.squeeze(data[<span class="string">&#x27;y&#x27;</span>]) <span class="comment"># the target variable vector is labeled with &#x27;y&#x27; inside the file</span></span><br><span class="line">np.place(y, y == <span class="number">10</span>, <span class="number">0</span>) <span class="comment"># replace the label 10 with 0</span></span><br><span class="line">numExamples = x.shape[<span class="number">0</span>] <span class="comment"># 5000 examples</span></span><br><span class="line">numFeatures = x.shape[<span class="number">1</span>] <span class="comment"># 400 features</span></span><br><span class="line">numLabels = <span class="number">10</span> <span class="comment"># digits from 0 to 9</span></span><br></pre></td></tr></table></figure>
+<p>Let me point out two things here:</p>
+<ol>
+<li><p>We’re using the <strong><code>squeeze</code></strong> function on the <strong><code>y</code></strong> array in order to explicitly make it one dimensional. We’re doing this because <strong><code>y</code></strong> is stored as a 2D matrix in the <strong><code>.mat</code></strong> file although it’s actually a 1D array.</p>
+</li>
+<li><p>We’re replacing the label 10 with 0. This label actually stands for the digit 0 but it was converted to 10 because of array indexing issues in Matlab.</p>
+</li>
+</ol>
+<img src="/2018/06/03/one-vs-all-classification/matlab-index.png" class="">
+<br>
+
+<h4 id="Logistic-Regression-Recap"><a href="#Logistic-Regression-Recap" class="headerlink" title="Logistic Regression Recap"></a>Logistic Regression Recap</h4><p>Remember the <strong><code>sigmoid</code></strong>, <strong><code>cost</code></strong> and <strong><code>cost_gradient</code></strong> functions that we’ve come up with while training a logistic regression model in the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a>? Here we can reuse these functions exactly as they are, because we’re going to train nothing but logistic regression models also in this problem.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes error in division</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
+<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we have to do before starting to train our multi-class classifier is to add an initial column of ones to our feature matrix to take into account the intercept term:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
+<p>Now we’re ready to train our classifiers. Let’s create an array to store the model parameters $\theta$ for each classifier. Note that we need 10 sets of model parameters, each consisting of 401 parameters including the intercept term:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classifiers = np.zeros(shape=(numLabels, numFeatures + <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>Then we’re going to train 10 binary classifiers targeted for each digit inside a <strong><code>for</code></strong> loop:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, numLabels):</span><br><span class="line">    label = (y == c).astype(<span class="built_in">int</span>)</span><br><span class="line">    initial_theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    classifiers[c, :] = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, label), disp=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>Here we create a <strong><code>label</code></strong> vector in each iteration. We set its values to 1 where the corresponding values in <strong><code>y</code></strong> are equal to the current digit, and we set the rest of its values to 0. Hence the <strong><code>label</code></strong> vector acts as the target variable vector <strong><code>y</code></strong> of the binary classifier that we train for the current digit.</p>
+<h4 id="Predictions"><a href="#Predictions" class="headerlink" title="Predictions"></a>Predictions</h4><p>We can evaluate the probability estimations of our optimized model for each class as follows:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classProbabilities = sigmoid(X @ classifiers.transpose())</span><br></pre></td></tr></table></figure>
+<p>This will give us a matrix of 5000 rows and 10 columns, where the columns correspond to the estimated class (digit) probabilities for all 5000 images.</p>
+<p>However, we may need the final predictions of the optimized classifier instead of numerical probability estimations. We can find out our model’s predictions by simply selecting the label with the highest probability in each row :</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = classProbabilities.argmax(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>Now we have our model’s predictions as a vector with 5000 elements labeled from 0 to 9.</p>
+<h4 id="Accuracy"><a href="#Accuracy" class="headerlink" title="Accuracy"></a>Accuracy</h4><p>Finally, we can compute our model’s training accuracy by computing the percentage of successful predictions:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;Training accuracy:&quot;</span>, <span class="built_in">str</span>(<span class="number">100</span> * np.mean(predictions == y)) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Training accuracy: 94.54%</code></pre>
+<p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
+<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
+]]></content>
+      <tags>
+        <tag>AI</tag>
+        <tag>Python</tag>
+        <tag>Machine Learning</tag>
       </tags>
   </entry>
   <entry>
@@ -1004,6 +1061,32 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
       </tags>
   </entry>
   <entry>
+    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
+    <url>/2018/12/20/trello-budget/</url>
+    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
+<a id="more"></a>
+
+
+<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
+<ul>
+<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
+<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
+</ul>
+<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
+<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Google Sheets</tag>
+        <tag>Budget Tracking</tag>
+        <tag>JavaScript</tag>
+        <tag>Trello</tag>
+        <tag>Firebase</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>How I Manage My Side-Projects Using Trello</title>
     <url>/2020/03/20/trello-project-manage/</url>
     <content><![CDATA[<p>For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except for very small projects. Trello is one of my favorite software tools ever, and I’m going to talk about how I manage my current side-project using its free version in this article.</p>
@@ -1079,89 +1162,6 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
       <tags>
         <tag>Trello</tag>
         <tag>Project Management</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>One-vs-All Classification Using Logistic Regression</title>
-    <url>/2018/06/03/one-vs-all-classification/</url>
-    <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
-
-<a id="more"></a>
-
-<h4 id="One-vs-All-Classification"><a href="#One-vs-All-Classification" class="headerlink" title="One-vs-All Classification"></a>One-vs-All Classification</h4><p>First of all, let me briefly explain the idea behind one-vs-all classification. Say we have a classification problem and there are $N$ distinct classes. In this case, we’ll have to train a multi-class classifier instead of a binary one.</p>
-<p>One-vs-all classification is a method which involves training $N$ distinct binary classifiers, each designed for recognizing a particular class. Then those $N$ classifiers are collectively used for multi-class classification as demonstrated below:</p>
-<img src="/2018/06/03/one-vs-all-classification/one-vs-all.png" class="">
-<br>
-
-<p>We already know from the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a> how to train a binary classifier using logistic regression. So the only thing we have to do now really is to train $N$ binary classifiers instead of just one. And that’s pretty much it.</p>
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’re going to use this one-vs-all approach to solve a multi-class classification problem from the <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> thought by Andrew Ng. The goal in this problem is to identify digits from 0 to 9 by looking at 20x20 pixel drawings.</p>
-<p>Here the number of classes $N$ is equal to 10, which is the number of different digits. We’re going to treat each pixel as an individual feature, which adds up to 400 features per image. Here are some examples from our training sample of 5000 images:</p>
-<img src="/2018/06/03/one-vs-all-classification/examples-from-dataset.png" class="">
-<br>
-
-<p>The training data is stored in a file called <a href="/2018/06/03/one-vs-all-classification/digits.mat" title="digits.mat">digits.mat</a>. The reason that it’s a <strong><code>.mat</code></strong> file is because this problem is originally a Matlab assignment. No big deal, since it’s pretty easy to import a <strong><code>.mat</code></strong> file in Python using the <strong><code>loadmat</code></strong> function from the <strong><code>scipy.io</code></strong> module. Here’s how to do it:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br><span class="line"></span><br><span class="line">data = sio.loadmat(<span class="string">&quot;digits.mat&quot;</span>)</span><br><span class="line">x = data[<span class="string">&#x27;X&#x27;</span>] <span class="comment"># the feature matrix is labeled with &#x27;X&#x27; inside the file</span></span><br><span class="line">y = np.squeeze(data[<span class="string">&#x27;y&#x27;</span>]) <span class="comment"># the target variable vector is labeled with &#x27;y&#x27; inside the file</span></span><br><span class="line">np.place(y, y == <span class="number">10</span>, <span class="number">0</span>) <span class="comment"># replace the label 10 with 0</span></span><br><span class="line">numExamples = x.shape[<span class="number">0</span>] <span class="comment"># 5000 examples</span></span><br><span class="line">numFeatures = x.shape[<span class="number">1</span>] <span class="comment"># 400 features</span></span><br><span class="line">numLabels = <span class="number">10</span> <span class="comment"># digits from 0 to 9</span></span><br></pre></td></tr></table></figure>
-<p>Let me point out two things here:</p>
-<ol>
-<li><p>We’re using the <strong><code>squeeze</code></strong> function on the <strong><code>y</code></strong> array in order to explicitly make it one dimensional. We’re doing this because <strong><code>y</code></strong> is stored as a 2D matrix in the <strong><code>.mat</code></strong> file although it’s actually a 1D array.</p>
-</li>
-<li><p>We’re replacing the label 10 with 0. This label actually stands for the digit 0 but it was converted to 10 because of array indexing issues in Matlab.</p>
-</li>
-</ol>
-<img src="/2018/06/03/one-vs-all-classification/matlab-index.png" class="">
-<br>
-
-<h4 id="Logistic-Regression-Recap"><a href="#Logistic-Regression-Recap" class="headerlink" title="Logistic Regression Recap"></a>Logistic Regression Recap</h4><p>Remember the <strong><code>sigmoid</code></strong>, <strong><code>cost</code></strong> and <strong><code>cost_gradient</code></strong> functions that we’ve come up with while training a logistic regression model in the <a href="/2018/05/19/binary-logistic-regression/" title="previous post">previous post</a>? Here we can reuse these functions exactly as they are, because we’re going to train nothing but logistic regression models also in this problem.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta)</span><br><span class="line">    predictions[predictions == <span class="number">1</span>] = <span class="number">0.999</span> <span class="comment"># log(1)=0 causes error in division</span></span><br><span class="line">    error = -y * np.log(predictions) - (<span class="number">1</span> - y) * np.log(<span class="number">1</span> - predictions);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(error) / <span class="built_in">len</span>(y);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_gradient</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = sigmoid(X @ theta);</span><br><span class="line">    <span class="keyword">return</span> X.transpose() @ (predictions - y) / <span class="built_in">len</span>(y)</span><br></pre></td></tr></table></figure>
-<h4 id="Training-Stage"><a href="#Training-Stage" class="headerlink" title="Training Stage"></a>Training Stage</h4><p>The final thing we have to do before starting to train our multi-class classifier is to add an initial column of ones to our feature matrix to take into account the intercept term:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(x.shape[<span class="number">0</span>], x.shape[<span class="number">1</span>] + <span class="number">1</span>))</span><br><span class="line">X[:, <span class="number">1</span>:] = x</span><br></pre></td></tr></table></figure>
-<p>Now we’re ready to train our classifiers. Let’s create an array to store the model parameters $\theta$ for each classifier. Note that we need 10 sets of model parameters, each consisting of 401 parameters including the intercept term:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classifiers = np.zeros(shape=(numLabels, numFeatures + <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>Then we’re going to train 10 binary classifiers targeted for each digit inside a <strong><code>for</code></strong> loop:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, numLabels):</span><br><span class="line">    label = (y == c).astype(<span class="built_in">int</span>)</span><br><span class="line">    initial_theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    classifiers[c, :] = opt.fmin_cg(cost, initial_theta, cost_gradient, (X, label), disp=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<p>Here we create a <strong><code>label</code></strong> vector in each iteration. We set its values to 1 where the corresponding values in <strong><code>y</code></strong> are equal to the current digit, and we set the rest of its values to 0. Hence the <strong><code>label</code></strong> vector acts as the target variable vector <strong><code>y</code></strong> of the binary classifier that we train for the current digit.</p>
-<h4 id="Predictions"><a href="#Predictions" class="headerlink" title="Predictions"></a>Predictions</h4><p>We can evaluate the probability estimations of our optimized model for each class as follows:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">classProbabilities = sigmoid(X @ classifiers.transpose())</span><br></pre></td></tr></table></figure>
-<p>This will give us a matrix of 5000 rows and 10 columns, where the columns correspond to the estimated class (digit) probabilities for all 5000 images.</p>
-<p>However, we may need the final predictions of the optimized classifier instead of numerical probability estimations. We can find out our model’s predictions by simply selecting the label with the highest probability in each row :</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = classProbabilities.argmax(axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>Now we have our model’s predictions as a vector with 5000 elements labeled from 0 to 9.</p>
-<h4 id="Accuracy"><a href="#Accuracy" class="headerlink" title="Accuracy"></a>Accuracy</h4><p>Finally, we can compute our model’s training accuracy by computing the percentage of successful predictions:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&quot;Training accuracy:&quot;</span>, <span class="built_in">str</span>(<span class="number">100</span> * np.mean(predictions == y)) + <span class="string">&quot;%&quot;</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>Training accuracy: 94.54%</code></pre>
-<p>An accuracy of 94.5% isn’t bad at all considering we have 10 classes and a very large number of features. Still, we could do even better if we decided to use a nonlinear model such as a neural network.</p>
-<p>If you’re still here, you should <a href="%5Csubscribe">subscribe</a> to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>Python</tag>
-        <tag>Machine Learning</tag>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
-    <url>/2018/12/20/trello-budget/</url>
-    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
-<a id="more"></a>
-
-
-<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
-<ul>
-<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
-<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
-</ul>
-<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
-<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-]]></content>
-      <tags>
-        <tag>Python</tag>
-        <tag>Google Sheets</tag>
-        <tag>Budget Tracking</tag>
-        <tag>JavaScript</tag>
-        <tag>Trello</tag>
-        <tag>Firebase</tag>
       </tags>
   </entry>
 </search>
