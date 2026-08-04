@@ -143,6 +143,65 @@ Looks pretty good. Let's also measure the training accuracy:
       </tags>
   </entry>
   <entry>
+    <title>Try, catch, but don&#39;t throw</title>
+    <url>/2024/09/20/error-handling-in-typescript/</url>
+    <content><![CDATA[<p>The standard <code>try-catch-throw</code> approach to error handling in TypeScript is not type-safe, making it difficult to explicitly handle different kinds of errors in business logic. This might be okay in small projects where it’s affordable to treat all errors similarly, but it’s not ideal for larger and more complex projects where it’s oftentimes desirable to differentiate between recoverable and unrecoverable errors.</p>
+<h2 id="Limitations-of-standard-error-handling"><a href="#Limitations-of-standard-error-handling" class="headerlink" title="Limitations of standard error handling"></a>Limitations of standard error handling</h2><p>Since the caught error is of type <code>unknown</code> in the <code>catch</code> block, we cannot rely on TypeScript in ensuring that all the possible error types are covered. Suppose that we have a function that can fail due to several reasons such as:</p>
+<ul>
+<li>Input decode (format) failure </li>
+<li>Input validation failure </li>
+<li>Unexpected database query result</li>
+<li>HTTP request timeout</li>
+<li>Other errors thrown by libraries</li>
+</ul>
+<p>Some of these errors might be recoverable. Such errors should not bubble up to higher abstraction layers lest they disrupt the entire operation. Instead, they should be gracefully handled by the business logic.</p>
+<p>For the sake of the argument, let’s assume that we want our system to recover from <code>DecodeError</code> and <code>ValidationError</code> in the example below:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DecodeError</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValidationError</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// may throw DecodeError or ValidationError</span></span><br><span class="line"><span class="comment">// (but that&#x27;s not visible in the signature)</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): <span class="function"><span class="params">ImportResult</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call site</span></span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">  importData(rawData)</span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123; <span class="comment">// err is of type `unknown`  </span></span><br><span class="line">  <span class="keyword">if</span> (err <span class="keyword">instanceof</span> DecodeError) &#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="string">&#x27;Decode error:&#x27;</span>, err)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// gracefully handle decode error</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// oops, forgot to handle ValidationError</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">throw</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If we wish to handle certain types of errors explicitly, we must make sure to cover all of them, and we get no help whatsoever from TypeScript. Moreover, if the above function evolves to produce additional types of (recoverable) errors, there’s a risk of forgetting to cover them in all the corresponding <code>catch</code> blocks.</p>
+<p>Before we start talking about a better approach, it’s important to note that<br>we cannot completely avoid dealing with thrown <code>Error</code>s. This is because external (third-party and system) function calls <strong>will</strong> throw <code>Error</code>s, even if our code doesn’t throw at all. Thus, we need to find a solution that can deal with unavoidable (foreign) <code>Error</code>s too.</p>
+<h2 id="A-simple-type-safe-alternative"><a href="#A-simple-type-safe-alternative" class="headerlink" title="A simple type-safe alternative"></a>A simple type-safe alternative</h2><p>Here’s all the boilerplate needed for this simple yet type-safe error-handling mechanism:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">get</span> <span class="title">name</span>(): <span class="title">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.constructor.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> isFailure =</span><br><span class="line">  &lt;F <span class="keyword">extends</span> Failure, T&gt;<span class="function">(<span class="params">f: <span class="keyword">new</span> (...args: <span class="built_in">Array</span>&lt;<span class="built_in">any</span>&gt;) =&gt; F</span>) =&gt;</span></span><br><span class="line">  (m: T | F): m is F =&gt;</span><br><span class="line">    m <span class="keyword">instanceof</span> f</span><br></pre></td></tr></table></figure>
+<p>After that, we only need to extend the <code>Failure</code> class for specific types of errors we wish to handle explicitly:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">ValidationFailure</span>&lt;<span class="title">T</span> </span>= unknown&gt; <span class="keyword">extends</span> Failure &#123;</span><br><span class="line">  rawObject: T</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">rawObject: T</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>()</span><br><span class="line">    <span class="built_in">this</span>.rawObject = rawObject</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DecodeFailure</span> <span class="keyword">extends</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>With this minimal toolkit, we can use <code>importData</code> from the earlier example as follows:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): ImportResult | DecodeFailure | <span class="function"><span class="params">ValidationFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> persistData = <span class="function">(<span class="params">importRes: ImportResult</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call site</span></span><br><span class="line"><span class="keyword">const</span> res = importData(rawData)</span><br><span class="line"><span class="keyword">if</span> (isFailure(DecodeFailure)(res)) &#123;</span><br><span class="line">  <span class="comment">// handle decode failure</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (isFailure(ValidationFailure)(res)) &#123;</span><br><span class="line">  <span class="comment">// handle validation failure</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">persistData(res) <span class="comment">// res must be of type `ImportResult`</span></span><br></pre></td></tr></table></figure>
+<p>Note that all the possible failure types are visible in the function signature. TypeScript will alert us if we fail to cover all the possible failure cases at the call site; we won’t be allowed to pass a variable of type <code>ImportResult | SomeFailure</code> to <code>persistData</code>, which expects an <code>ImportResult</code>.</p>
+<h2 id="Dealing-with-foreign-errors"><a href="#Dealing-with-foreign-errors" class="headerlink" title="Dealing with foreign errors"></a>Dealing with foreign errors</h2><p>As mentioned earlier, we cannot prevent our dependencies from throwing errors. Therefore, we still need to rely on <code>try / catch</code> blocks to handle those errors. Now comes the crucial principle:</p>
+<blockquote>
+<p>Try, catch, but do not throw.</p>
+</blockquote>
+<p>This means that <strong>in our own code</strong> we should never <code>throw</code> an <code>Error</code> of our own by extending the <code>Error</code> class. Instead, we should extend <code>Failure</code> and return it.</p>
+<p>In <code>try / catch</code> blocks at higher layers of abstraction, we may log errors, return HTTP responses, and so on. At lower layers (i.e. business logic), we may catch a foreign <code>Error</code> and return it as a <code>Failure</code>.</p>
+<p>An <code>Error</code> should be converted to a <code>Failure</code> <strong>if and only if</strong> it needs to be explicitly handled it in the business logic. Assuming that most errors don’t require special treatment, <code>Failure</code>s are supposed to be used for a very small subset of errors. In such cases, the conversion should be done at the earliest opportunity lest the <code>Error</code> bubbles up to higher layers.</p>
+<p>Here’s an example where a <code>SyntaxError</code> thrown by <code>JSON.parse</code> is converted to a <code>ParseFailure</code> and returned:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParseFailure</span> <span class="keyword">extends</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> safeParseJson = (serializedData: <span class="built_in">string</span>): <span class="built_in">object</span> | <span class="function"><span class="params">ParseFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(serializedData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">if</span> (err <span class="keyword">instanceof</span> <span class="built_in">SyntaxError</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> ParseFailure(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> err <span class="comment">// let all other kinds of errors bubble up</span></span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Since we wish to explicitly handle <code>SyntaxError</code>, we need to prevent it from bubbling up unchecked. By converting it to <code>ParseFailure</code>, we force ourselves to explicitly handle it in our business logic.</p>
+<p>Note that in the above example, the way we capture <code>SyntaxError</code> is not type-safe. That’s because catching and matching it (via <code>instanceof</code>) is the only option. On the bright side, anything that uses <code>safeParseJson</code> has a way handle <code>ParseFailure</code> in a type-safe manner.</p>
+<h2 id="Failure-not-based-on-an-Error"><a href="#Failure-not-based-on-an-Error" class="headerlink" title="Failure not based on an Error"></a><code>Failure</code> not based on an <code>Error</code></h2><p>A <code>Failure</code> doesn’t necessarily have to be created based on an <code>Error</code>. We can create and return custom <code>Failure</code>s in the business logic to represent an event/state/situation that isn’t a part of the happy path. For instance, if the business logic doesn’t allow a certain state, then we could return an <code>IllegalStateFailure</code> rather than throw an <code>IllegalStateError</code> and pray that it is handled properly (if at all) in all relevant <code>catch</code> blocks.</p>
+<h2 id="Code-style"><a href="#Code-style" class="headerlink" title="Code style"></a>Code style</h2><p>On top of the lack of type safety, this standard error-handling approach makes the code messier too. To throw different kinds of errors from a function, we have to declare some variables via <code>let</code> instead of <code>const</code> (yikes!), and have a lot of <code>try / catch</code> blocks that clutter the code.</p>
+<p>To demonstrate this, compare the following two implementations of <code>importData</code> from the earlier examples:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Standard error handling</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): <span class="function"><span class="params">ImportResult</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> decodedData</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    decodedData = decode(rawData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> DecodeError()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> validatedData</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    validatedData = validate(decodedData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ValidationError()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Type-safe error handling</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): ImportResult | DecodeFailure | <span class="function"><span class="params">ValidationFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> decodedData = decode(rawData)</span><br><span class="line">  <span class="keyword">if</span> (isFailure(DecodeFailure)(decodedData)) &#123;</span><br><span class="line">    <span class="keyword">return</span> decodedData <span class="comment">// return the failure (DecodeFailure) as-is</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> validatedData = validate(decodedData)</span><br><span class="line">  <span class="keyword">if</span> (isFailure(ValidationFailure)(validatedData)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> OtherFailure(validatedData) <span class="comment">// return a new failure            </span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Other-alternatives"><a href="#Other-alternatives" class="headerlink" title="Other alternatives"></a>Other alternatives</h2><p>There are some existing type-safe alternatives to the standard error-handling approach such as <a href="https://gcanti.github.io/fp-ts/modules/Either.ts.html"><code>Either</code> (from <code>fp-ts</code>)</a> and <a href="https://github.com/supermacro/neverthrow">neverthrow</a>.</p>
+<p>However, I prefer this solution because</p>
+<ul>
+<li>It’s much less intrusive than the aforementioned alternatives. For instance, using <code>Either</code> will likely expose you to more functional programming than you might be comfortable with.</li>
+<li>You won’t have to unwrap the return value in the happy path. With <code>Either</code>  and <code>neverthrow</code>, the return value is wrapped with <code>Right</code> and <code>Ok</code>, respectively.</li>
+<li>Only 10 lines of boilerplate code, no external library dependencies.</li>
+</ul>
+<h2 id="Key-takeaways"><a href="#Key-takeaways" class="headerlink" title="Key takeaways"></a>Key takeaways</h2><ul>
+<li>TypeScript has a severe blind spot in type safety when it comes to standard error handling.</li>
+<li>Outside of <code>catch</code> blocks, create custom <code>Failure</code>s and return them instead of throwing custom <code>Error</code>s.</li>
+<li>Catch and convert an <code>Error</code> to a <code>Failure</code> if it should be explicitly handled. If not (that is most of the time), let it bubble up.</li>
+<li>By declaring all the possible <code>Failure</code> types in the signature, you can know much more   about the behavior of a function at first glance.</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>TypeScript</tag>
+        <tag>Error Handling</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>A CLI App to Insert Budget Transactions in Google Spreadsheets</title>
     <url>/2018/11/10/budget-cli/</url>
     <content><![CDATA[<p>If you use Google Spreadsheets for personal budget management and also like to get things done from the command line as much as possible, I have some good news for you. I’ve built a <a href="https://github.com/utkuufuk/budget-cli">CLI app</a> to insert transaction entries in monthly budget spreadsheets with simple commands from CLI. Today I’ll be walking you through the process of building this app.</p>
@@ -227,62 +286,37 @@ Looks pretty good. Let's also measure the training accuracy:
       </tags>
   </entry>
   <entry>
-    <title>Try, catch, but don&#39;t throw</title>
-    <url>/2024/09/20/error-handling-in-typescript/</url>
-    <content><![CDATA[<p>The standard <code>try-catch-throw</code> approach to error handling in TypeScript is not type-safe, making it difficult to explicitly handle different kinds of errors in business logic. This might be okay in small projects where it’s affordable to treat all errors similarly, but it’s not ideal for larger and more complex projects where it’s oftentimes desirable to differentiate between recoverable and unrecoverable errors.</p>
-<h2 id="Limitations-of-standard-error-handling"><a href="#Limitations-of-standard-error-handling" class="headerlink" title="Limitations of standard error handling"></a>Limitations of standard error handling</h2><p>Since the caught error is of type <code>unknown</code> in the <code>catch</code> block, we cannot rely on TypeScript in ensuring that all the possible error types are covered. Suppose that we have a function that can fail due to several reasons such as:</p>
-<ul>
-<li>Input decode (format) failure </li>
-<li>Input validation failure </li>
-<li>Unexpected database query result</li>
-<li>HTTP request timeout</li>
-<li>Other errors thrown by libraries</li>
-</ul>
-<p>Some of these errors might be recoverable. Such errors should not bubble up to higher abstraction layers lest they disrupt the entire operation. Instead, they should be gracefully handled by the business logic.</p>
-<p>For the sake of the argument, let’s assume that we want our system to recover from <code>DecodeError</code> and <code>ValidationError</code> in the example below:</p>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DecodeError</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValidationError</span> <span class="keyword">extends</span> <span class="title">Error</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// may throw DecodeError or ValidationError</span></span><br><span class="line"><span class="comment">// (but that&#x27;s not visible in the signature)</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): <span class="function"><span class="params">ImportResult</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call site</span></span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">  importData(rawData)</span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123; <span class="comment">// err is of type `unknown`  </span></span><br><span class="line">  <span class="keyword">if</span> (err <span class="keyword">instanceof</span> DecodeError) &#123;</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="string">&#x27;Decode error:&#x27;</span>, err)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// gracefully handle decode error</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// oops, forgot to handle ValidationError</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">throw</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>If we wish to handle certain types of errors explicitly, we must make sure to cover all of them, and we get no help whatsoever from TypeScript. Moreover, if the above function evolves to produce additional types of (recoverable) errors, there’s a risk of forgetting to cover them in all the corresponding <code>catch</code> blocks.</p>
-<p>Before we start talking about a better approach, it’s important to note that<br>we cannot completely avoid dealing with thrown <code>Error</code>s. This is because external (third-party and system) function calls <strong>will</strong> throw <code>Error</code>s, even if our code doesn’t throw at all. Thus, we need to find a solution that can deal with unavoidable (foreign) <code>Error</code>s too.</p>
-<h2 id="A-simple-type-safe-alternative"><a href="#A-simple-type-safe-alternative" class="headerlink" title="A simple type-safe alternative"></a>A simple type-safe alternative</h2><p>Here’s all the boilerplate needed for this simple yet type-safe error-handling mechanism:</p>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">get</span> <span class="title">name</span>(): <span class="title">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.constructor.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> isFailure =</span><br><span class="line">  &lt;F <span class="keyword">extends</span> Failure, T&gt;<span class="function">(<span class="params">f: <span class="keyword">new</span> (...args: <span class="built_in">Array</span>&lt;<span class="built_in">any</span>&gt;) =&gt; F</span>) =&gt;</span></span><br><span class="line">  (m: T | F): m is F =&gt;</span><br><span class="line">    m <span class="keyword">instanceof</span> f</span><br></pre></td></tr></table></figure>
-<p>After that, we only need to extend the <code>Failure</code> class for specific types of errors we wish to handle explicitly:</p>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">ValidationFailure</span>&lt;<span class="title">T</span> </span>= unknown&gt; <span class="keyword">extends</span> Failure &#123;</span><br><span class="line">  rawObject: T</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">rawObject: T</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>()</span><br><span class="line">    <span class="built_in">this</span>.rawObject = rawObject</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DecodeFailure</span> <span class="keyword">extends</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>With this minimal toolkit, we can use <code>importData</code> from the earlier example as follows:</p>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): ImportResult | DecodeFailure | <span class="function"><span class="params">ValidationFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> persistData = <span class="function">(<span class="params">importRes: ImportResult</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call site</span></span><br><span class="line"><span class="keyword">const</span> res = importData(rawData)</span><br><span class="line"><span class="keyword">if</span> (isFailure(DecodeFailure)(res)) &#123;</span><br><span class="line">  <span class="comment">// handle decode failure</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (isFailure(ValidationFailure)(res)) &#123;</span><br><span class="line">  <span class="comment">// handle validation failure</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">persistData(res) <span class="comment">// res must be of type `ImportResult`</span></span><br></pre></td></tr></table></figure>
-<p>Note that all the possible failure types are visible in the function signature. TypeScript will alert us if we fail to cover all the possible failure cases at the call site; we won’t be allowed to pass a variable of type <code>ImportResult | SomeFailure</code> to <code>persistData</code>, which expects an <code>ImportResult</code>.</p>
-<h2 id="Dealing-with-foreign-errors"><a href="#Dealing-with-foreign-errors" class="headerlink" title="Dealing with foreign errors"></a>Dealing with foreign errors</h2><p>As mentioned earlier, we cannot prevent our dependencies from throwing errors. Therefore, we still need to rely on <code>try / catch</code> blocks to handle those errors. Now comes the crucial principle:</p>
+    <title>I had to build a web scraper to buy groceries</title>
+    <url>/2020/03/28/grocery-scraping/</url>
+    <content><![CDATA[<p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+<a id="more"></a>
+
+<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
+<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
 <blockquote>
-<p>Try, catch, but do not throw.</p>
+<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
 </blockquote>
-<p>This means that <strong>in our own code</strong> we should never <code>throw</code> an <code>Error</code> of our own by extending the <code>Error</code> class. Instead, we should extend <code>Failure</code> and return it.</p>
-<p>In <code>try / catch</code> blocks at higher layers of abstraction, we may log errors, return HTTP responses, and so on. At lower layers (i.e. business logic), we may catch a foreign <code>Error</code> and return it as a <code>Failure</code>.</p>
-<p>An <code>Error</code> should be converted to a <code>Failure</code> <strong>if and only if</strong> it needs to be explicitly handled it in the business logic. Assuming that most errors don’t require special treatment, <code>Failure</code>s are supposed to be used for a very small subset of errors. In such cases, the conversion should be done at the earliest opportunity lest the <code>Error</code> bubbles up to higher layers.</p>
-<p>Here’s an example where a <code>SyntaxError</code> thrown by <code>JSON.parse</code> is converted to a <code>ParseFailure</code> and returned:</p>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParseFailure</span> <span class="keyword">extends</span> <span class="title">Failure</span> </span>&#123;</span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> safeParseJson = (serializedData: <span class="built_in">string</span>): <span class="built_in">object</span> | <span class="function"><span class="params">ParseFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(serializedData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">if</span> (err <span class="keyword">instanceof</span> <span class="built_in">SyntaxError</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> ParseFailure(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> err <span class="comment">// let all other kinds of errors bubble up</span></span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Since we wish to explicitly handle <code>SyntaxError</code>, we need to prevent it from bubbling up unchecked. By converting it to <code>ParseFailure</code>, we force ourselves to explicitly handle it in our business logic.</p>
-<p>Note that in the above example, the way we capture <code>SyntaxError</code> is not type-safe. That’s because catching and matching it (via <code>instanceof</code>) is the only option. On the bright side, anything that uses <code>safeParseJson</code> has a way handle <code>ParseFailure</code> in a type-safe manner.</p>
-<h2 id="Failure-not-based-on-an-Error"><a href="#Failure-not-based-on-an-Error" class="headerlink" title="Failure not based on an Error"></a><code>Failure</code> not based on an <code>Error</code></h2><p>A <code>Failure</code> doesn’t necessarily have to be created based on an <code>Error</code>. We can create and return custom <code>Failure</code>s in the business logic to represent an event/state/situation that isn’t a part of the happy path. For instance, if the business logic doesn’t allow a certain state, then we could return an <code>IllegalStateFailure</code> rather than throw an <code>IllegalStateError</code> and pray that it is handled properly (if at all) in all relevant <code>catch</code> blocks.</p>
-<h2 id="Code-style"><a href="#Code-style" class="headerlink" title="Code style"></a>Code style</h2><p>On top of the lack of type safety, this standard error-handling approach makes the code messier too. To throw different kinds of errors from a function, we have to declare some variables via <code>let</code> instead of <code>const</code> (yikes!), and have a lot of <code>try / catch</code> blocks that clutter the code.</p>
-<p>To demonstrate this, compare the following two implementations of <code>importData</code> from the earlier examples:</p>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Standard error handling</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): <span class="function"><span class="params">ImportResult</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> decodedData</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    decodedData = decode(rawData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> DecodeError()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> validatedData</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    validatedData = validate(decodedData)</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ValidationError()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Type-safe error handling</span></span><br><span class="line"><span class="keyword">const</span> importData = (rawData: unknown): ImportResult | DecodeFailure | <span class="function"><span class="params">ValidationFailure</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> decodedData = decode(rawData)</span><br><span class="line">  <span class="keyword">if</span> (isFailure(DecodeFailure)(decodedData)) &#123;</span><br><span class="line">    <span class="keyword">return</span> decodedData <span class="comment">// return the failure (DecodeFailure) as-is</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> validatedData = validate(decodedData)</span><br><span class="line">  <span class="keyword">if</span> (isFailure(ValidationFailure)(validatedData)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> OtherFailure(validatedData) <span class="comment">// return a new failure            </span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// …</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Other-alternatives"><a href="#Other-alternatives" class="headerlink" title="Other alternatives"></a>Other alternatives</h2><p>There are some existing type-safe alternatives to the standard error-handling approach such as <a href="https://gcanti.github.io/fp-ts/modules/Either.ts.html"><code>Either</code> (from <code>fp-ts</code>)</a> and <a href="https://github.com/supermacro/neverthrow">neverthrow</a>.</p>
-<p>However, I prefer this solution because</p>
-<ul>
-<li>It’s much less intrusive than the aforementioned alternatives. For instance, using <code>Either</code> will likely expose you to more functional programming than you might be comfortable with.</li>
-<li>You won’t have to unwrap the return value in the happy path. With <code>Either</code>  and <code>neverthrow</code>, the return value is wrapped with <code>Right</code> and <code>Ok</code>, respectively.</li>
-<li>Only 10 lines of boilerplate code, no external library dependencies.</li>
-</ul>
-<h2 id="Key-takeaways"><a href="#Key-takeaways" class="headerlink" title="Key takeaways"></a>Key takeaways</h2><ul>
-<li>TypeScript has a severe blind spot in type safety when it comes to standard error handling.</li>
-<li>Outside of <code>catch</code> blocks, create custom <code>Failure</code>s and return them instead of throwing custom <code>Error</code>s.</li>
-<li>Catch and convert an <code>Error</code> to a <code>Failure</code> if it should be explicitly handled. If not (that is most of the time), let it bubble up.</li>
-<li>By declaring all the possible <code>Failure</code> types in the signature, you can know much more   about the behavior of a function at first glance.</li>
-</ul>
+<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
+<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
+<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
+<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+
+<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
+<p>I got this response:</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
+<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
+<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
+<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
+<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
+<p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
 ]]></content>
       <tags>
-        <tag>TypeScript</tag>
-        <tag>Error Handling</tag>
+        <tag>Python</tag>
+        <tag>Web Scraping</tag>
       </tags>
   </entry>
   <entry>
@@ -432,37 +466,175 @@ Congratulations! You're now officially a full-stack developer. Go ahead and pat 
       </tags>
   </entry>
   <entry>
-    <title>I had to build a web scraper to buy groceries</title>
-    <url>/2020/03/28/grocery-scraping/</url>
-    <content><![CDATA[<p>Grocery shopping has been one of my least favorite chores, even before the pandemic. Unlike many people I know, I always preferred online shopping over going to the supermarket. Now it’s not a matter of personal preference anymore; everybody stays at home and especially avoids crowded indoor places like supermarkets. It’s good to know that people are acting responsibly, but I never thought this could mean that I won’t be able to do online grocery shopping anymore!</p>
+    <title>Training a Simple Linear Regression Model From Scratch</title>
+    <url>/2018/04/21/linear-regression/</url>
+    <content><![CDATA[<p>Hey everyone, welcome to my first blog post! This is going to be a walkthrough on training a simple linear regression model in Python. I’ll show you how to do it from scratch, without using any machine learning tools or libraries. We’ll only use <a href="http://www.numpy.org/">NumPy</a> and <a href="https://matplotlib.org/">Matplotlib</a> for matrix operations and data visualization.</p>
 <a id="more"></a>
 
-<p>Here’s the deal; very few supermarket chains in Turkey have online stores. <a href="https://www.migros.com.tr/">Migros Sanalmarket</a> is one of them and it’s arguably the best one. But they don’t have unlimited resources, obviously. When everybody decided to switch to online shopping all of a sudden, they couldn’t handle that demand spike. Even though their delivery system works from 8:30 AM to 10:00 PM every day, it’s virtually impossible to find an empty slot, that is if you play nicely.</p>
-<p>I’ve frequently visited the online store for the past two weeks and attempted to place an order, but I always got this message (translated from Turkish):</p>
-<blockquote>
-<p>“We do not have delivery to the neighborhood you have chosen for the next 4 days.”</p>
-</blockquote>
-<p>Probably as soon as new slots are opened, they get occupied in minutes by a few dozen lucky people who happen to be online at that time.</p>
-<p>I didn’t want to resort to violence but after yet another failed attempt yesterday, I got really frustrated and finally unsheathed Chrome developer tools. I looked at the <em>Network</em> tab to see which HTTP request was returning the above response. I found out that there was an endpoint for checking live delivery availability, and it was getting hit automatically when a logged-in user visited the website.</p>
-<p>The first step of my plan was to write a script that makes a <code>GET</code> request to that endpoint and checks if delivery is available for my neighborhood within the next 4 days. Firsty, I needed to find out what additional information I had to send with my request to make the server treat me as a logged-in user. I looked at the cookies in the <em>Request Cookies</em> section:</p>
-<img src="/2020/03/28/grocery-scraping/request-cookies.png" class="">
+<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll look at a regression problem from a very popular <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem will be to train a model that accurately predicts the profits of a food truck.</p>
+<p>The first column in our <a href="/2018/04/21/linear-regression/food_truck_data.txt" title="dataset file">dataset file</a> contains city populations and the second column contains food truck profits in each city, both in $10,000$s. Here are the first few training examples:</p>
+<figure class="highlight sh"><figcaption><span>food_truck_data.txt</span></figcaption><table><tr><td class="code"><pre><span class="line">6.1101,17.592</span><br><span class="line">5.5277,9.1302</span><br><span class="line">8.5186,13.662</span><br><span class="line">7.0032,11.854</span><br><span class="line">5.8598,6.8233</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>We’re going to use this dataset as a training sample to build our model. Let’s begin by loading it:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;food_truck_data.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>] <span class="comment"># city populations</span></span><br><span class="line">y = data[:, <span class="number">1</span>] <span class="comment"># food truck profits</span></span><br></pre></td></tr></table></figure>
+<p>Both $x$ and $y$ are one dimensional arrays, because we have one <strong>feature</strong> (population) and one <strong>target variable</strong> (profit) in this problem. Therefore we can conveniently visualize our dataset using a scatter plot:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(x, y, marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&quot;red&quot;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Food Truck Dataset&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;City Population in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Food Truck Profit in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">4</span>, <span class="number">25</span>, -<span class="number">5</span>, <span class="number">25</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_3_0.png" class="">
 
-<p>The <code>SESSION</code> cookie looks promising, doesn’t it? I did what anybody does when they need to quickly put together a script to get something done; I created a <code>main.py</code> file. The <code>requests</code> package is more than capable of setting cookies and making simple HTTP requests. This is how I tried to get the same response from the server programmatically:</p>
-<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy &amp; paste the SESSION cookie value obtained from request headers</span></span><br><span class="line">session = requests.Session()</span><br><span class="line">jar = requests.cookies.RequestsCookieJar()</span><br><span class="line">jar.<span class="built_in">set</span>(<span class="string">&#x27;SESSION&#x27;</span>, <span class="string">&#x27;Y2IxOWE0YWQtNmM0Ni00ZWYzLTkzYmItOGI4YWQ0MDI1MTg4&#x27;</span>)</span><br><span class="line">session.cookies = jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># make a GET request to the delivery availability endpoint</span></span><br><span class="line">r = session.get(<span class="string">&#x27;https://www.migros.com.tr/teslimat/en-yakin-siparis-dilimi&#x27;</span>)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
-<p>I got this response:</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;part-area date-header mobile-hide pull-right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">b</span>&gt;</span></span><br><span class="line">    Önümüzdeki 4 gün için seçtiğiniz mahalleye teslimatımız bulunmamaktadır.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>This is how you say “nope” in Turkish. It was exactly what I wanted to receive. If the session cookie hadn’t worked, or if it hadn’t been enough on its own, I would have received the HTML for a login page. I know because that was what I received when I sent the request without any cookies.</p>
-<p>So far so good. I could run a script every minute as a cron job, pipe <code>stdout</code> to a log file and check the logs every once in a while. So I set up the cron job and went AFK for 30 minutes. When I got back, I saw 30 failed attempts.</p>
-<p>Obviously, I didn’t want to sit there and check the logs forever. That’s why I decided to use one of my existing Mailgun domains for sending myself an email if and when one of the attempts succeeded. It’s actually pretty easy to send an email using the Mailgun API:</p>
-<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="code"><pre><span class="line">requests.post(</span><br><span class="line">    os.getenv(<span class="string">&#x27;MAILGUN_DOMAIN&#x27;</span>),</span><br><span class="line">    auth=(<span class="string">&quot;api&quot;</span>, os.getenv(<span class="string">&#x27;MAILGUN_SECRET&#x27;</span>)),</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: os.getenv(<span class="string">&#x27;EMAIL_FROM&#x27;</span>),</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: [os.getenv(<span class="string">&#x27;EMAIL_TO&#x27;</span>)],</span><br><span class="line">        <span class="string">&quot;subject&quot;</span>: <span class="string">&quot;Sanalmarket Is Available!!!&quot;</span>,</span><br><span class="line">        <span class="string">&quot;text&quot;</span>: <span class="string">f&quot;Go to <span class="subst">&#123;os.getenv(<span class="string">&#x27;SHOPPING_CART_URL&#x27;</span>)&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>The only issue was that if my script ever found an available slot, it would start sending an email to me every minute until there were no slots left. I really didn’t want to spam myself. As a solution, I made it so that the script would create a <code>.lock</code> file the first time it received a success response and sent me an email. Also, at the beginning of each execution, it would check that <code>.lock</code> file and terminate immediately if it existed.</p>
-<p>After adding the email functionality, I went AFK once more and attended to other stuff. I got an email notification on my phone after about an hour later. The sender was me, I was talking about some nonsense that had something to do with grocery shopping. I checked it out anyway. It turned out that Sanalmarket was available for delivery to my neighborhood if I placed an order immediately! I had already prepared my shopping cart, so all I needed to do was confirm the order. </p>
-<p>I received my delivery the morning after. I’m pretty sure that I would’ve never been able to get a chance to make an order anytime soon if it wasn’t for that little hack. </p>
-<p>That’s all there is to my mini-adventure for this weekend. <a href="https://github.com/utkuufuk/ping-sm">My script is available on Github</a> for those who are interested. Feel free to <a href="/about">reach me out</a> if you have any comments or questions. Also, make sure to <a href="/subscribe">subscribe</a> if you’re interested in getting email updates on my future articles.</p>
+
+<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Now we need to come up with a <strong>straight line</strong> which accurately represents the relationship between population and profit. This is called the <strong>hypothesis function</strong> and it’s formulated as:</p>
+<p>$h_\theta(x) = \theta^Tx = \theta_0 + \theta_1x_1 + \theta_2x_2 + … + \theta_nx_n$</p>
+<p>where $x$ corresponds to the feature matrix and $\theta$ corresponds to the vector of <strong>model parameters.</strong></p>
+<p>Since we have a single feature $x_1,$ we’ll only have two model parameters $\theta_0$ and $\theta_1$ in our hypothesis function:</p>
+<p>$h_\theta(x) = \theta_0 + \theta_1x_1$</p>
+<p>As you may have noticed, the number of model parameters is equal to the number of features plus $1$. That’s because each feature is weighted by a parameter to control its impact on the hypothesis $h_\theta(x)$. There is also an independent parameter $\theta_0$ called the <strong>intercept term,</strong> which defines the point where the hypothesis function intercepts the $y$-axis as demonstrated below:</p>
+<img src="/2018/04/21/linear-regression/intercept_term.png" class="">
+<br>
+The predictions of a hypothesis function can easily be evaluated in Python by computing the cross product of $x$ and $\theta^T.$ At the moment we have our $x$ and $y$ vectors but we don't have our model parameters yet. So let's create those as well and initialize them with zeros:
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = np.zeros(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>Also, we have to make sure that the matrix dimensions of $x$ and $\theta^T$ are compatible with each other for cross product. Currently $x$ has $1$ column but $\theta^T$ has $2$ rows. The dimensions don’t match because of the additional intercept term $\theta_0.$</p>
+<p>We can solve this issue by prepending a column to $x$ and set it to all ones. This is essentially equivalent to creating a new feature $x_0 = 1.$ This extra column won’t affect the hypothesis whatsoever because $\theta_0$ is going to be multiplied by $1$ in the cross product.</p>
+<p>Let’s create a new variable $X$ to store the extended $x$ matrix:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(<span class="built_in">len</span>(x), <span class="number">2</span>))</span><br><span class="line">X[:, <span class="number">1</span>] = x</span><br></pre></td></tr></table></figure>
+<p>Finally, we can compute the predictions of our hypothesis as follows:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = X @ theta</span><br></pre></td></tr></table></figure>
+<p>Of course, the predictions are currently all zeros because we haven’t trained our model yet.</p>
+<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>The objective in training a linear regression model is to minimize a <strong>cost function</strong>, which measures the difference between actual $y$ values in the training sample and predictions made by the hypothesis function $h_\theta(x)$.</p>
+<p>Such a cost function can be formulated as;</p>
+<p>$J(\theta) = \dfrac{1}{2m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})^2$</p>
+<p>where $m$ is the number of training examples.</p>
+<p>Here’s its Python version:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    squared_errors = np.square(predictions - y)</span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(squared_errors) / (<span class="number">2</span> * <span class="built_in">len</span>(y))</span><br></pre></td></tr></table></figure>
+<p>Now let’s take a look at the cost of our initial untrained model:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&#x27;The initial cost is:&#x27;</span>, cost(theta, X, y))</span><br></pre></td></tr></table></figure>
+<pre><code>The initial cost is: 32.0727338775</code></pre>
+<h4 id="Gradient-Descent-Algorithm"><a href="#Gradient-Descent-Algorithm" class="headerlink" title="Gradient Descent Algorithm"></a>Gradient Descent Algorithm</h4><p>Since our hypothesis is based on the model parameters $\theta$, we must somehow adjust them to minimize our cost function $J(\theta)$. This is where the <strong>gradient descent</strong> algorithm comes into play. It’s an optimization algorithm which can be used in minimizing <a href="https://en.wikipedia.org/wiki/Differentiable_function">differentiable</a> functions. Luckily our cost function $J(\theta)$ happens to be a differentiable one.</p>
+<p>So here’s how the gradient descent algorithm works in a nutshell: </p>
+<p>In each iteration, it takes a small step in the opposite gradient direction of $J(\theta)$. This makes the model parameters $\theta$ gradually come closer to the optimal values. This process is repeated until eventually the minimum cost is achieved.</p>
+<p>More formally, gradient descent performs the following update in each iteration: </p>
+<p>$\theta_j := \theta_j - \alpha\frac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
+<p>The $\alpha$ term here is called the <strong>learning rate</strong>. It allows us to control the step size to update $\theta$ in each iteration. Choosing a too large learning rate may prevent us from converging to a minimum cost, whereas choosing a too small learning rate may significantly slow down the algorithm.</p>
+<p>Here’s a generic implementation of the gradient descent algorithm:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)          <span class="comment"># initialize model parameters</span></span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta             <span class="comment"># compute predictions based on the current hypothesis</span></span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)  <span class="comment"># update model parameters</span></span><br><span class="line">    <span class="keyword">return</span> theta                            <span class="comment"># return optimized parameters</span></span><br></pre></td></tr></table></figure>
+<p>Now let’s use this function to train our model and plot the hypothesis function:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)   <span class="comment"># run GD for 600 iterations with learning rate = 0.02</span></span><br><span class="line">predictions = X @ theta                     <span class="comment"># predictions made by the optimized model</span></span><br><span class="line">ax.plot(X[:, <span class="number">1</span>], predictions, linewidth=<span class="number">2</span>)  <span class="comment"># plot the hypothesis on top of the training data</span></span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_15_0.png" class="">
+
+<h4 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h4><p>Our linear fit looks pretty good, right? The algorithm must have successfully optimized our model.</p>
+<p>Well, to be honest, it’s been fairly easy to visualize the hypothesis because there’s only one feature in this problem. </p>
+<p>But what if we had multiple features? Then it wouldn’t be possible to simply plot the hypothesis to see whether the algorithm has worked as intended or not.</p>
+<p>Fortunately, there’s a simple way to debug the gradient descent algorithm irrespective of the number of features:</p>
+<ol>
+<li>Modify the gradient descent function to make it record the cost at the end of each iteration. </li>
+<li>Plot the cost history after the gradient descent has finished.</li>
+<li>Pat yourself on the back if you see that the cost has monotonically decreased over time.</li>
+</ol>
+<p>Here’s the modified version of our gradient descent function:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    cost_history = np.zeros(num_iters)          <span class="comment"># create a vector to store the cost history</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta</span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)</span><br><span class="line">        cost_history[n] = cost(theta, X, y)     <span class="comment"># compute and record the cost</span></span><br><span class="line">    <span class="keyword">return</span> theta, cost_history                  <span class="comment"># return optimized parameters and cost history</span></span><br></pre></td></tr></table></figure>
+<p>Now let’s try learning rates $0.01$, $0.015$, $0.02$ and plot the cost history for each one:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line">num_iters = <span class="number">1200</span></span><br><span class="line">learning_rates = [<span class="number">0.01</span>, <span class="number">0.015</span>, <span class="number">0.02</span>]</span><br><span class="line"><span class="keyword">for</span> lr <span class="keyword">in</span> learning_rates:</span><br><span class="line">    _, cost_history = gradient_descent(X, y, lr, num_iters)</span><br><span class="line">    plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with different learning rates&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">str</span>, learning_rates)))</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">4</span>, <span class="number">6</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_19_0.png" class="" title="image_description">
+
+<p>It appears that the gradient descent algorithm worked correctly for these particular learning rates. Notice that it takes more iterations to minimize the cost as the learning rate decreases.</p>
+<p>Now let’s try a larger learning rate and see what happens:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">learning_rate = <span class="number">0.025</span></span><br><span class="line">num_iters = <span class="number">50</span></span><br><span class="line">_, cost_history = gradient_descent(X, y, learning_rate, num_iters)</span><br><span class="line">plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with learning rate = &quot;</span> + <span class="built_in">str</span>(learning_rate), fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">0</span>, <span class="number">6000</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="/2018/04/21/linear-regression/linear-regression_21_0.png" class="" title="image_description">
+<br>
+Doesn't look good... That's what happens when the learning rate is too large. Even though the gradient descent algorithm takes steps in the correct direction, these steps are so huge that it's going to overshoot the target and the cost diverges from the minimum value instead of converging to it.
+
+<p>Right now we can safely set the learning rate to $0.02$, because it allows us to minimize the cost and it requires relatively fewer iterations to converge.</p>
+<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Now that we’ve learned how to train our model, we can finally predict the food truck profit for a particular city:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta, _ = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)    <span class="comment"># train the model</span></span><br><span class="line">test_example = np.array([<span class="number">1</span>, <span class="number">7</span>])                 <span class="comment"># pick a city with 70,000 population as a test example</span></span><br><span class="line">prediction = test_example @ theta               <span class="comment"># use the trained model to make a prediction</span></span><br><span class="line">print(<span class="string">&#x27;For population = 70,000, we predict a profit of $&#x27;</span>, prediction * <span class="number">10000</span>);</span><br></pre></td></tr></table></figure>
+<pre><code>For population = 70,000, we predict a profit of $ 45905.6621788</code></pre>
+<p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
 ]]></content>
       <tags>
+        <tag>AI</tag>
         <tag>Python</tag>
-        <tag>Web Scraping</tag>
+        <tag>Machine Learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MacOS Keyboard Settings and Shortcuts for Coding</title>
+    <url>/2021/01/17/macos-keyboard-shortcuts/</url>
+    <content><![CDATA[<p>Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for general text editing, window management, iTerm2 and some other stuff. I’m going to go over everything I do step by step in this post. I’m sure you’ll find at least some of these tips &amp; tricks pretty useful.</p>
+<a id="more"></a>
+
+
+<h3 id="Keyboard-Type"><a href="#Keyboard-Type" class="headerlink" title="Keyboard Type"></a>Keyboard Type</h3><p>First of all, if you’re using an external keyboard, you should make sure that your keyboard is identified correctly. Usually you don’t have to worry about this, but recently my keyboard was identified incorrectly for some reason while I was setting up macOS for the first time on my new Mac Mini.</p>
+<p>You can check the identified keyboard type from <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Input Sources</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-layout.png" class="">
+
+<p>If you find out that it’s incorrect, go to <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong> and select <strong>Change Keyboard Type</strong></p>
+<p>For me, it turns out my keyboard was identified as <strong>ANSI</strong> while it’s actually <strong>ISO</strong>, so I had to change it:</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-type.png" class="">
+
+
+<h3 id="iTerm2-Natural-Text-Editing"><a href="#iTerm2-Natural-Text-Editing" class="headerlink" title="iTerm2 Natural Text Editing"></a>iTerm2 Natural Text Editing</h3><p>Natural text editing shortcuts such as the ones below do not work by default on iTerm2:</p>
+<ul>
+<li><code>⌥→</code> (next word)</li>
+<li><code>⌥←</code> (previous word)</li>
+<li><code>⌃→</code> (end of line)</li>
+<li><code>⌃←</code> (start of line)</li>
+</ul>
+<p>You have to set the preset as “<em>Natural Text Editing</em>“ in order to fix this:</p>
+<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Profiles</strong> &gt; <strong>[Profile Name]</strong> &gt; <strong>Keys</strong> &gt; <strong>Presets</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-natural-text-editing.png" class="">
+
+
+<h3 id="iTerm2-Tab-Pane-Switching"><a href="#iTerm2-Tab-Pane-Switching" class="headerlink" title="iTerm2 Tab/Pane Switching"></a>iTerm2 Tab/Pane Switching</h3><p>iTerm2 lets you create multiple tabs, and you can even split a tab into multiple panes.</p>
+<ul>
+<li><code>⌘T</code> creates a new tab</li>
+<li><code>⌘D</code> creates a new pane by splitting the existing tab horizontally</li>
+<li><code>⇧⌘D</code> creates a new pane by splitting the existing tab vertically</li>
+</ul>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-tabs.png" class="">
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-panes.png" class="">
+
+<p>These default shortcuts for creating tabs &amp; panes are pretty nice. However, I don’t like the default shortcuts for switching between tabs/panes. That’s why I override them like this:</p>
+<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Keys</strong> &gt; <strong>Key Bindings</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-tabs-and-panes.png" class="">
+
+
+<h3 id="Switching-Between-Windows-of-the-Same-App"><a href="#Switching-Between-Windows-of-the-Same-App" class="headerlink" title="Switching Between Windows of the Same App"></a>Switching Between Windows of the Same App</h3><p><code>⌘Tab</code> is pretty useful for switching between different apps. What if you need to switch between windows of the same app? Sometimes, I have multiple iTerm2 windows or multiple VSCode windows open at the same time and I want to be able to quickly switch between those. Here’s how you can (re)assign a shortcut for that:</p>
+<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Shortcuts</strong> &gt; <strong>Keyboard</strong> &gt; <em>Move focus to next window</em></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/move-focus-to-next-window.png" class="">
+
+
+<h3 id="Window-Organizer-Spectacle"><a href="#Window-Organizer-Spectacle" class="headerlink" title="Window Organizer: Spectacle"></a>Window Organizer: Spectacle</h3><p><a href="https://www.spectacleapp.com/">Spectacle</a> is a free app that lets you organize and resize your windows using keyboard shortcuts:</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/spectacle-shortcuts.png" class="">
+
+<p>It’s no longer actively maintained, but I’ve been using it for a couple of years and I’ve had zero issues so far. It’s quite simple, and the default shortcuts are pretty good.</p>
+<h3 id="Key-Repeat-and-Delay"><a href="#Key-Repeat-and-Delay" class="headerlink" title="Key Repeat and Delay"></a>Key Repeat and Delay</h3><p>I use Vim for text editing, which means I don’t use my mouse to navigate in the text editor. That’s why I frequently need to press and hold some keys for scrolling up/down/left/right in the editor.</p>
+<p>By default, key repeat is too slow and the delay until repeat is too long to do that fluidly. I adjust the settings like this, but you should experiment with each option on your favorite text editor and see what works for you the best:</p>
+<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong></p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/key-repeat-and-delay.png" class="">
+
+
+<h3 id="VSCodeVim-Extension"><a href="#VSCodeVim-Extension" class="headerlink" title="VSCodeVim Extension"></a>VSCodeVim Extension</h3><p><em>You should only read this section if you use both <a href="https://code.visualstudio.com/">VSCode</a> and the <a href="https://marketplace.visualstudio.com/items?itemName=vscodevim.vim">VSCodeVim</a> extension.</em></p>
+<p>Pressing and holding the arrow keys (<code>←</code>, <code>→</code>, <code>↑</code>, <code>↓</code>) lets you fluidly navigate between rows (lines) and columns (characters) in the editor by default.</p>
+<p>Unfortunately, that’s not the case for Vim equivalents (<code>h</code>, <code>l</code>, <code>k</code>, <code>j</code>). For instance, even if you press and hold the <code>j</code> key, it only advances to the next line and it gets stuck there by default. You have to run one of the following commands after installing the VSCodeVim extension to have the same fluid behavior, <a href="https://github.com/VSCodeVim/Vim#mac">as pointed out</a> in the GitHub page of the extension:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># For VS Code</span><br><span class="line">defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Code Insider</span><br><span class="line">defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Codium</span><br><span class="line">defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># If necessary, reset global default</span><br><span class="line">defaults delete -g ApplePressAndHoldEnabled</span><br></pre></td></tr></table></figure>
+
+<h3 id="A-Handy-Shortcut-Control-Space"><a href="#A-Handy-Shortcut-Control-Space" class="headerlink" title="A Handy Shortcut: Control + Space"></a>A Handy Shortcut: <code>Control + Space</code></h3><p>I think <code>⌃Space</code> is a very handy key combination and should be assigned to a frequently used shortcut. However, it’s assigned to another shortcut by default, so it needs to be unassigned first.</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions-accept.gif" class="">
+
+<p>My command-line shell preference is <a href="https://www.zsh.org/">zsh</a> and one of my favorite zsh plugins is <a href="https://github.com/zsh-users/zsh-autosuggestions">zsh-autosuggestions</a>. It allows you to define a custom hotkey to accept the current suggestion. For me, <code>⌃Space</code> fits perfectly into this use case.</p>
+<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions.png" class="">
+
+
+<h3 id="Bonus-Font-Smoothing"><a href="#Bonus-Font-Smoothing" class="headerlink" title="Bonus: Font Smoothing"></a>Bonus: Font Smoothing</h3><p>I know that this isn’t related to keyboard settings or shortcuts, but I still want to mention it because I think it’s important.</p>
+<p>I don’t know about your experience, but the default font smoothing is too much for me. What’s worse is, macOS doesn’t let you change this setting easily from system preferences anymore. You have to actually open the terminal and run this command:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 0, 1, 2, or 3</span></span><br><span class="line">defaults -currentHost write -globalDomain AppleFontSmoothing -int 1</span><br></pre></td></tr></table></figure>
+<p>Setting it to 1 works best for me. I suggest you to experiment with each option (0 is lowest, 3 is highest) and see whichever feels best. Keep in mind that in order to see the effects, you have to logout &amp; login back every time you change the setting.</p>
+<h3 id="Tips-From-Other-Articles"><a href="#Tips-From-Other-Articles" class="headerlink" title="Tips From Other Articles"></a>Tips From Other Articles</h3><ul>
+<li><a href="https://osxdaily.com/2019/03/27/disable-period-typing-shortcut-mac/">Stop Typing Periods Automatically with Double-Space</a></li>
+</ul>
+<hr>
+<p>Feel free to leave a comment on <a href="https://twitter.com/utkufu">Twitter</a> if you have some other tips &amp; tricks that haven’t been covered in this article. I’d love to hear them!</p>
+]]></content>
+      <tags>
+        <tag>MacOS</tag>
       </tags>
   </entry>
   <entry>
@@ -607,178 +779,6 @@ Test Error = 3.85988782246 | Regularized Polynomial Regression (at lambda = 3)</
       </tags>
   </entry>
   <entry>
-    <title>MacOS Keyboard Settings and Shortcuts for Coding</title>
-    <url>/2021/01/17/macos-keyboard-shortcuts/</url>
-    <content><![CDATA[<p>Some of the default keyboard settings and shortcuts on macOS simply don’t work for me as a software developer. As soon as I get my hands on a new mac, I change some keyboard settings and shortcuts for general text editing, window management, iTerm2 and some other stuff. I’m going to go over everything I do step by step in this post. I’m sure you’ll find at least some of these tips &amp; tricks pretty useful.</p>
-<a id="more"></a>
-
-
-<h3 id="Keyboard-Type"><a href="#Keyboard-Type" class="headerlink" title="Keyboard Type"></a>Keyboard Type</h3><p>First of all, if you’re using an external keyboard, you should make sure that your keyboard is identified correctly. Usually you don’t have to worry about this, but recently my keyboard was identified incorrectly for some reason while I was setting up macOS for the first time on my new Mac Mini.</p>
-<p>You can check the identified keyboard type from <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Input Sources</strong></p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-layout.png" class="">
-
-<p>If you find out that it’s incorrect, go to <strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong> and select <strong>Change Keyboard Type</strong></p>
-<p>For me, it turns out my keyboard was identified as <strong>ANSI</strong> while it’s actually <strong>ISO</strong>, so I had to change it:</p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/keyboard-type.png" class="">
-
-
-<h3 id="iTerm2-Natural-Text-Editing"><a href="#iTerm2-Natural-Text-Editing" class="headerlink" title="iTerm2 Natural Text Editing"></a>iTerm2 Natural Text Editing</h3><p>Natural text editing shortcuts such as the ones below do not work by default on iTerm2:</p>
-<ul>
-<li><code>⌥→</code> (next word)</li>
-<li><code>⌥←</code> (previous word)</li>
-<li><code>⌃→</code> (end of line)</li>
-<li><code>⌃←</code> (start of line)</li>
-</ul>
-<p>You have to set the preset as “<em>Natural Text Editing</em>“ in order to fix this:</p>
-<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Profiles</strong> &gt; <strong>[Profile Name]</strong> &gt; <strong>Keys</strong> &gt; <strong>Presets</strong></p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-natural-text-editing.png" class="">
-
-
-<h3 id="iTerm2-Tab-Pane-Switching"><a href="#iTerm2-Tab-Pane-Switching" class="headerlink" title="iTerm2 Tab/Pane Switching"></a>iTerm2 Tab/Pane Switching</h3><p>iTerm2 lets you create multiple tabs, and you can even split a tab into multiple panes.</p>
-<ul>
-<li><code>⌘T</code> creates a new tab</li>
-<li><code>⌘D</code> creates a new pane by splitting the existing tab horizontally</li>
-<li><code>⇧⌘D</code> creates a new pane by splitting the existing tab vertically</li>
-</ul>
-<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-tabs.png" class="">
-<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-multi-panes.png" class="">
-
-<p>These default shortcuts for creating tabs &amp; panes are pretty nice. However, I don’t like the default shortcuts for switching between tabs/panes. That’s why I override them like this:</p>
-<p><strong>iTerm2</strong> &gt; <strong>Preferences</strong> &gt; <strong>Keys</strong> &gt; <strong>Key Bindings</strong></p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/iterm-tabs-and-panes.png" class="">
-
-
-<h3 id="Switching-Between-Windows-of-the-Same-App"><a href="#Switching-Between-Windows-of-the-Same-App" class="headerlink" title="Switching Between Windows of the Same App"></a>Switching Between Windows of the Same App</h3><p><code>⌘Tab</code> is pretty useful for switching between different apps. What if you need to switch between windows of the same app? Sometimes, I have multiple iTerm2 windows or multiple VSCode windows open at the same time and I want to be able to quickly switch between those. Here’s how you can (re)assign a shortcut for that:</p>
-<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Shortcuts</strong> &gt; <strong>Keyboard</strong> &gt; <em>Move focus to next window</em></p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/move-focus-to-next-window.png" class="">
-
-
-<h3 id="Window-Organizer-Spectacle"><a href="#Window-Organizer-Spectacle" class="headerlink" title="Window Organizer: Spectacle"></a>Window Organizer: Spectacle</h3><p><a href="https://www.spectacleapp.com/">Spectacle</a> is a free app that lets you organize and resize your windows using keyboard shortcuts:</p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/spectacle-shortcuts.png" class="">
-
-<p>It’s no longer actively maintained, but I’ve been using it for a couple of years and I’ve had zero issues so far. It’s quite simple, and the default shortcuts are pretty good.</p>
-<h3 id="Key-Repeat-and-Delay"><a href="#Key-Repeat-and-Delay" class="headerlink" title="Key Repeat and Delay"></a>Key Repeat and Delay</h3><p>I use Vim for text editing, which means I don’t use my mouse to navigate in the text editor. That’s why I frequently need to press and hold some keys for scrolling up/down/left/right in the editor.</p>
-<p>By default, key repeat is too slow and the delay until repeat is too long to do that fluidly. I adjust the settings like this, but you should experiment with each option on your favorite text editor and see what works for you the best:</p>
-<p><strong>System Preferences</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Keyboard</strong></p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/key-repeat-and-delay.png" class="">
-
-
-<h3 id="VSCodeVim-Extension"><a href="#VSCodeVim-Extension" class="headerlink" title="VSCodeVim Extension"></a>VSCodeVim Extension</h3><p><em>You should only read this section if you use both <a href="https://code.visualstudio.com/">VSCode</a> and the <a href="https://marketplace.visualstudio.com/items?itemName=vscodevim.vim">VSCodeVim</a> extension.</em></p>
-<p>Pressing and holding the arrow keys (<code>←</code>, <code>→</code>, <code>↑</code>, <code>↓</code>) lets you fluidly navigate between rows (lines) and columns (characters) in the editor by default.</p>
-<p>Unfortunately, that’s not the case for Vim equivalents (<code>h</code>, <code>l</code>, <code>k</code>, <code>j</code>). For instance, even if you press and hold the <code>j</code> key, it only advances to the next line and it gets stuck there by default. You have to run one of the following commands after installing the VSCodeVim extension to have the same fluid behavior, <a href="https://github.com/VSCodeVim/Vim#mac">as pointed out</a> in the GitHub page of the extension:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># For VS Code</span><br><span class="line">defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Code Insider</span><br><span class="line">defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># For VS Codium</span><br><span class="line">defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false</span><br><span class="line"></span><br><span class="line"># If necessary, reset global default</span><br><span class="line">defaults delete -g ApplePressAndHoldEnabled</span><br></pre></td></tr></table></figure>
-
-<h3 id="A-Handy-Shortcut-Control-Space"><a href="#A-Handy-Shortcut-Control-Space" class="headerlink" title="A Handy Shortcut: Control + Space"></a>A Handy Shortcut: <code>Control + Space</code></h3><p>I think <code>⌃Space</code> is a very handy key combination and should be assigned to a frequently used shortcut. However, it’s assigned to another shortcut by default, so it needs to be unassigned first.</p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions-accept.gif" class="">
-
-<p>My command-line shell preference is <a href="https://www.zsh.org/">zsh</a> and one of my favorite zsh plugins is <a href="https://github.com/zsh-users/zsh-autosuggestions">zsh-autosuggestions</a>. It allows you to define a custom hotkey to accept the current suggestion. For me, <code>⌃Space</code> fits perfectly into this use case.</p>
-<img src="/2021/01/17/macos-keyboard-shortcuts/zsh-autosuggestions.png" class="">
-
-
-<h3 id="Bonus-Font-Smoothing"><a href="#Bonus-Font-Smoothing" class="headerlink" title="Bonus: Font Smoothing"></a>Bonus: Font Smoothing</h3><p>I know that this isn’t related to keyboard settings or shortcuts, but I still want to mention it because I think it’s important.</p>
-<p>I don’t know about your experience, but the default font smoothing is too much for me. What’s worse is, macOS doesn’t let you change this setting easily from system preferences anymore. You have to actually open the terminal and run this command:</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 0, 1, 2, or 3</span></span><br><span class="line">defaults -currentHost write -globalDomain AppleFontSmoothing -int 1</span><br></pre></td></tr></table></figure>
-<p>Setting it to 1 works best for me. I suggest you to experiment with each option (0 is lowest, 3 is highest) and see whichever feels best. Keep in mind that in order to see the effects, you have to logout &amp; login back every time you change the setting.</p>
-<h3 id="Tips-From-Other-Articles"><a href="#Tips-From-Other-Articles" class="headerlink" title="Tips From Other Articles"></a>Tips From Other Articles</h3><ul>
-<li><a href="https://osxdaily.com/2019/03/27/disable-period-typing-shortcut-mac/">Stop Typing Periods Automatically with Double-Space</a></li>
-</ul>
-<hr>
-<p>Feel free to leave a comment on <a href="https://twitter.com/utkufu">Twitter</a> if you have some other tips &amp; tricks that haven’t been covered in this article. I’d love to hear them!</p>
-]]></content>
-      <tags>
-        <tag>MacOS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Training a Simple Linear Regression Model From Scratch</title>
-    <url>/2018/04/21/linear-regression/</url>
-    <content><![CDATA[<p>Hey everyone, welcome to my first blog post! This is going to be a walkthrough on training a simple linear regression model in Python. I’ll show you how to do it from scratch, without using any machine learning tools or libraries. We’ll only use <a href="http://www.numpy.org/">NumPy</a> and <a href="https://matplotlib.org/">Matplotlib</a> for matrix operations and data visualization.</p>
-<a id="more"></a>
-
-<h4 id="Problem-amp-Dataset"><a href="#Problem-amp-Dataset" class="headerlink" title="Problem &amp; Dataset"></a>Problem &amp; Dataset</h4><p>We’ll look at a regression problem from a very popular <a href="https://www.coursera.org/learn/machine-learning">machine learning course</a> taught by <a href="http://www.andrewng.org/">Andrew Ng</a>. Our objective in this problem will be to train a model that accurately predicts the profits of a food truck.</p>
-<p>The first column in our <a href="/2018/04/21/linear-regression/food_truck_data.txt" title="dataset file">dataset file</a> contains city populations and the second column contains food truck profits in each city, both in $10,000$s. Here are the first few training examples:</p>
-<figure class="highlight sh"><figcaption><span>food_truck_data.txt</span></figcaption><table><tr><td class="code"><pre><span class="line">6.1101,17.592</span><br><span class="line">5.5277,9.1302</span><br><span class="line">8.5186,13.662</span><br><span class="line">7.0032,11.854</span><br><span class="line">5.8598,6.8233</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>We’re going to use this dataset as a training sample to build our model. Let’s begin by loading it:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">data = np.loadtxt(<span class="string">&#x27;food_truck_data.txt&#x27;</span>, delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line">x = data[:, <span class="number">0</span>] <span class="comment"># city populations</span></span><br><span class="line">y = data[:, <span class="number">1</span>] <span class="comment"># food truck profits</span></span><br></pre></td></tr></table></figure>
-<p>Both $x$ and $y$ are one dimensional arrays, because we have one <strong>feature</strong> (population) and one <strong>target variable</strong> (profit) in this problem. Therefore we can conveniently visualize our dataset using a scatter plot:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(x, y, marker=<span class="string">&quot;x&quot;</span>, c=<span class="string">&quot;red&quot;</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Food Truck Dataset&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;City Population in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Food Truck Profit in 10,000s&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">4</span>, <span class="number">25</span>, -<span class="number">5</span>, <span class="number">25</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_3_0.png" class="">
-
-
-<h4 id="Hypothesis-Function"><a href="#Hypothesis-Function" class="headerlink" title="Hypothesis Function"></a>Hypothesis Function</h4><p>Now we need to come up with a <strong>straight line</strong> which accurately represents the relationship between population and profit. This is called the <strong>hypothesis function</strong> and it’s formulated as:</p>
-<p>$h_\theta(x) = \theta^Tx = \theta_0 + \theta_1x_1 + \theta_2x_2 + … + \theta_nx_n$</p>
-<p>where $x$ corresponds to the feature matrix and $\theta$ corresponds to the vector of <strong>model parameters.</strong></p>
-<p>Since we have a single feature $x_1,$ we’ll only have two model parameters $\theta_0$ and $\theta_1$ in our hypothesis function:</p>
-<p>$h_\theta(x) = \theta_0 + \theta_1x_1$</p>
-<p>As you may have noticed, the number of model parameters is equal to the number of features plus $1$. That’s because each feature is weighted by a parameter to control its impact on the hypothesis $h_\theta(x)$. There is also an independent parameter $\theta_0$ called the <strong>intercept term,</strong> which defines the point where the hypothesis function intercepts the $y$-axis as demonstrated below:</p>
-<img src="/2018/04/21/linear-regression/intercept_term.png" class="">
-<br>
-The predictions of a hypothesis function can easily be evaluated in Python by computing the cross product of $x$ and $\theta^T.$ At the moment we have our $x$ and $y$ vectors but we don't have our model parameters yet. So let's create those as well and initialize them with zeros:
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = np.zeros(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>Also, we have to make sure that the matrix dimensions of $x$ and $\theta^T$ are compatible with each other for cross product. Currently $x$ has $1$ column but $\theta^T$ has $2$ rows. The dimensions don’t match because of the additional intercept term $\theta_0.$</p>
-<p>We can solve this issue by prepending a column to $x$ and set it to all ones. This is essentially equivalent to creating a new feature $x_0 = 1.$ This extra column won’t affect the hypothesis whatsoever because $\theta_0$ is going to be multiplied by $1$ in the cross product.</p>
-<p>Let’s create a new variable $X$ to store the extended $x$ matrix:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = np.ones(shape=(<span class="built_in">len</span>(x), <span class="number">2</span>))</span><br><span class="line">X[:, <span class="number">1</span>] = x</span><br></pre></td></tr></table></figure>
-<p>Finally, we can compute the predictions of our hypothesis as follows:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = X @ theta</span><br></pre></td></tr></table></figure>
-<p>Of course, the predictions are currently all zeros because we haven’t trained our model yet.</p>
-<h4 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h4><p>The objective in training a linear regression model is to minimize a <strong>cost function</strong>, which measures the difference between actual $y$ values in the training sample and predictions made by the hypothesis function $h_\theta(x)$.</p>
-<p>Such a cost function can be formulated as;</p>
-<p>$J(\theta) = \dfrac{1}{2m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})^2$</p>
-<p>where $m$ is the number of training examples.</p>
-<p>Here’s its Python version:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta, X, y</span>):</span></span><br><span class="line">    predictions = X @ theta</span><br><span class="line">    squared_errors = np.square(predictions - y)</span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(squared_errors) / (<span class="number">2</span> * <span class="built_in">len</span>(y))</span><br></pre></td></tr></table></figure>
-<p>Now let’s take a look at the cost of our initial untrained model:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">&#x27;The initial cost is:&#x27;</span>, cost(theta, X, y))</span><br></pre></td></tr></table></figure>
-<pre><code>The initial cost is: 32.0727338775</code></pre>
-<h4 id="Gradient-Descent-Algorithm"><a href="#Gradient-Descent-Algorithm" class="headerlink" title="Gradient Descent Algorithm"></a>Gradient Descent Algorithm</h4><p>Since our hypothesis is based on the model parameters $\theta$, we must somehow adjust them to minimize our cost function $J(\theta)$. This is where the <strong>gradient descent</strong> algorithm comes into play. It’s an optimization algorithm which can be used in minimizing <a href="https://en.wikipedia.org/wiki/Differentiable_function">differentiable</a> functions. Luckily our cost function $J(\theta)$ happens to be a differentiable one.</p>
-<p>So here’s how the gradient descent algorithm works in a nutshell: </p>
-<p>In each iteration, it takes a small step in the opposite gradient direction of $J(\theta)$. This makes the model parameters $\theta$ gradually come closer to the optimal values. This process is repeated until eventually the minimum cost is achieved.</p>
-<p>More formally, gradient descent performs the following update in each iteration: </p>
-<p>$\theta_j := \theta_j - \alpha\frac{1}{m}\sum\limits_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)})x^{(i)}_j$</p>
-<p>The $\alpha$ term here is called the <strong>learning rate</strong>. It allows us to control the step size to update $\theta$ in each iteration. Choosing a too large learning rate may prevent us from converging to a minimum cost, whereas choosing a too small learning rate may significantly slow down the algorithm.</p>
-<p>Here’s a generic implementation of the gradient descent algorithm:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)          <span class="comment"># initialize model parameters</span></span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta             <span class="comment"># compute predictions based on the current hypothesis</span></span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)  <span class="comment"># update model parameters</span></span><br><span class="line">    <span class="keyword">return</span> theta                            <span class="comment"># return optimized parameters</span></span><br></pre></td></tr></table></figure>
-<p>Now let’s use this function to train our model and plot the hypothesis function:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)   <span class="comment"># run GD for 600 iterations with learning rate = 0.02</span></span><br><span class="line">predictions = X @ theta                     <span class="comment"># predictions made by the optimized model</span></span><br><span class="line">ax.plot(X[:, <span class="number">1</span>], predictions, linewidth=<span class="number">2</span>)  <span class="comment"># plot the hypothesis on top of the training data</span></span><br><span class="line">fig</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_15_0.png" class="">
-
-<h4 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h4><p>Our linear fit looks pretty good, right? The algorithm must have successfully optimized our model.</p>
-<p>Well, to be honest, it’s been fairly easy to visualize the hypothesis because there’s only one feature in this problem. </p>
-<p>But what if we had multiple features? Then it wouldn’t be possible to simply plot the hypothesis to see whether the algorithm has worked as intended or not.</p>
-<p>Fortunately, there’s a simple way to debug the gradient descent algorithm irrespective of the number of features:</p>
-<ol>
-<li>Modify the gradient descent function to make it record the cost at the end of each iteration. </li>
-<li>Plot the cost history after the gradient descent has finished.</li>
-<li>Pat yourself on the back if you see that the cost has monotonically decreased over time.</li>
-</ol>
-<p>Here’s the modified version of our gradient descent function:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span>(<span class="params">X, y, alpha, num_iters</span>):</span></span><br><span class="line">    cost_history = np.zeros(num_iters)          <span class="comment"># create a vector to store the cost history</span></span><br><span class="line">    num_features = X.shape[<span class="number">1</span>]               </span><br><span class="line">    theta = np.zeros(num_features)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        predictions = X @ theta</span><br><span class="line">        errors = predictions - y</span><br><span class="line">        gradient = X.transpose() @ errors</span><br><span class="line">        theta -= alpha * gradient / <span class="built_in">len</span>(y)</span><br><span class="line">        cost_history[n] = cost(theta, X, y)     <span class="comment"># compute and record the cost</span></span><br><span class="line">    <span class="keyword">return</span> theta, cost_history                  <span class="comment"># return optimized parameters and cost history</span></span><br></pre></td></tr></table></figure>
-<p>Now let’s try learning rates $0.01$, $0.015$, $0.02$ and plot the cost history for each one:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line">num_iters = <span class="number">1200</span></span><br><span class="line">learning_rates = [<span class="number">0.01</span>, <span class="number">0.015</span>, <span class="number">0.02</span>]</span><br><span class="line"><span class="keyword">for</span> lr <span class="keyword">in</span> learning_rates:</span><br><span class="line">    _, cost_history = gradient_descent(X, y, lr, num_iters)</span><br><span class="line">    plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with different learning rates&quot;</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.legend(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">str</span>, learning_rates)))</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">4</span>, <span class="number">6</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_19_0.png" class="" title="image_description">
-
-<p>It appears that the gradient descent algorithm worked correctly for these particular learning rates. Notice that it takes more iterations to minimize the cost as the learning rate decreases.</p>
-<p>Now let’s try a larger learning rate and see what happens:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">learning_rate = <span class="number">0.025</span></span><br><span class="line">num_iters = <span class="number">50</span></span><br><span class="line">_, cost_history = gradient_descent(X, y, learning_rate, num_iters)</span><br><span class="line">plt.plot(cost_history, linewidth=<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&quot;Gradient descent with learning rate = &quot;</span> + <span class="built_in">str</span>(learning_rate), fontsize=<span class="number">16</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;number of iterations&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;cost&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, num_iters, <span class="number">0</span>, <span class="number">6000</span>])</span><br><span class="line">plt.grid()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<img src="/2018/04/21/linear-regression/linear-regression_21_0.png" class="" title="image_description">
-<br>
-Doesn't look good... That's what happens when the learning rate is too large. Even though the gradient descent algorithm takes steps in the correct direction, these steps are so huge that it's going to overshoot the target and the cost diverges from the minimum value instead of converging to it.
-
-<p>Right now we can safely set the learning rate to $0.02$, because it allows us to minimize the cost and it requires relatively fewer iterations to converge.</p>
-<h4 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h4><p>Now that we’ve learned how to train our model, we can finally predict the food truck profit for a particular city:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">theta, _ = gradient_descent(X, y, <span class="number">0.02</span>, <span class="number">600</span>)    <span class="comment"># train the model</span></span><br><span class="line">test_example = np.array([<span class="number">1</span>, <span class="number">7</span>])                 <span class="comment"># pick a city with 70,000 population as a test example</span></span><br><span class="line">prediction = test_example @ theta               <span class="comment"># use the trained model to make a prediction</span></span><br><span class="line">print(<span class="string">&#x27;For population = 70,000, we predict a profit of $&#x27;</span>, prediction * <span class="number">10000</span>);</span><br></pre></td></tr></table></figure>
-<pre><code>For population = 70,000, we predict a profit of $ 45905.6621788</code></pre>
-<p>If you’re still here, you should <a href="/subscribe">subscribe</a> to get updates on my future articles.</p>
-]]></content>
-      <tags>
-        <tag>AI</tag>
-        <tag>Python</tag>
-        <tag>Machine Learning</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>One Task Board to Rule Them All</title>
     <url>/2020/06/14/one-board/</url>
     <content><![CDATA[<p>Do you ever feel that the numerous productivity tools you use every day actually cost you more time than they are supposed to save? It sure doesn’t feel right when managing your tasks becomes a non-trivial task on its own. On the other hand, there’s no one-size-fits-all solution when it comes to task managers, so it makes sense to use the right tool for the job. To address this dilemma, I recently came up with a simple hack that lets me use all my favorite tools while interacting with just one.</p>
@@ -873,6 +873,32 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
       </tags>
   </entry>
   <entry>
+    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
+    <url>/2018/12/20/trello-budget/</url>
+    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
+<a id="more"></a>
+
+
+<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
+<ul>
+<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
+<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
+</ul>
+<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
+<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
+<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Google Sheets</tag>
+        <tag>Budget Tracking</tag>
+        <tag>JavaScript</tag>
+        <tag>Trello</tag>
+        <tag>Firebase</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>One-vs-All Classification Using Logistic Regression</title>
     <url>/2018/06/03/one-vs-all-classification/</url>
     <content><![CDATA[<a href="/2018/05/19/binary-logistic-regression/" title="Previously">Previously</a>, we talked about how to build a binary classifier by implementing our own logistic regression model in Python. In this post, we're going to build upon that existing model and turn it into a multi-class classifier using an approach called one-vs-all classification.
@@ -927,6 +953,84 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
         <tag>AI</tag>
         <tag>Python</tag>
         <tag>Machine Learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How I Manage My Side-Projects Using Trello</title>
+    <url>/2020/03/20/trello-project-manage/</url>
+    <content><![CDATA[<p>For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except for very small projects. Trello is one of my favorite software tools ever, and I’m going to talk about how I manage my current side-project using its free version in this article.</p>
+<a id="more"></a>
+
+<h4 id="Why-Tho"><a href="#Why-Tho" class="headerlink" title="Why Tho?"></a>Why Tho?</h4><p>I’m sure some people see this whole side-project management thing as an unnecessary overhead that’s just going to slow them down. But here’s the thing:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Heading towards the finish line on a side project <a href="https://t.co/wHVJJBMDbx">pic.twitter.com/wHVJJBMDbx</a></p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/status/1240029324423704576?ref_src=twsrc%5Etfw">March 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>At the end of the day, you want to turn a cool idea into reality, on your own. That’s pretty much the meaning of a side-project. However, ideas lead to more ideas, as well as new problems to be solved. Sooner or later your head will explode because of every little thing you have to keep in mind (issues, ideas, problems, suggestions) about your project. If you use something like Trello, you can forget about all that until you have to actually deal with them.</p>
+<h4 id="Demo-Project-TodoDock"><a href="#Demo-Project-TodoDock" class="headerlink" title="Demo Project: TodoDock"></a>Demo Project: TodoDock</h4><p>Before talking about how I manage it, let me briefly tell you about <a href="https://tododock.com/">TodoDock</a>, the side-project that I’ve been working on for the last few months. In a nutshell, TodoDock lets you keep track of your periodic tasks and sends you a reminder whenever one of your tasks is due soon. The task timers don’t get automatically reset unlike repeating calendar events; you have to reset the timer manually. Therefore you won’t receive another reminder until you’ve actually waited for another full period since the last time you’ve completed the task. Here’s what it looks like:</p>
+<img src="/2020/03/20/trello-project-manage/tododock.png" class="">
+
+<p>The current state (March 2020) of the app can be categorized as an MVP at best, as there’s still a lot of work to be done. And that’s where Trello comes into play:</p>
+<img src="/2020/03/20/trello-project-manage/board-overview.png" class="">
+
+<h4 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h4><p>As you can see, I have three lists on the board: <em>Icebox</em>, <em>Backlog</em> and <em>Active</em>. Each task that I’m planning to work on soon is inside one of these. Obviously, the number of lists and the list names can be adjusted according to personal preference, as well as the size &amp; nature of the project at hand. I have this particular setup because</p>
+<ul>
+<li>I like to separate high-priority tasks (<em>Backlog</em>) from low-priority ones (<em>Icebox</em>)</li>
+<li>I like to see the things I’m currently working on in a separate list (<em>Active</em>)</li>
+</ul>
+<h4 id="Cards-Tasks-and-Labels"><a href="#Cards-Tasks-and-Labels" class="headerlink" title="Cards, Tasks and Labels"></a>Cards, Tasks and Labels</h4><p>Each card is a task. Simple as that. Here’s how I label my tasks:</p>
+<ul>
+<li><strong><em>Backend:</em></strong> server-side coding</li>
+<li><strong><em>Frontend:</em></strong> client-side coding</li>
+<li><strong><em>Test:</em></strong> requires creating new tests</li>
+<li><strong><em>DevOps:</em></strong> server administration/configuration, deployment, CI/CD and so on</li>
+<li><strong><em>User Request:</em></strong> a feature request from one of the existing users</li>
+<li><strong><em>Bug:</em></strong> pest control</li>
+<li><strong><em>Other:</em></strong> none of the above</li>
+</ul>
+<p>I assign labels to tasks primarily because then I can estimate their difficulties and priorities more accurately. The difficulty usually ends up higher if it has more than one of the first 4 labels. Similarly, the priority tends to increase if it has a <em>User Request</em> or a <em>Bug</em> label. More on priority and difficulty later…</p>
+<p>I just archive a task after completing it. I can always view an archived task if I need to. Here’s a task that I’ve archived recently:</p>
+<img src="/2020/03/20/trello-project-manage/sample-task.png" class="">
+
+<p>I’m a big fan of using checklists to break tasks into even smaller steps. That way I can get a feeling of the progress I’ve made, which helps a lot especially for difficult tasks. Also, I link the Github PR in the description so that it’s easy to see the corresponding changes if I ever want to. </p>
+<h4 id="Butler-and-Custom-Fields"><a href="#Butler-and-Custom-Fields" class="headerlink" title="Butler and Custom Fields"></a>Butler and Custom Fields</h4><p>There are a bunch of <a href="https://trello.com/power-ups">power-ups</a> you can use on your board. You get only 1 power-up per board with the free version. You also get a default power-up called <a href="https://help.trello.com/article/1198-an-intro-to-butler">Butler</a> which you can use to bring some automation to your board:</p>
+<blockquote><p>“Free Trello accounts also include a small taste of Butler with limited functionality.”</p>
+<footer><strong>Trello Help</strong><cite><a href="https://help.trello.com/article/1181-butler-features-and-quotas">help.trello.com/article/1181-butler-features-and-quotas</a></cite></footer></blockquote>
+
+<p>Even that small taste of Butler can actually prove very useful. I used it to define a <em>board button</em> for sorting the tasks by priority and difficulty. You can actually see that button in the board overview screenshot above. It’s called <em>Sort by Priority</em> and it appears next to the <em>Show Menu</em> button.</p>
+<p>The problem is, you can’t assign a priority or a difficulty attribute to Trello cards by default. That’s why I spent my power-up slot on <a href="https://trello.com/power-ups/56d5e249a98895a9797bebb9/custom-fields">Custom Fields</a>, which lets you define … wait for it … custom fields! Combined with Butler, it lets me sort all the cards within each list automatically. Here’s my <em>Sort by Priority</em> command:</p>
+<img src="/2020/03/20/trello-project-manage/butler-sort-command.png" class="">
+
+<p>You can see that the button triggers a command that runs a sequence of actions, top to bottom. That allows me to sort the equal-priority tasks additionally by their difficulty attributes. If you look at the screenshot of the board again, you’ll see that the tasks in each list are indeed sorted by those rules.</p>
+<h4 id="Other-Cool-Power-Ups"><a href="#Other-Cool-Power-Ups" class="headerlink" title="Other Cool Power-Ups"></a>Other Cool Power-Ups</h4><p>There are a few other power-ups that I would use if I didn’t have to upgrade to a paid account. I’ll just talk about a couple of those, in case some of you prefer them over <em>Custom Fields</em>.</p>
+<ul>
+<li><p><strong><em><a href="https://screenful.com/card-dependencies-for-trello">Card Dependencies</a>:</em></strong> It would be great to see if a task blocks (or is blocked by) other tasks. For instance, in my <em>Archive</em> list, there’s a task for automatically sending reminder emails to users. That task is in fact blocked by the two tasks above it, but it’s not obvious that there’s a dependency relationship between them.</p>
+</li>
+<li><p><strong><em><a href="https://trello.com/power-ups/55a5d916446f517774210004/github">Github</a>:</em></strong> This lets you attach pull requests, issues and branches to your cards. You can see visual badges directly from the board view indicating whether a PR has been merged, the status checks and so on.</p>
+</li>
+</ul>
+<h4 id="Bonus-Tips-amp-Tricks"><a href="#Bonus-Tips-amp-Tricks" class="headerlink" title="Bonus Tips &amp; Tricks"></a>Bonus Tips &amp; Tricks</h4><blockquote><p>Here’s my ten cents, my two cents is free.</p>
+<footer><strong>Marshall Bruce Mathers III</strong><cite>Philosopher</cite></footer></blockquote>
+
+<h5 id="When-to-create-new-tasks"><a href="#When-to-create-new-tasks" class="headerlink" title="When to create new tasks"></a>When to create new tasks</h5><p>My board isn’t a complete collection of everything that needs to be done. I create new tasks only when they become obvious to me while I work on the existing ones. Why, you ask?</p>
+<ul>
+<li>It’s impossible to think of every little thing in advance, and certainly not fun.</li>
+<li>There’s no benefit in creating a task which I’m not going to start working on soon.</li>
+<li>I rarely have to delete/update a task if I’ve created it soon before I start working on it.</li>
+</ul>
+<h5 id="Deciding-what-to-work-on-next"><a href="#Deciding-what-to-work-on-next" class="headerlink" title="Deciding what to work on next"></a>Deciding what to work on next</h5><p>I always assign an approximate priority &amp; difficulty to new tasks, because I strongly believe that it’s important to work on what matters the most right now. For example, spending my time on making task groups collapsable (2nd task in <em>Icebox</em>, a nice-to-have visual feature) wouldn’t be a great idea when I haven’t even set up automated reminder emails yet, which is a core feature of TodoDock. So I put the low-priority (&lt;=2) tasks into <em>Icebox</em> and high-priority ones into <em>Backlog</em>. After all the tasks are sorted, I just start working on the topmost task in <em>Backlog</em>, the lowest hanging fruit.</p>
+<h5 id="Limiting-the-task-scope"><a href="#Limiting-the-task-scope" class="headerlink" title="Limiting the task scope"></a>Limiting the task scope</h5><p>I try to make my tasks as small as possible. I can mention quite a few reasons for that:</p>
+<ul>
+<li>Big tasks look scary to get started.</li>
+<li>It’s easier to focus on smaller tasks.</li>
+<li>It’s easier to write tests for smaller features.</li>
+<li>It’s easier to revert a change (using Git) if it has a clear scope.</li>
+<li>It’s hard to break big tasks into a few checklist items for progress tracking.</li>
+<li>A big task might contain sub-tasks with different priority levels, which can be scheduled independently.</li>
+</ul>
+<p>That’s it, I hope you found this useful. Feel free to <a href="/about">reach out</a> if you have any comments or questions. Also, don’t forget to <a href="/subscribe">subscribe</a> if you want to get notified when I post new stuff.</p>
+]]></content>
+      <tags>
+        <tag>Trello</tag>
+        <tag>Project Management</tag>
       </tags>
   </entry>
   <entry>
@@ -1058,110 +1162,6 @@ Doesn't look good... That's what happens when the learning rate is too large. Ev
       <tags>
         <tag>Python</tag>
         <tag>Web Scraping</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Using Firebase to Insert Budget Transactions to Google Sheets from Trello</title>
-    <url>/2018/12/20/trello-budget/</url>
-    <content><![CDATA[<p>I’ve put together a <a href="https://www.youtube.com/playlist?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1">YouTube Tutorial</a> on building a serverless <a href="https://firebase.google.com/">Firebase</a> application that lets you insert transaction entries into your Google budget spreadsheet just by creating a Trello card from your mobile device. Throughout the the playlist, I demonstrate how to easily create a useful cloud application by wiring together <a href="https://developers.trello.com/page/webhooks">Trello Webhooks</a>, <a href="https://developers.google.com/sheets/api/guides/concepts">Google Sheets API</a>, <a href="https://firebase.google.com/docs/firestore/">Firebase Cloud Firestore</a> and <a href="https://firebase.google.com/products/functions/?gclid=CjwKCAiAmO3gBRBBEiwA8d0Q4gWhPtXuV6PN4AxKNiKVEJShrQBMdtLwUtnBxqN16atMTD966oxjXBoC-X8QAvD_BwE">Firebase Cloud Functions</a>. </p>
-<a id="more"></a>
-
-
-<h4 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h4><p>Here’s what you need in order to follow along:</p>
-<ul>
-<li>You have to create a <em>monthly budget</em> template from the <a href="https://docs.google.com/spreadsheets/u/0/?ftv=1&folder=0ACoSgW1iveL-Uk9PVA">spreadsheet template gallery</a>. Check out my <a href="https://docs.google.com/spreadsheets/d/186YX-RyEyz5OcTsoI4QwIyJJMuZVc5MNTYIrF62ztiI/edit#gid=1732160294">sample sheet</a> to see what it looks like.</li>
-<li>You also need a <a href="https://trello.com/signup">Trello account</a> in order to create cards and webhooks.</li>
-</ul>
-<h4 id="Contribute"><a href="#Contribute" class="headerlink" title="Contribute"></a>Contribute</h4><p>The source code of the app is available on Github:<br><a href="https://github.com/utkuufuk/trello-budget">https://github.com/utkuufuk/trello-budget</a></p>
-<p>Feel free to contribute by providing pull requests, issues, ideas or suggestions.</p>
-<p>Make sure to <a href="/subscribe">subscribe</a> if you want to get updates on my future articles.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PL36SguL4LIwmJTYLlnCMXG5Azrpezm4h1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-]]></content>
-      <tags>
-        <tag>Python</tag>
-        <tag>Google Sheets</tag>
-        <tag>Budget Tracking</tag>
-        <tag>JavaScript</tag>
-        <tag>Trello</tag>
-        <tag>Firebase</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How I Manage My Side-Projects Using Trello</title>
-    <url>/2020/03/20/trello-project-manage/</url>
-    <content><![CDATA[<p>For the last few years, I’ve been spending a lot of my free time working on side-projects. What I came to realize is that it’s quite important that I plan ahead and work in an organized fashion except for very small projects. Trello is one of my favorite software tools ever, and I’m going to talk about how I manage my current side-project using its free version in this article.</p>
-<a id="more"></a>
-
-<h4 id="Why-Tho"><a href="#Why-Tho" class="headerlink" title="Why Tho?"></a>Why Tho?</h4><p>I’m sure some people see this whole side-project management thing as an unnecessary overhead that’s just going to slow them down. But here’s the thing:</p>
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Heading towards the finish line on a side project <a href="https://t.co/wHVJJBMDbx">pic.twitter.com/wHVJJBMDbx</a></p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/status/1240029324423704576?ref_src=twsrc%5Etfw">March 17, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>At the end of the day, you want to turn a cool idea into reality, on your own. That’s pretty much the meaning of a side-project. However, ideas lead to more ideas, as well as new problems to be solved. Sooner or later your head will explode because of every little thing you have to keep in mind (issues, ideas, problems, suggestions) about your project. If you use something like Trello, you can forget about all that until you have to actually deal with them.</p>
-<h4 id="Demo-Project-TodoDock"><a href="#Demo-Project-TodoDock" class="headerlink" title="Demo Project: TodoDock"></a>Demo Project: TodoDock</h4><p>Before talking about how I manage it, let me briefly tell you about <a href="https://tododock.com/">TodoDock</a>, the side-project that I’ve been working on for the last few months. In a nutshell, TodoDock lets you keep track of your periodic tasks and sends you a reminder whenever one of your tasks is due soon. The task timers don’t get automatically reset unlike repeating calendar events; you have to reset the timer manually. Therefore you won’t receive another reminder until you’ve actually waited for another full period since the last time you’ve completed the task. Here’s what it looks like:</p>
-<img src="/2020/03/20/trello-project-manage/tododock.png" class="">
-
-<p>The current state (March 2020) of the app can be categorized as an MVP at best, as there’s still a lot of work to be done. And that’s where Trello comes into play:</p>
-<img src="/2020/03/20/trello-project-manage/board-overview.png" class="">
-
-<h4 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h4><p>As you can see, I have three lists on the board: <em>Icebox</em>, <em>Backlog</em> and <em>Active</em>. Each task that I’m planning to work on soon is inside one of these. Obviously, the number of lists and the list names can be adjusted according to personal preference, as well as the size &amp; nature of the project at hand. I have this particular setup because</p>
-<ul>
-<li>I like to separate high-priority tasks (<em>Backlog</em>) from low-priority ones (<em>Icebox</em>)</li>
-<li>I like to see the things I’m currently working on in a separate list (<em>Active</em>)</li>
-</ul>
-<h4 id="Cards-Tasks-and-Labels"><a href="#Cards-Tasks-and-Labels" class="headerlink" title="Cards, Tasks and Labels"></a>Cards, Tasks and Labels</h4><p>Each card is a task. Simple as that. Here’s how I label my tasks:</p>
-<ul>
-<li><strong><em>Backend:</em></strong> server-side coding</li>
-<li><strong><em>Frontend:</em></strong> client-side coding</li>
-<li><strong><em>Test:</em></strong> requires creating new tests</li>
-<li><strong><em>DevOps:</em></strong> server administration/configuration, deployment, CI/CD and so on</li>
-<li><strong><em>User Request:</em></strong> a feature request from one of the existing users</li>
-<li><strong><em>Bug:</em></strong> pest control</li>
-<li><strong><em>Other:</em></strong> none of the above</li>
-</ul>
-<p>I assign labels to tasks primarily because then I can estimate their difficulties and priorities more accurately. The difficulty usually ends up higher if it has more than one of the first 4 labels. Similarly, the priority tends to increase if it has a <em>User Request</em> or a <em>Bug</em> label. More on priority and difficulty later…</p>
-<p>I just archive a task after completing it. I can always view an archived task if I need to. Here’s a task that I’ve archived recently:</p>
-<img src="/2020/03/20/trello-project-manage/sample-task.png" class="">
-
-<p>I’m a big fan of using checklists to break tasks into even smaller steps. That way I can get a feeling of the progress I’ve made, which helps a lot especially for difficult tasks. Also, I link the Github PR in the description so that it’s easy to see the corresponding changes if I ever want to. </p>
-<h4 id="Butler-and-Custom-Fields"><a href="#Butler-and-Custom-Fields" class="headerlink" title="Butler and Custom Fields"></a>Butler and Custom Fields</h4><p>There are a bunch of <a href="https://trello.com/power-ups">power-ups</a> you can use on your board. You get only 1 power-up per board with the free version. You also get a default power-up called <a href="https://help.trello.com/article/1198-an-intro-to-butler">Butler</a> which you can use to bring some automation to your board:</p>
-<blockquote><p>“Free Trello accounts also include a small taste of Butler with limited functionality.”</p>
-<footer><strong>Trello Help</strong><cite><a href="https://help.trello.com/article/1181-butler-features-and-quotas">help.trello.com/article/1181-butler-features-and-quotas</a></cite></footer></blockquote>
-
-<p>Even that small taste of Butler can actually prove very useful. I used it to define a <em>board button</em> for sorting the tasks by priority and difficulty. You can actually see that button in the board overview screenshot above. It’s called <em>Sort by Priority</em> and it appears next to the <em>Show Menu</em> button.</p>
-<p>The problem is, you can’t assign a priority or a difficulty attribute to Trello cards by default. That’s why I spent my power-up slot on <a href="https://trello.com/power-ups/56d5e249a98895a9797bebb9/custom-fields">Custom Fields</a>, which lets you define … wait for it … custom fields! Combined with Butler, it lets me sort all the cards within each list automatically. Here’s my <em>Sort by Priority</em> command:</p>
-<img src="/2020/03/20/trello-project-manage/butler-sort-command.png" class="">
-
-<p>You can see that the button triggers a command that runs a sequence of actions, top to bottom. That allows me to sort the equal-priority tasks additionally by their difficulty attributes. If you look at the screenshot of the board again, you’ll see that the tasks in each list are indeed sorted by those rules.</p>
-<h4 id="Other-Cool-Power-Ups"><a href="#Other-Cool-Power-Ups" class="headerlink" title="Other Cool Power-Ups"></a>Other Cool Power-Ups</h4><p>There are a few other power-ups that I would use if I didn’t have to upgrade to a paid account. I’ll just talk about a couple of those, in case some of you prefer them over <em>Custom Fields</em>.</p>
-<ul>
-<li><p><strong><em><a href="https://screenful.com/card-dependencies-for-trello">Card Dependencies</a>:</em></strong> It would be great to see if a task blocks (or is blocked by) other tasks. For instance, in my <em>Archive</em> list, there’s a task for automatically sending reminder emails to users. That task is in fact blocked by the two tasks above it, but it’s not obvious that there’s a dependency relationship between them.</p>
-</li>
-<li><p><strong><em><a href="https://trello.com/power-ups/55a5d916446f517774210004/github">Github</a>:</em></strong> This lets you attach pull requests, issues and branches to your cards. You can see visual badges directly from the board view indicating whether a PR has been merged, the status checks and so on.</p>
-</li>
-</ul>
-<h4 id="Bonus-Tips-amp-Tricks"><a href="#Bonus-Tips-amp-Tricks" class="headerlink" title="Bonus Tips &amp; Tricks"></a>Bonus Tips &amp; Tricks</h4><blockquote><p>Here’s my ten cents, my two cents is free.</p>
-<footer><strong>Marshall Bruce Mathers III</strong><cite>Philosopher</cite></footer></blockquote>
-
-<h5 id="When-to-create-new-tasks"><a href="#When-to-create-new-tasks" class="headerlink" title="When to create new tasks"></a>When to create new tasks</h5><p>My board isn’t a complete collection of everything that needs to be done. I create new tasks only when they become obvious to me while I work on the existing ones. Why, you ask?</p>
-<ul>
-<li>It’s impossible to think of every little thing in advance, and certainly not fun.</li>
-<li>There’s no benefit in creating a task which I’m not going to start working on soon.</li>
-<li>I rarely have to delete/update a task if I’ve created it soon before I start working on it.</li>
-</ul>
-<h5 id="Deciding-what-to-work-on-next"><a href="#Deciding-what-to-work-on-next" class="headerlink" title="Deciding what to work on next"></a>Deciding what to work on next</h5><p>I always assign an approximate priority &amp; difficulty to new tasks, because I strongly believe that it’s important to work on what matters the most right now. For example, spending my time on making task groups collapsable (2nd task in <em>Icebox</em>, a nice-to-have visual feature) wouldn’t be a great idea when I haven’t even set up automated reminder emails yet, which is a core feature of TodoDock. So I put the low-priority (&lt;=2) tasks into <em>Icebox</em> and high-priority ones into <em>Backlog</em>. After all the tasks are sorted, I just start working on the topmost task in <em>Backlog</em>, the lowest hanging fruit.</p>
-<h5 id="Limiting-the-task-scope"><a href="#Limiting-the-task-scope" class="headerlink" title="Limiting the task scope"></a>Limiting the task scope</h5><p>I try to make my tasks as small as possible. I can mention quite a few reasons for that:</p>
-<ul>
-<li>Big tasks look scary to get started.</li>
-<li>It’s easier to focus on smaller tasks.</li>
-<li>It’s easier to write tests for smaller features.</li>
-<li>It’s easier to revert a change (using Git) if it has a clear scope.</li>
-<li>It’s hard to break big tasks into a few checklist items for progress tracking.</li>
-<li>A big task might contain sub-tasks with different priority levels, which can be scheduled independently.</li>
-</ul>
-<p>That’s it, I hope you found this useful. Feel free to <a href="/about">reach out</a> if you have any comments or questions. Also, don’t forget to <a href="/subscribe">subscribe</a> if you want to get notified when I post new stuff.</p>
-]]></content>
-      <tags>
-        <tag>Trello</tag>
-        <tag>Project Management</tag>
       </tags>
   </entry>
 </search>
